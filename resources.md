@@ -6,6 +6,14 @@ when making the Time Logger app. This will make it easier to keep
 track all sources used, so we can give proper attribution/credit in our
 source code.
 
+## Frameworks, Libraries, and Appliactions Used
+-----
+
+* React.js
+* Node.js
+* Express.js
+* PostgreSQL
+
 
 ## Front End Sources 
 -----
