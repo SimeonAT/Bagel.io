@@ -1,0 +1,13 @@
+{
+    "name": "cse115a-timelogger",
+    "version": "2.0.0",
+    "description": "CSE115a time logger project",
+    "author": "fill later",
+    "license": "UNLICENSED",
+    "repository": "none",
+    "scripts": {
+      "start-backend": "cd back-end && npm run dev",
+      "start-frontend": "cd front-end/front-src && npm start",
+      "start": "(npm run start-backend) & (npm run start-frontend)"
+    }
+  }
