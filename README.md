@@ -1,14 +1,25 @@
-First get node:
-    https://nodejs.org/en/download/
-    node -v;
-    npm -v;
+# First get node:
+https://nodejs.org/en/download/
+node -v;
+npm -v;
 
-Then before anything do this:
-    npm install;
-    cd back-end/;
-    npm install;
-    cd ../front-end/front-src/;
-    npm install;
+# Then get docker desktop:
+https://www.docker.com/products/docker-desktop/
+docker -v;
 
-TO RUN THE WEB APP (in the "TIME-LOGGER---CSE-115A/" directory):
-    npm start;
+# Then in the "TIME-LOGGER---CSE-115A/" directory run this:
+npm install;
+cd back-end/;
+npm install;
+cd ../front-end/front-src/;
+npm install;
+
+# To start the database:
+cd back-end/;
+docker-compose up -d; <--might take a while
+cd ../;
+
+# TO RUN THE WEB APP (in the "TIME-LOGGER---CSE-115A/" directory):
+npm start; <--might take a while
+
+Note: the back-end does not currently use the database so starting the database is not really necessary to start the web app

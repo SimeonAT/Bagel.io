@@ -1,0 +1,1 @@
+INSERT INTO foobar (created) VALUES (current_timestamp);

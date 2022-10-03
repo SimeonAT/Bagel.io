@@ -1,0 +1,14 @@
+services:
+  postgres:
+    container_name: cse115a-timelogger-backend
+    image: postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "4321:4321"
+    volumes:
+      - ./sql/schema.sql:/docker-entrypoint-initdb.d/1.schema.sql
+      - ./sql/data.sql:/docker-entrypoint-initdb.d/2.data.sql
+      - ./sql/indexes.sql:/docker-entrypoint-initdb.d/3.indexes.sql
