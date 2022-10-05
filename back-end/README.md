@@ -6,3 +6,4 @@ Properties:
 - ID (Hash? Unique identifier) UUID?
 - Username and Password
 
+- USER TOKEN or something like that to save task?
