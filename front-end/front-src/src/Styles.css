@@ -1,0 +1,185 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* .hero-view-frame-element {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  background-color: red
+} */
+
+.hero-view-frame-element {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+.hero-view-frame-element::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url(Images/calculator-spash.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  filter: brightness(75%);
+}
+
+.hero-view-content {
+  position: relative;
+  height: 100vh;
+  flex-direction: column;
+}
+
+.login-button-element {
+  text-align: right;
+
+  position: absolute;
+  top: 0%;
+  right: 0%;
+}
+
+.title-section {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: 15vw;
+  font-weight: 600;
+  line-height: 15vw;
+  background-image: conic-gradient(#CB4C4E 30%, rgba(0, 128, 128) 40%, rgba(0, 128, 128) 70%, #553c9a 80%, #CB4C4E);
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  text-align: center;
+  background-color: green;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+
+.title-capital-letter-element{
+  flex-grow: 1;
+  text-align: right;
+}
+
+.title-capital-letter-text {
+  font-size: 30vw !important;
+  line-height: 27vw;
+  font-weight: 600;
+}
+
+.secondary-title-element{
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.title-lowercase-letter {
+  font-size: 10vw !important;
+  line-height: 15vw;
+  font-weight: 600;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.subtitle {
+  font-size: 3vw !important;
+  font-style: italic;
+  line-height: 10vw;
+  font-weight: 600;
+  display: inline-block;
+  vertical-align: bottom;
+  text-align: center;
+}
+
+.list-section {
+  background-image: conic-gradient( rgba(0, 128, 128) 30%,  #553c9a 40%,  #553c9a 70%,  #CB4C4E 80%, rgba(0, 128, 128));
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  font-size: 3vw;
+  display:block;
+  text-align: center !important;
+  padding: 0 0 1vw 0vw;
+}
+
+.create-button-element {
+  text-align: center;
+  flex-grow: 1;
+}
+
+button {
+  cursor: pointer;
+  border: 0;
+  border-radius: 4px;
+  font-weight: 600;
+  margin: 1vw 1vw;
+  transition: 0.4s;
+}
+
+.login-button {
+  width: 10vw;
+  color: #FFEADF;
+  background-color: #553c9a;;
+  border: .1vw solid #553c9a;
+  font-weight: bold;
+  padding: .5vw .5vw;
+}
+
+button:hover {
+  color: #553c9a;
+  box-shadow: 0 0 5vw rgba(0, 128, 128, 0.6);
+  background-color: #FFEADF;
+}
+
+.create-account-button {
+  font-size: 2vw;
+  color: #FFEADF;
+  background-color: #553c9a;
+  border: .1vw solid #553c9a;
+  font-weight: bold;
+  padding: .5vw 3vw;
+}
+
+ul {
+  margin:0;
+}
