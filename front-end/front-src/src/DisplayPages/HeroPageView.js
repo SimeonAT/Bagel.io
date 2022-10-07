@@ -50,7 +50,8 @@ function WelcomeView() {
 class HeroView extends React.Component { 
   constructor(props) {
     super(props);
-    this.clickHandler = this.clickHandler.bind(this);
+    this.loginHandler = this.loginHandler.bind(this);
+    this.registerHandler = this.registerHandler.bind(this);
     this.state = {userStatus: WELCOME};
 
     return;
@@ -73,7 +74,7 @@ class HeroView extends React.Component {
     return;
   }
 
-  async clickHandler() {
+  async loginHandler() {
     this.setState({userStatus: LOGIN});
 
     let httpResponse = await fetch(LoginURL, {
@@ -87,19 +88,26 @@ class HeroView extends React.Component {
     return;
   }
 
+  registerHandler() {
+    this.setState({userStatus: REGISTER});
+    return;
+  }
+
   render() {
     return (
       <section className="hero-view-frame-element">
 
       <div className="hero-view-content">
         <div className="login-button-element">
-          <button className="login-button" onClick = {this.clickHandler}>Login</button>
+          <button className="login-button" 
+           onClick = {this.loginHandler}>Login</button>
         </div> 
 
         {this.changeView()}
 
         <div className="create-button-element">
-          <button className="create-account-button">Make your account now!</button>
+          <button className="create-account-button"
+           onClick = {this.registerHandler}>Make your account now!</button>
         </div>  
       </div>
     </section>
