@@ -16,7 +16,12 @@ server.get("/login", (request, response) => {
   console.log("Server received data from front-end");
 
   response.set("Access-Control-Allow-Origin", "*");
-  response.send("Login information will be sent here.");
+  response.send("Login information will be sent.");
+});
+
+server.get("/register", (request, response) => {
+  response.set("Access-Control-Allow-Origin", "*");
+  response.send("Register information will be sent.");
 });
 
 server.get("/testdb", testDB.get);
