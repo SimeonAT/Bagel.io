@@ -61,10 +61,21 @@ class HeroView extends React.Component {
   */
   changeView() {
     if (this.state.userStatus === WELCOME) {
+      return (<WelcomeView />);
     }
+    else if (this.state.userStatus === LOGIN) {
+      return (null);
+    } 
+    else if (this.state.userStats === REGISTER) {
+      return (null);
+    }
+    
+    return;
   }
 
   async clickHandler() {
+    this.setState({userStatus: LOGIN});
+
     let httpResponse = await fetch(LoginURL, {
       mode: "cors",
       method: "get"
@@ -85,7 +96,7 @@ class HeroView extends React.Component {
           <button className="login-button" onClick = {this.clickHandler}>Login</button>
         </div> 
 
-        <WelcomeView />
+        {this.changeView()}
 
         <div className="create-button-element">
           <button className="create-account-button">Make your account now!</button>
