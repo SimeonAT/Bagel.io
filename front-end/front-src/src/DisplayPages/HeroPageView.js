@@ -14,6 +14,7 @@ import '../Styles.css';
 
 const BackendURL = "http://localhost:8000";
 const LoginURL = BackendURL + "/login";
+const RegisterURL = BackendURL + "/register";
 
 /* Enumerations that indicate what the user is
    currently doing on the site:
@@ -77,7 +78,7 @@ class HeroView extends React.Component {
   async loginHandler() {
     this.setState({userStatus: LOGIN});
 
-    let httpResponse = await fetch(LoginURL, {
+    let httpResponse = await fetch(RegisterURL, {
       mode: "cors",
       method: "get"
     });
@@ -88,8 +89,18 @@ class HeroView extends React.Component {
     return;
   }
 
-  registerHandler() {
+  async registerHandler() {
     this.setState({userStatus: REGISTER});
+
+    let httpResponse = await fetch(RegisterURL, {
+      mode: "cors",
+      method: "get"
+    });
+
+    let responseBody = await httpResponse.text();
+
+    console.log(responseBody);
+
     return;
   }
 
