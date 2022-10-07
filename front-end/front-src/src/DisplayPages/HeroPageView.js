@@ -7,6 +7,7 @@
  * - https://www.digitalocean.com/community/tutorials/how-to-write-asynchronous-code-in-node-js
  * - https://www.stackhawk.com/blog/react-cors-guide-what-it-is-and-how-to-enable-it/
  * - https://developer.mozilla.org/en-US/docs/Web/API/Response
+ * - https://reactjs.org/docs/state-and-lifecycle.html
 */
 import React from "react";
 import '../Styles.css';
@@ -14,12 +15,53 @@ import '../Styles.css';
 const BackendURL = "http://localhost:8000";
 const LoginURL = BackendURL + "/login";
 
+/* Enumerations that indicate what the user is
+   currently doing on the site:
+
+   WELCOME => user is viewing the welcome page
+   REGISTER => user is creating an account
+   LOGIN => user is entering their login information
+*/
+const WELCOME = 0;
+const REGISTER = 1;
+const LOGIN = 2;
+
+function WelcomeView() {
+  return (
+    <div>
+      <div className = "title-section">
+        <div className="title-capital-letter-element">
+          <div className="title-capital-letter-div">B</div>
+        </div>
+        <div className="secondary-title-element">
+          <div className="title-lowercase-letter">agel</div>
+          <div className="subtitle">take back your time</div> 
+        </div>
+      </div> 
+      <div className = "list-section">
+        <ul>• Plan</ul>
+        <ul>• Prioritize</ul>
+        <ul>• Perfect</ul>
+      </div>
+    </div>
+  );
+}
+
 class HeroView extends React.Component { 
   constructor(props) {
     super(props);
     this.clickHandler = this.clickHandler.bind(this);
+    this.state = {userStatus: WELCOME};
 
     return;
+  }
+
+  /* Change what is currently being shown on the webpage
+     depending on the action that the user wants to take.
+  */
+  changeView() {
+    if (this.state.userStatus === WELCOME) {
+    }
   }
 
   async clickHandler() {
@@ -42,26 +84,13 @@ class HeroView extends React.Component {
         <div className="login-button-element">
           <button className="login-button" onClick = {this.clickHandler}>Login</button>
         </div> 
-        <div className = "title-section">
-          <div className="title-capital-letter-element">
-            <div className="title-capital-letter-div">B</div>
-          </div>
-          <div className="secondary-title-element">
-            <div className="title-lowercase-letter">agel</div>
-            <div className="subtitle">take back your time</div> 
-          </div>
-        </div> 
-        <div className = "list-section">
-          <ul>• Plan</ul>
-          <ul>• Prioritize</ul>
-          <ul>• Perfect</ul>
-        </div> 
+
+        <WelcomeView />
+
         <div className="create-button-element">
           <button className="create-account-button">Make your account now!</button>
-        </div> 
-      
+        </div>  
       </div>
-
     </section>
     );
   }
