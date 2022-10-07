@@ -1,4 +1,0 @@
-# ---- SOURCES UTILIZED ----
-# - https://linuxize.com/post/gitignore-ignoring-files-in-git/
-#
-node_modules/*
