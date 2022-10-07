@@ -6,8 +6,12 @@
     "license": "UNLICENSED",
     "repository": "none",
     "scripts": {
-      "start-backend": "cd back-end && npm run start",
-      "start-frontend": "cd front-end/front-src && npm start",
-      "start": "(npm run start-backend) & (npm run start-frontend)"
+        "start-backend": "cd back-end && npm run start",
+        "start-frontend": "cd front-end/front-src && npm start",
+        "start": "(npm run start-backend) & (npm run start-frontend)"
+    },
+    "dependencies": {
+        "dotenv": "^16.0.3",
+        "pg": "^8.8.0"
     }
-  }
+}
