@@ -8,45 +8,14 @@
  * - https://developer.mozilla.org/en-US/docs/Web/API/Response
  * - https://reactjs.org/docs/hooks-state.html
 */
-import React from "react";
-import logo from './logo.svg';
-import './App.css';
 
-const BACKEND_URL = "http://localhost:8000";
+import './Styles.css';
+import HeroView from "./DisplayPages/HeroPageView";
 
 function App() {
-  const [server_response, set_server_response] = React.useState("");
+  const heroView = HeroView();
 
-  const talk_to_server = async function() {
-    let http_response = await fetch(BACKEND_URL, {
-      method: "get",
-      mode: "cors"
-    });
-    console.log(http_response);
-
-    let response_body = await http_response.text();
-    set_server_response(response_body);
-    return;
-  }
-
-  const show_response = function() {
-    if (server_response.length > 0) { 
-      return (<p>{server_response}</p>);
-    }
-    else { return (null); }
-  }
-
-  return (
-    <div>
-      <p>Press the button to get the server to do something.</p>
-
-      <button onClick = {talk_to_server}>
-        Press Me!
-      </button>
-
-      {show_response()}
-    </div>
-  );
+  return (heroView);
 }
 
 export default App;
