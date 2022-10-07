@@ -12,7 +12,7 @@ server.get("/login", (request, response) => {
   console.log("Server received data from front-end");
 
   response.set("Access-Control-Allow-Origin", "*");
-  response.send("Hello World!");
+  response.send("Login information will be sent here.");
 });
 
 server.listen(PORT, () => {
