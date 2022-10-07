@@ -12,10 +12,10 @@
 import './Styles.css';
 import HeroView from "./DisplayPages/HeroPageView";
 
-function App() {
+function Main() {
   const heroView = HeroView();
 
   return (heroView);
 }
 
-export default App;
+export default Main;
