@@ -8,11 +8,11 @@ const express = require("express");
 const server = express();
 const PORT = 8000;
 
-server.get("/", (request, response) => {
+server.get("/login", (request, response) => {
   console.log("Server received data from front-end");
 
   response.set("Access-Control-Allow-Origin", "*");
-  response.send("Hello World!");
+  response.send("Login information will be sent here.");
 });
 
 server.listen(PORT, () => {
