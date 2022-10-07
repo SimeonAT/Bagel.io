@@ -16,7 +16,7 @@ const LoginURL = BackendURL + "/login";
 class HeroView extends React.Component { 
 
   async clickHandler() {
-    let httpResponse = await fetch(LoginURL + "/login", {
+    let httpResponse = await fetch(LoginURL, {
       mode: "cors",
       method: "get"
     });
@@ -34,11 +34,11 @@ class HeroView extends React.Component {
         </div> 
         <div className = "title-section">
           <div className="title-capital-letter-element">
-            <text className="title-capital-letter-text">B</text>
+            <div className="title-capital-letter-div">B</div>
           </div>
           <div className="secondary-title-element">
-            <text className="title-lowercase-letter">agel</text>
-            <text className="subtitle">take back your time</text> 
+            <div className="title-lowercase-letter">agel</div>
+            <div className="subtitle">take back your time</div> 
           </div>
         </div> 
         <div className = "list-section">
