@@ -1,12 +1,14 @@
+/* ---- SOURCES USED ----
+ * - https://reactjs.org/docs/components-and-props.html
+ * - https://www.robinwieruch.de/react-pass-props-to-component/
+*/
 import React from "react";
 import '../Styles.css';
 
-
-function HeroView() {
-
-  return (
-
-    <section class="hero-view-frame-element">
+class HeroView extends React.Component { 
+  render() {
+    return (
+      <section class="hero-view-frame-element">
 
       <div class="hero-view-content">
         <div class="login-button-element">
@@ -33,7 +35,8 @@ function HeroView() {
       </div>
 
     </section>
-  );
+    );
+  }
 }
 
 export default HeroView;

@@ -13,9 +13,11 @@ import './Styles.css';
 import HeroView from "./DisplayPages/HeroPageView";
 
 function Main() {
-  const heroView = HeroView();
-
-  return (heroView);
+  return (
+    <div>
+      <HeroView />
+    </div>
+  );
 }
 
 export default Main;
