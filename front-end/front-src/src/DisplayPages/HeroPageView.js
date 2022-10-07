@@ -78,7 +78,7 @@ class HeroView extends React.Component {
   async loginHandler() {
     this.setState({userStatus: LOGIN});
 
-    let httpResponse = await fetch(RegisterURL, {
+    let httpResponse = await fetch(LoginURL, {
       mode: "cors",
       method: "get"
     });
