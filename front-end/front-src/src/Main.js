@@ -10,12 +10,18 @@
 
 import './Styles.css';
 import HeroView from "./DisplayPages/HeroPageView";
+import LoginPage from './DisplayPages/LoginPage';
+//import ReactDOM from "react-dom/client";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function Main() {
   return (
-    <div>
-      <HeroView />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route exact path='/' element={< HeroView />}></Route>
+        <Route exact path='/login' element={< LoginPage />}></Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
