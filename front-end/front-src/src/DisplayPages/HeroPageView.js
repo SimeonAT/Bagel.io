@@ -10,6 +10,8 @@
  * - https://reactjs.org/docs/state-and-lifecycle.html
  * - https://github.com/facebook/create-react-app/issues/11174
  * - https://styled-components.com/
+ * 
+ * - https://www.w3schools.com/css/css_font.asp
 */
 import React from "react";
 import styled from "styled-components";
@@ -30,13 +32,22 @@ const WELCOME = 0;
 const REGISTER = 1;
 const LOGIN = 2;
 
-const Button = styled.button``;
+const Button = styled.button`
+  font-size: 30px;
+  font-family: Ubuntu, Courier;
+`;
 
-function WelcomeView() {
+const WelcomeDiv = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+function WelcomeView(loginClickHandler) {
   return (
-    <div>
-      <Button>Hello World!</Button>
-    </div>
+    <WelcomeDiv>
+      <Button>Login</Button>
+      <Button>Register</Button>
+    </WelcomeDiv>
   );
 }
 
@@ -49,7 +60,9 @@ function HeroView() {
   const changeView = function() {
     if (userStatus === WELCOME) {
       return (
-      <WelcomeView />
+        <div>
+          <WelcomeView />
+        </div>
       );
     }
     else if (userStatus === LOGIN) {
