@@ -9,6 +9,8 @@
  * - https://developer.mozilla.org/en-US/docs/Web/API/Response
  * - https://reactjs.org/docs/state-and-lifecycle.html
  * - https://github.com/facebook/create-react-app/issues/11174
+ * 
+ * - https://styled-components.com/docs/api#primary
  * - https://styled-components.com/
  * 
  * - https://www.w3schools.com/css/css_font.asp
@@ -35,17 +37,21 @@ const LOGIN = 2;
 const Button = styled.button`
   font-size: 30px;
   font-family: Ubuntu, Courier;
+
+  width: 200px;
+  height: 50px;
 `;
 
 const WelcomeDiv = styled.div`
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 `;
 
-function WelcomeView(loginClickHandler) {
+function WelcomeView(props) {
   return (
     <WelcomeDiv>
-      <Button>Login</Button>
+      <Button onClick = {props.loginHandler}>Login</Button>
       <Button>Register</Button>
     </WelcomeDiv>
   );
@@ -53,27 +59,6 @@ function WelcomeView(loginClickHandler) {
 
 function HeroView() { 
   let [userStatus, changeStatus] = React.useState(WELCOME);
-
-  /* Change what is currently being shown on the webpage
-     depending on the action that the user wants to take.
-  */
-  const changeView = function() {
-    if (userStatus === WELCOME) {
-      return (
-        <div>
-          <WelcomeView />
-        </div>
-      );
-    }
-    else if (userStatus === LOGIN) {
-      return (null);
-    } 
-    else if (userStatus === REGISTER) {
-      return (null);
-    }
-    
-    return;
-  }
 
   const loginHandler = async function() {
     changeStatus(LOGIN);
@@ -103,6 +88,27 @@ function HeroView() {
 
     return;
   }
+
+  /* Change what is currently being shown on the webpage
+     depending on the action that the user wants to take.
+  */
+     const changeView = function() {
+      if (userStatus === WELCOME) {
+        return (
+          <div>
+            <WelcomeView loginHandler = {loginHandler} />
+          </div>
+        );
+      }
+      else if (userStatus === LOGIN) {
+        return (null);
+      } 
+      else if (userStatus === REGISTER) {
+        return (null);
+      }
+      
+      return;
+    }
 
   return (
     <div>
