@@ -7,13 +7,16 @@
  * - https://www.digitalocean.com/community/tutorials/how-to-write-asynchronous-code-in-node-js
  * - https://www.stackhawk.com/blog/react-cors-guide-what-it-is-and-how-to-enable-it/
  * - https://developer.mozilla.org/en-US/docs/Web/API/Response
- * - https://reactjs.org/docs/state-and-lifecycle.html
  * - https://github.com/facebook/create-react-app/issues/11174
+ * - https://reactjs.org/docs/hooks-intro.html
+ * - https://reactjs.org/docs/components-and-props.html
+ * - https://reactjs.org/docs/state-and-lifecycle.html
  * 
  * - https://styled-components.com/docs/api#primary
  * - https://styled-components.com/
  * 
  * - https://www.w3schools.com/css/css_font.asp
+ * - https://www.w3schools.com/css/css_inline-block.asp
 */
 import React from "react";
 import styled from "styled-components";
@@ -49,9 +52,30 @@ const WelcomeDiv = styled.div`
   align-items: center;
 `;
 
+const MainLetter = styled.div`
+  font-size: 200px;
+  font-weight: bold;
+  display: inline;
+`;
+
+const SubLetters = styled.div`
+  font-size: 75px;
+  display: inline;
+`;
+
+const LogoDiv = styled.div`
+  width: 500px;
+  text-align: center;
+`;
+
 function WelcomeView(props) {
   return (
     <WelcomeDiv>
+      <LogoDiv>
+        <MainLetter>B</MainLetter>
+        <SubLetters>agel.io</SubLetters>
+      </LogoDiv>
+
       <Button onClick = {props.loginHandler}>Login</Button>
       <Button>Register</Button>
     </WelcomeDiv>
