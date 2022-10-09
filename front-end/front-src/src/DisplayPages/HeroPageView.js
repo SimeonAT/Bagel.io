@@ -68,12 +68,19 @@ const LogoDiv = styled.div`
   text-align: center;
 `;
 
+const Tagline = styled.h5`
+  font-size: 25px;
+  margin: 0px;
+  padding: 0px;
+`;
+
 function WelcomeView(props) {
   return (
     <WelcomeDiv>
       <LogoDiv>
         <MainLetter>B</MainLetter>
         <SubLetters>agel.io</SubLetters>
+        <Tagline>Take back your time!</Tagline>
       </LogoDiv>
 
       <Button onClick = {props.loginHandler}>Login</Button>
