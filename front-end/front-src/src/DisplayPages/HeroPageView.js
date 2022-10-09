@@ -77,6 +77,10 @@ const Tagline = styled.h5`
   padding: 0px;
 `;
 
+const SellingPoints = styled.ul`
+  font-size: 25px;
+`;
+
 function WelcomeView(props) {
   return (
     <WelcomeDiv>
@@ -87,7 +91,7 @@ function WelcomeView(props) {
       </LogoDiv>
 
       <Button onClick = {props.loginHandler}>Login</Button>
-      <Button>Register</Button>
+      <Button onClick = {props.registerHandler}>Register</Button>
     </WelcomeDiv>
   );
 }
@@ -131,7 +135,8 @@ function HeroView() {
       if (userStatus === WELCOME) {
         return (
           <div>
-            <WelcomeView loginHandler = {loginHandler} />
+            <WelcomeView loginHandler = {loginHandler} 
+              registerHandler = {registerHandler} />
           </div>
         );
       }
@@ -141,7 +146,14 @@ function HeroView() {
         );
       } 
       else if (userStatus === REGISTER) {
-        return (null);
+        return (
+          <div>
+            <h3>404 Not Found</h3>
+            <p>
+              Registration page still under construction.
+            </p>
+          </div>
+        );
       }
       
       return;
