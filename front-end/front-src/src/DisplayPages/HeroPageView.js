@@ -18,6 +18,7 @@
 import React from "react";
 import styled from "styled-components";
 import '../styles.css';
+import SignIn from "./LoginPage";
 
 const BackendURL = "http://localhost:8000";
 const LoginURL = BackendURL + "/login";
@@ -101,7 +102,9 @@ function HeroView() {
         );
       }
       else if (userStatus === LOGIN) {
-        return (null);
+        return (
+          <SignIn />
+        );
       } 
       else if (userStatus === REGISTER) {
         return (null);
