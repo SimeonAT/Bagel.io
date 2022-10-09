@@ -10,7 +10,7 @@
  * - https://reactjs.org/docs/state-and-lifecycle.html
 */
 import React from "react";
-import '../Styles.css';
+import '../styles.css';
 
 const BackendURL = "http://localhost:8000";
 const LoginURL = BackendURL + "/login";
@@ -68,7 +68,7 @@ class HeroView extends React.Component {
     else if (this.state.userStatus === LOGIN) {
       return (null);
     } 
-    else if (this.state.userStats === REGISTER) {
+    else if (this.state.userStatus === REGISTER) {
       return (null);
     }
     
