@@ -131,30 +131,30 @@ function HeroView() {
   /* Change what is currently being shown on the webpage
      depending on the action that the user wants to take.
   */
-     const changeView = function() {
-      if (userStatus === WELCOME) {
-        return (
-          <div>
-            <WelcomeView loginHandler = {loginHandler} 
-              registerHandler = {registerHandler} />
-          </div>
-        );
-      }
-      else if (userStatus === LOGIN) {
-        return (
-          <SignIn />
-        );
-      } 
-      else if (userStatus === REGISTER) {
-        return (
-          <div>
-            <h3>404 Not Found</h3>
-            <p>
-              Registration page still under construction.
-            </p>
-          </div>
-        );
-      }
+  const changeView = function() {
+    if (userStatus === WELCOME) {
+      return (
+        <div>
+          <WelcomeView loginHandler = {loginHandler} 
+            registerHandler = {registerHandler} />
+        </div>
+      );
+    }
+    else if (userStatus === LOGIN) {
+      return (
+        <SignIn />
+      );
+    } 
+    else if (userStatus === REGISTER) {
+      return (
+        <div>
+          <h3>404 Not Found</h3>
+          <p>
+            Registration page still under construction.
+          </p>
+        </div>
+      );
+    }
       
       return;
     }
