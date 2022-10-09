@@ -8,7 +8,7 @@
  * - https://reactjs.org/docs/hooks-state.html
 */
 
-import './Styles.css';
+import './styles.css';
 import HeroView from "./DisplayPages/HeroPageView";
 import LoginPage from './DisplayPages/LoginPage';
 //import ReactDOM from "react-dom/client";

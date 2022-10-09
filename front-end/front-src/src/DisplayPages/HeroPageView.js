@@ -48,35 +48,28 @@ function WelcomeView() {
   );
 }
 
-class HeroView extends React.Component { 
-  constructor(props) {
-    super(props);
-    this.loginHandler = this.loginHandler.bind(this);
-    this.registerHandler = this.registerHandler.bind(this);
-    this.state = {userStatus: WELCOME};
-
-    return;
-  }
+function HeroView() { 
+  let [userStatus, changeStatus] = React.useState(WELCOME);
 
   /* Change what is currently being shown on the webpage
      depending on the action that the user wants to take.
   */
-  changeView() {
-    if (this.state.userStatus === WELCOME) {
+  const changeView = function() {
+    if (userStatus === WELCOME) {
       return (<WelcomeView />);
     }
-    else if (this.state.userStatus === LOGIN) {
+    else if (userStatus === LOGIN) {
       return (null);
     } 
-    else if (this.state.userStatus === REGISTER) {
+    else if (userStatus === REGISTER) {
       return (null);
     }
     
     return;
   }
 
-  async loginHandler() {
-    this.setState({userStatus: LOGIN});
+  const loginHandler = async function() {
+    changeStatus(LOGIN);
 
     let httpResponse = await fetch(LoginURL, {
       mode: "cors",
@@ -89,8 +82,8 @@ class HeroView extends React.Component {
     return;
   }
 
-  async registerHandler() {
-    this.setState({userStatus: REGISTER});
+  const registerHandler = async function() {
+    changeStatus(REGISTER);
 
     let httpResponse = await fetch(RegisterURL, {
       mode: "cors",
@@ -104,26 +97,24 @@ class HeroView extends React.Component {
     return;
   }
 
-  render() {
-    return (
-      <section className="hero-view-frame-element">
+  return (
+    <section className="hero-view-frame-element">
 
-      <div className="hero-view-content">
-        <div className="login-button-element">
-          <button className="login-button" 
-           onClick = {this.loginHandler}>Login</button>
-        </div> 
+    <div className="hero-view-content">
+      <div className="login-button-element">
+        <button className="login-button" 
+          onClick = {loginHandler}>Login</button>
+      </div> 
 
-        {this.changeView()}
+      {changeView()}
 
-        <div className="create-button-element">
-          <button className="create-account-button"
-           onClick = {this.registerHandler}>Make your account now!</button>
-        </div>  
-      </div>
-    </section>
-    );
-  }
+      <div className="create-button-element">
+        <button className="create-account-button"
+          onClick = {registerHandler}>Make your account now!</button>
+      </div>  
+    </div>
+  </section>
+  );
 }
 
 export default HeroView;
