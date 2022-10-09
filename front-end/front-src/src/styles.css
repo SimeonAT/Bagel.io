@@ -1,3 +1,7 @@
+/* ---- SOURCES USED ----
+   - https://www.w3schools.com/colors/colors_picker.asp
+*/
+
 /* .hero-view-frame-element {
   height: 100vh;
   display: flex;
@@ -5,6 +9,10 @@
   align-items: stretch;
   background-color: red
 } */
+
+body {
+  background-color: GhostWhite;
+}
 
 .hero-view-frame-element {
   position: relative;

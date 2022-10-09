@@ -17,6 +17,8 @@
  * 
  * - https://www.w3schools.com/css/css_font.asp
  * - https://www.w3schools.com/css/css_inline-block.asp
+ * - https://www.w3schools.com/colors/colors_picker.asp
+ * - https://www.w3schools.com/colors/colors_names.asp
 */
 import React from "react";
 import styled from "styled-components";
@@ -44,6 +46,7 @@ const Button = styled.button`
 
   width: 200px;
   height: 50px;
+  background-color: Lavender;
 `;
 
 const WelcomeDiv = styled.div`
