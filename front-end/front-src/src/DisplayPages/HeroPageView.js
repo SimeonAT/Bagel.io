@@ -8,8 +8,11 @@
  * - https://www.stackhawk.com/blog/react-cors-guide-what-it-is-and-how-to-enable-it/
  * - https://developer.mozilla.org/en-US/docs/Web/API/Response
  * - https://reactjs.org/docs/state-and-lifecycle.html
+ * - https://github.com/facebook/create-react-app/issues/11174
+ * - https://styled-components.com/
 */
 import React from "react";
+import styled from "styled-components";
 import '../styles.css';
 
 const BackendURL = "http://localhost:8000";
@@ -27,8 +30,14 @@ const WELCOME = 0;
 const REGISTER = 1;
 const LOGIN = 2;
 
+const Button = styled.button``;
+
 function WelcomeView() {
-  return (null);
+  return (
+    <div>
+      <Button>Hello World!</Button>
+    </div>
+  );
 }
 
 function HeroView() { 
@@ -82,7 +91,11 @@ function HeroView() {
     return;
   }
 
-  return (null);
+  return (
+    <div>
+      {changeView()}
+    </div>
+  );
 }
 
 export default HeroView;
