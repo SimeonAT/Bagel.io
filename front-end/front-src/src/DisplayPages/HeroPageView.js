@@ -20,6 +20,7 @@
  * - https://www.w3schools.com/colors/colors_picker.asp
  * - https://www.w3schools.com/colors/colors_names.asp
  * - https://www.w3schools.com/css/css_positioning.asp
+ * - https://www.w3schools.com/cssref/pr_font_weight.asp
 */
 import React from "react";
 import styled from "styled-components";
@@ -69,8 +70,18 @@ const Tagline = styled.h5`
   padding: 0px;
 `;
 
-const SellingPoints = styled.ul`
+const SellingPoint = styled(Tagline)`
+  margin-top: 0.5em;
   font-size: 25px;
+  font-weight: normal;
+`;
+
+const Prioritize = styled(SellingPoint)`
+  margin-right: 7em;
+`;
+
+const Perfect = styled(SellingPoint)`
+  margin-left: 7em;
 `;
 
 const Button = styled.button`
@@ -87,19 +98,31 @@ const LoginButton = styled(Button)`
   left: 85%;
 `;
 
+const RegisterButton = styled(Button)`
+  width: 500px;
+`;
+
 function WelcomeView(props) {
   return (
     <div>
-      <LoginButton onClick = {props.loginHandler}>Login</LoginButton>
+      <LoginButton onClick = {props.loginHandler}>
+        Login
+      </LoginButton>
 
       <WelcomeDiv>
         <LogoDiv>
           <MainLetter>B</MainLetter>
           <SubLetters>agel.io</SubLetters>
           <Tagline>Take back your time!</Tagline>
+
+          <Prioritize>Prioritize!</Prioritize>
+          <SellingPoint>Plan!</SellingPoint>
+          <Perfect>Perfect!</Perfect>
         </LogoDiv>
           
-        <Button onClick = {props.registerHandler}>Register</Button>
+        <RegisterButton onClick = {props.registerHandler}>
+          Make your account now!
+        </RegisterButton>
       </WelcomeDiv>
     </div>
   );
