@@ -1,3 +1,15 @@
+/* ---- SOURCES USED ----
+   - https://developer.mozilla.org/en-US/docs/Web/API/fetch
+   - https://developer.mozilla.org/en-US/docs/Web/API/Response
+   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse
+   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
+   - https://expressjs.com/en/4x/api.html#express.json
+   - https://www.stackhawk.com/blog/react-cors-guide-what-it-is-and-how-to-enable-it/
+
+   - https://stackabuse.com/get-http-post-body-in-express-js/
+   - https://www.npmjs.com/package/body-parser
+   - https://dmitripavlutin.com/fetch-with-json/
+*/
 import {useState} from "react";
 import * as React from 'react';
 //import Avatar from '@mui/material/Avatar';
@@ -13,6 +25,10 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Copyright from "./Copyright";
+
+const BackendURL = "http://localhost:8000";
+const LoginURL = BackendURL + "/logindatabase";
+const RegisterURL = BackendURL + "/register";
 
 const theme = createTheme( {
   palette: {
@@ -44,9 +60,22 @@ export default function SignIn() {
     u_name: "invalid username",
     pass: "invalid password"
   };
-  const handleSubmit = (event) => {
+
+  const handleSubmit = async function(event) {
     event.preventDefault();
-    var { u_name, pass } = document.forms[0];
+    let { u_name, pass } = document.forms[0];
+
+    // Set username and password to the backend server
+    const httpResponse = await fetch(LoginURL, {
+      mode: "cors",
+      method: "post",
+      "Content-Type": "application/json",
+      body: JSON.stringify({username: u_name.value, password: pass.value})
+    });
+
+    const responseBody = await httpResponse.json();
+    console.log(responseBody);
+    
     const userData = database.find((user) => user.username === u_name.value)
 
     if (userData) {

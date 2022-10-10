@@ -3,10 +3,7 @@
  * - https://www.robinwieruch.de/react-pass-props-to-component/
  * - https://reactjs.org/docs/handling-events.html
  * - https://www.robinwieruch.de/react-event-handler/
- * - https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
  * - https://www.digitalocean.com/community/tutorials/how-to-write-asynchronous-code-in-node-js
- * - https://www.stackhawk.com/blog/react-cors-guide-what-it-is-and-how-to-enable-it/
- * - https://developer.mozilla.org/en-US/docs/Web/API/Response
  * - https://github.com/facebook/create-react-app/issues/11174
  * - https://reactjs.org/docs/hooks-intro.html
  * - https://reactjs.org/docs/components-and-props.html
@@ -27,10 +24,6 @@ import styled from "styled-components";
 import '../styles.css';
 import SignIn from "./LoginPage";
 import Copyright from "./Copyright";
-
-const BackendURL = "http://localhost:8000";
-const LoginURL = BackendURL + "/login";
-const RegisterURL = BackendURL + "/register";
 
 /* Enumerations that indicate what the user is
    currently doing on the site:
@@ -143,30 +136,11 @@ function HeroView() {
 
   const loginHandler = async function() {
     changeStatus(LOGIN);
-
-    let httpResponse = await fetch(LoginURL, {
-      mode: "cors",
-      method: "get"
-    });
-
-    let responseBody = await httpResponse.text();
-
-    console.log(responseBody);
     return;
   }
 
   const registerHandler = async function() {
     changeStatus(REGISTER);
-
-    let httpResponse = await fetch(RegisterURL, {
-      mode: "cors",
-      method: "get"
-    });
-
-    let responseBody = await httpResponse.text();
-
-    console.log(responseBody);
-
     return;
   }
 
