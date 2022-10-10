@@ -18,7 +18,8 @@ const PORT = 8000;
 /* FIXME: bodyParser.text() can return JSON as text,
           which the front-end can parse as JSON.
 
-          However, doing bodyParser.json() causes problems.
+          However, doing bodyParser.json() to parse the HTTP
+          Request's body will give an empty JSON object: "{}".
 
           Any help to fix this would be greatly appreciated.
 */
