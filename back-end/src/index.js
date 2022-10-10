@@ -4,19 +4,17 @@
  * - https://www.npmjs.com/package/nodemon  
  * - https://expressjs.com/en/4x/api.html#req
  * - https://expressjs.com/en/4x/api.html#express.json
+ * - https://stackoverflow.com/questions/19696240/proper-way-to-return-json-using-node-or-express
 */
 require('dotenv').config();
 
 const express = require("express");
-
 const testDB = require("./testDB");
 
 const server = express();
 const PORT = 8000;
 
 server.post("/logindatabase", (request, response) => {
-  console.log(request.body);
-
   response.set("Access-Control-Allow-Origin", "*");
   response.setHeader("Content-Type", "application/json");
   response.send(request.body);
