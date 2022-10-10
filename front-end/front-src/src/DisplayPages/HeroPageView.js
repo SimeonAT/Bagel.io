@@ -26,6 +26,7 @@ import React from "react";
 import styled from "styled-components";
 import '../styles.css';
 import SignIn from "./LoginPage";
+import Copyright from "./Copyright";
 
 const BackendURL = "http://localhost:8000";
 const LoginURL = BackendURL + "/login";
@@ -102,6 +103,10 @@ const RegisterButton = styled(Button)`
   width: 500px;
 `;
 
+const StyledFooter = styled.footer`
+  margin-top: 5em;
+`;
+
 function WelcomeView(props) {
   return (
     <div>
@@ -118,11 +123,16 @@ function WelcomeView(props) {
           <Prioritize>Prioritize!</Prioritize>
           <SellingPoint>Plan!</SellingPoint>
           <Perfect>Perfect!</Perfect>
+
         </LogoDiv>
           
         <RegisterButton onClick = {props.registerHandler}>
           Make your account now!
         </RegisterButton>
+
+        <StyledFooter>
+          <Copyright />
+        </StyledFooter>
       </WelcomeDiv>
     </div>
   );
