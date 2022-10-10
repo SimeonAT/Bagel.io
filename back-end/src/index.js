@@ -2,6 +2,8 @@
  * - https://www.geeksforgeeks.org/how-to-connect-node-js-with-react-js/
  * - https://www.stackhawk.com/blog/react-cors-guide-what-it-is-and-how-to-enable-it/
  * - https://www.npmjs.com/package/nodemon  
+ * - https://expressjs.com/en/4x/api.html#req
+ * - https://expressjs.com/en/4x/api.html#express.json
 */
 require('dotenv').config();
 
@@ -12,14 +14,14 @@ const testDB = require("./testDB");
 const server = express();
 const PORT = 8000;
 
-server.get("/login", (request, response) => {
-  console.log("Server received data from front-end");
+server.post("/logindatabase", (request, response) => {
+  console.log(request.body);
 
   response.set("Access-Control-Allow-Origin", "*");
-  response.send("Login information will be sent.");
+  response.json({hello: 'hello'});
 });
 
-server.get("/register", (request, response) => {
+server.post("/register", (request, response) => {
   response.set("Access-Control-Allow-Origin", "*");
   response.send("Register information will be sent.");
 });
