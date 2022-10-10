@@ -9,6 +9,7 @@
    - https://stackabuse.com/get-http-post-body-in-express-js/
    - https://www.npmjs.com/package/body-parser
    - https://dmitripavlutin.com/fetch-with-json/
+   - http://expressjs.com/en/resources/middleware/body-parser.html#bodyparserjsonoptions
 */
 import {useState} from "react";
 import * as React from 'react';
