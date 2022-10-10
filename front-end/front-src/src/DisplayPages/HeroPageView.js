@@ -143,30 +143,11 @@ function HeroView() {
 
   const loginHandler = async function() {
     changeStatus(LOGIN);
-
-    let httpResponse = await fetch(LoginURL, {
-      mode: "cors",
-      method: "get"
-    });
-
-    let responseBody = await httpResponse.text();
-
-    console.log(responseBody);
     return;
   }
 
   const registerHandler = async function() {
     changeStatus(REGISTER);
-
-    let httpResponse = await fetch(RegisterURL, {
-      mode: "cors",
-      method: "get"
-    });
-
-    let responseBody = await httpResponse.text();
-
-    console.log(responseBody);
-
     return;
   }
 
