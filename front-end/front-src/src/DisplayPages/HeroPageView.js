@@ -19,6 +19,7 @@
  * - https://www.w3schools.com/css/css_inline-block.asp
  * - https://www.w3schools.com/colors/colors_picker.asp
  * - https://www.w3schools.com/colors/colors_names.asp
+ * - https://www.w3schools.com/css/css_positioning.asp
 */
 import React from "react";
 import styled from "styled-components";
@@ -40,15 +41,6 @@ const WELCOME = 0;
 const REGISTER = 1;
 const LOGIN = 2;
 
-const Button = styled.button`
-  font-size: 30px;
-  font-family: Ubuntu, Courier;
-
-  width: 200px;
-  height: 50px;
-  background-color: Lavender;
-`;
-
 const WelcomeDiv = styled.div`
   display: flex;
   flex-direction: column;
@@ -56,13 +48,13 @@ const WelcomeDiv = styled.div`
 `;
 
 const MainLetter = styled.div`
-  font-size: 200px;
+  font-size: 300px;
   font-weight: bold;
   display: inline;
 `;
 
 const SubLetters = styled.div`
-  font-size: 75px;
+  font-size: 100px;
   display: inline;
 `;
 
@@ -72,7 +64,7 @@ const LogoDiv = styled.div`
 `;
 
 const Tagline = styled.h5`
-  font-size: 25px;
+  font-size: 30px;
   margin: 0px;
   padding: 0px;
 `;
@@ -81,18 +73,35 @@ const SellingPoints = styled.ul`
   font-size: 25px;
 `;
 
+const Button = styled.button`
+  font-size: 30px;
+  font-family: Ubuntu, Courier;
+
+  width: 200px;
+  height: 50px;
+  background-color: Lavender;
+`;
+
+const LoginButton = styled(Button)`
+  position: fixed;
+  left: 85%;
+`;
+
 function WelcomeView(props) {
   return (
-    <WelcomeDiv>
-      <LogoDiv>
-        <MainLetter>B</MainLetter>
-        <SubLetters>agel.io</SubLetters>
-        <Tagline>Take back your time!</Tagline>
-      </LogoDiv>
+    <div>
+      <LoginButton onClick = {props.loginHandler}>Login</LoginButton>
 
-      <Button onClick = {props.loginHandler}>Login</Button>
-      <Button onClick = {props.registerHandler}>Register</Button>
-    </WelcomeDiv>
+      <WelcomeDiv>
+        <LogoDiv>
+          <MainLetter>B</MainLetter>
+          <SubLetters>agel.io</SubLetters>
+          <Tagline>Take back your time!</Tagline>
+        </LogoDiv>
+          
+        <Button onClick = {props.registerHandler}>Register</Button>
+      </WelcomeDiv>
+    </div>
   );
 }
 
