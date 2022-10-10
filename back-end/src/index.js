@@ -9,10 +9,20 @@
 require('dotenv').config();
 
 const express = require("express");
+const bodyParser = require("body-parser");
 const testDB = require("./testDB");
 
 const server = express();
 const PORT = 8000;
+
+/* FIXME: bodyParser.text() can return JSON as text,
+          which the front-end can parse as JSON.
+
+          However, doing bodyParser.json() causes problems.
+
+          Any help to fix this would be greatly appreciated.
+*/
+server.use(bodyParser.text());
 
 server.post("/logindatabase", (request, response) => {
   response.set("Access-Control-Allow-Origin", "*");

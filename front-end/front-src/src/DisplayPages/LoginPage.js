@@ -5,6 +5,10 @@
    - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
    - https://expressjs.com/en/4x/api.html#express.json
    - https://www.stackhawk.com/blog/react-cors-guide-what-it-is-and-how-to-enable-it/
+
+   - https://stackabuse.com/get-http-post-body-in-express-js/
+   - https://www.npmjs.com/package/body-parser
+   - https://dmitripavlutin.com/fetch-with-json/
 */
 import {useState} from "react";
 import * as React from 'react';
@@ -63,13 +67,13 @@ export default function SignIn() {
 
     // Set username and password to the backend server
     const httpResponse = await fetch(LoginURL, {
-      mode: 'cors',
-      method: 'post',
-      'Content-Type': 'application/json',
+      mode: "cors",
+      method: "post",
+      "Content-Type": "application/json",
       body: JSON.stringify({username: u_name.value, password: pass.value})
     });
 
-    const responseBody = await httpResponse.text();
+    const responseBody = await httpResponse.json();
     console.log(responseBody);
     
     const userData = database.find((user) => user.username === u_name.value)
