@@ -65,11 +65,11 @@ export default function SignIn() {
     const httpResponse = await fetch(LoginURL, {
       mode: 'cors',
       method: 'post',
-      'Content-Type': 'json',
-      body: {username: u_name, password: pass}
+      'Content-Type': 'application/json',
+      body: JSON.stringify({username: u_name.value, password: pass.value})
     });
 
-    const responseBody = await httpResponse.json();
+    const responseBody = await httpResponse.text();
     console.log(responseBody);
     
     const userData = database.find((user) => user.username === u_name.value)

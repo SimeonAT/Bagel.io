@@ -18,7 +18,8 @@ server.post("/logindatabase", (request, response) => {
   console.log(request.body);
 
   response.set("Access-Control-Allow-Origin", "*");
-  response.json({hello: 'hello'});
+  response.setHeader("Content-Type", "application/json");
+  response.send(request.body);
 });
 
 server.post("/register", (request, response) => {
