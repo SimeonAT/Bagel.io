@@ -46,17 +46,6 @@ export default function SignIn() {
   const [errorMessage, setErrorMessages] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const database = [
-    {
-      username: "user1",
-      password: "pass1"
-    },
-    {
-      username: "user2",
-      password: "pass2"
-    }
-  ];
-
   const errors = {
     u_name: "invalid username",
     pass: "invalid password"
@@ -76,19 +65,12 @@ export default function SignIn() {
 
     const responseBody = await httpResponse.json();
     console.log(responseBody);
-    
-    const userData = database.find((user) => user.username === u_name.value)
 
-    if (userData) {
-      if (userData.password !== pass.value) {
-        // pass doesnt match
-        setErrorMessages({ name: "pass", message: errors.pass });
-      } else {
-        setIsSubmitted(true);
-      }
-    } else {
-      // user not in system
-      setErrorMessages({ name: "u_name", message: errors.u_name });
+    if (responseBody.loginAllowed === true) {
+      setIsSubmitted(true);
+    }
+    else {
+      setErrorMessages({ name: "pass", message: errors.pass });
     }
   };
   
