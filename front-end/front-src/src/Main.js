@@ -11,6 +11,7 @@
 import './styles.css';
 import HeroView from "./DisplayPages/HeroPageView";
 import LoginPage from './DisplayPages/LoginPage';
+import Register from './DisplayPages/RegisterPage';
 //import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
@@ -20,6 +21,7 @@ function Main() {
       <Routes>
         <Route exact path='/' element={< HeroView />}></Route>
         <Route exact path='/login' element={< LoginPage />}></Route>
+        <Route exact path='/register' element={< Register />}></Route>
       </Routes>
     </BrowserRouter>
   );

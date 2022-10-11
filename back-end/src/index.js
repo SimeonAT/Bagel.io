@@ -31,7 +31,7 @@ server.use(bodyParser.text());
  *  front-end's and back-end's ability to let
  *  users login to their dashboard. 
  */
-const testDatabase = {
+var testDatabase = {
   user1: "pass1",
   user2: "pass2"
 };
@@ -72,8 +72,32 @@ server.post("/logindatabase", (request, response) => {
 });
 
 server.post("/register", (request, response) => {
-  response.set("Access-Control-Allow-Origin", "*");
-  response.send("Register information will be sent.");
+  try {
+    response.set("Access-Control-Allow-Origin", "*");
+    response.setHeader("Content-Type", "application/json");
+  
+    const loginInfo = JSON.parse(request.body);
+    const username = loginInfo.username;
+    const password = loginInfo.password;
+
+    // If the username does not exist in DB, create new key-value pair
+    if (testDatabase[username] === undefined) {
+      testDatabase[username] = password;
+      response.send({loginAllowed: true}); 
+    } 
+    else {
+      response.send({loginAllowed: false});
+    }
+  }
+  catch (error) {
+    console.error(error);
+
+    response.status(500);
+    response.send({
+      error: true,
+      message: "Please check back-end console for error info."
+    });
+  }
 });
 
 server.get("/testdb", testDB.get);
