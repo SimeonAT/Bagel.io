@@ -26,6 +26,15 @@ const PORT = 8000;
 */
 server.use(bodyParser.text());
 
+/** Temporary Object that will allow us to test
+ *  front-end's and back-end's ability to let
+ *  users login to their dashboard. 
+ */
+const testDatabase = {
+  user1: "pass1",
+  user2: "pass2"
+};
+
 server.post("/logindatabase", (request, response) => {
   response.set("Access-Control-Allow-Origin", "*");
   response.setHeader("Content-Type", "application/json");
