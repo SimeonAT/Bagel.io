@@ -44,16 +44,26 @@ server.post("/logindatabase", (request, response) => {
     // TO-DO: Look into database to determine if 
     // login info exists.
     //
-    const payload = request.body;
-    console.log(payload);
-    console.log(type(payload));
+    const loginInfo = JSON.parse(request.body);
+    const username = loginInfo.username;
+    const password = loginInfo.password;
 
-    response.status(200);
-    response.send({loginAllowed: true});
+    // If the user has an account, then their username
+    // must be mapped to a defined password in the database.
+    //
+    if ((testDatabase[username] !== undefined) &&
+        (password === testDatabase[username])) {
+
+      response.send({loginAllowed: true}); 
+    } 
+    else {
+      response.send({loginAllowed: false});
+    }
   }
   catch (error) {
-    response.status(500);
+    console.error(error);
 
+    response.status(500);
     response.send({
       error: true,
       message: "Please check back-end console for error info."
