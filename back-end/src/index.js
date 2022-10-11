@@ -6,6 +6,7 @@
  * - https://expressjs.com/en/4x/api.html#express.json
  * - https://stackoverflow.com/questions/19696240/proper-way-to-return-json-using-node-or-express
  * - https://expressjs.com/en/api.html#res
+ * - https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#server_error_responses
 */
 require('dotenv').config();
 
@@ -36,15 +37,28 @@ const testDatabase = {
 };
 
 server.post("/logindatabase", (request, response) => {
-  response.set("Access-Control-Allow-Origin", "*");
-  response.setHeader("Content-Type", "application/json");
-  response.status(200);
+  try {
+    response.set("Access-Control-Allow-Origin", "*");
+    response.setHeader("Content-Type", "application/json");
+  
+    // TO-DO: Look into database to determine if 
+    // login info exists.
+    //
+    const payload = request.body;
+    console.log(payload);
+    console.log(type(payload));
 
-  // TO-DO: Look into database to determine if 
-  // login info exists.
-  //
+    response.status(200);
+    response.send({loginAllowed: true});
+  }
+  catch (error) {
+    response.status(500);
 
-  response.send({loginAllowed: true});
+    response.send({
+      error: true,
+      message: "Please check back-end console for error info."
+    });
+  }
 });
 
 server.post("/register", (request, response) => {
