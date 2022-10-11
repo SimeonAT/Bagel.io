@@ -5,6 +5,7 @@
  * - https://expressjs.com/en/4x/api.html#req
  * - https://expressjs.com/en/4x/api.html#express.json
  * - https://stackoverflow.com/questions/19696240/proper-way-to-return-json-using-node-or-express
+ * - https://expressjs.com/en/api.html#res
 */
 require('dotenv').config();
 
@@ -28,7 +29,13 @@ server.use(bodyParser.text());
 server.post("/logindatabase", (request, response) => {
   response.set("Access-Control-Allow-Origin", "*");
   response.setHeader("Content-Type", "application/json");
-  response.send(request.body);
+  response.status(200);
+
+  // TO-DO: Look into database to determine if 
+  // login info exists.
+  //
+
+  response.send({loginAllowed: true});
 });
 
 server.post("/register", (request, response) => {
