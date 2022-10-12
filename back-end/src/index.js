@@ -111,6 +111,79 @@ server.post("/register", (request, response) => {
   }
 });
 
+
+//Pre-set task structure. //? Probably have to move this somewhere else later?
+class task {
+  constructor() {
+    this.id;     //unique ID for referencing.
+    this.extra;  //allows us to extend task functionality.
+  }
+};
+
+//Data sent when creating a pre-set task.
+server.post("/tasks", (request, response) => {
+  try {
+    response.set("Access-Control-Allow-Origin", "*");
+    response.setHeader("Content-Type", "application/json");
+  
+    var taskInfo = JSON.parse(request.body);
+
+
+    //Send to the testDB server.
+    //receieve success or fail based on whether task was added successfully or not
+    const taskAdded = true; //SOME FUNCTION HERE TO ADD THE TASK AND RETURN TRUE/FALSE.
+    
+    //Send task added status.
+    if(taskAdded) {
+      response.send("Task Created"); //confirm task
+    } else {
+      response.send("Task Not Created"); //task failed
+    }
+  } catch (error) {
+    sendError.sendError(error, response);
+  }
+});
+
+//Object sent when scheduling/recording tasks. //move this to front end?
+class scheduleTask {
+  constructorO() {
+    this.taskID; //taskID referred to.
+    this.start;  //start time of task
+    this.duration; //duration of task being added.
+  }
+};
+
+//Data sent to server when recording a task being done
+server.post("/scheduleTask", (request, response) => {
+  try {
+    response.set("Access-Control-Allow-Origin", "*");
+    response.setHeader("Content-Type", "application/json");
+
+    var infoForTask = JSON.parse(request.body);
+
+    //Get the current time, convert to UNIX timestamp
+    var currentDate = new Date();
+    var currentTime = currentDate.getTime();
+    const unixTimeStamp = currentTime/1000; //Get the UNIX date timestamp.
+
+    var sendTask = new scheduleTask();
+    sendTask.taskID = 0; //do this?
+    sendTask.start = unixTimeStamp;
+    sendTask.duration = 0; //get this from infoForTask
+
+    //Send "sendTask" to database
+    var sendTaskWork = true;
+    if(sendTaskWork) {
+      response.send("Task recorded");
+    } else {
+      response.send("Task not recorded");
+    }
+  } catch (error) {
+    sendError.sendError(error, response);
+  }
+});
+
+
 server.get("/testdb", testDB.get);
 
 server.listen(PORT, () => {
