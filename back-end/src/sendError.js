@@ -1,3 +1,7 @@
+/** --- SOURCES UTILIZED --- 
+ *  - https://jsdoc.app/about-getting-started.html
+ */
+
 const express = require("express");
 
 /** Sends to client information about the error that occured

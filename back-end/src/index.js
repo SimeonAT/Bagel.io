@@ -10,6 +10,7 @@
  * - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse
  * - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
  * - https://nodejs.org/en/knowledge/getting-started/what-is-require/
+ * - https://jsdoc.app/about-getting-started.html
  * */
 require('dotenv').config();
 
