@@ -12,6 +12,8 @@
  * - https://styled-components.com/docs/api#primary
  * - https://styled-components.com/
  * 
+ * - https://v5.reactrouter.com/web/guides/quick-start
+ * 
  * - https://www.w3schools.com/css/css_font.asp
  * - https://www.w3schools.com/css/css_inline-block.asp
  * - https://www.w3schools.com/colors/colors_picker.asp
@@ -24,6 +26,13 @@ import styled from "styled-components";
 import '../styles.css';
 import SignIn from "./LoginPage";
 import Copyright from "./Copyright";
+
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
 
 /* Enumerations that indicate what the user is
    currently doing on the site:
@@ -103,9 +112,11 @@ const StyledFooter = styled.footer`
 function WelcomeView(props) {
   return (
     <div>
-      <LoginButton onClick = {props.loginHandler}>
-        Login
-      </LoginButton>
+      <Link to = "/login">
+        <LoginButton onClick = {props.loginHandler}>
+          Login
+        </LoginButton>
+      </Link>
 
       <WelcomeDiv>
         <LogoDiv>
@@ -119,9 +130,11 @@ function WelcomeView(props) {
 
         </LogoDiv>
           
-        <RegisterButton onClick = {props.registerHandler}>
-          Make your account now!
-        </RegisterButton>
+        <Link to = "/register">
+          <RegisterButton>
+            Make your account now!
+          </RegisterButton>
+        </Link>
 
         <StyledFooter>
           <Copyright />
