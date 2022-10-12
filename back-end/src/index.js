@@ -39,23 +39,41 @@ var testDatabase = {
   user2: "pass2"
 };
 
+/** Returns JSON indicating whether or not 
+ *  username and password combination is in the database.
+ *  
+ *  @param {object} loginInfo - the object of with keys "username" and "password"
+ *  @returns {boolean} inDatabase - "true" if username and password in
+ *                                  database, and "false" otherwise.
+*/
+function checkDatabase(loginInfo) {
+  const username = loginInfo.username;
+  const password = loginInfo.password;
+
+  // If the user has an account, then their username
+  // must be mapped to a defined password in the database.
+  //
+  if ((testDatabase[username] !== undefined) &&
+      (password === testDatabase[username])) {
+
+    return true;
+  } 
+  else {
+    return false;
+  }
+
+  return; 
+}
+
 server.post("/logindatabase", (request, response) => {
   try {
     response.set("Access-Control-Allow-Origin", "*");
     response.setHeader("Content-Type", "application/json");
   
     const loginInfo = JSON.parse(request.body);
-    const username = loginInfo.username;
-    const password = loginInfo.password;
-
-    // If the user has an account, then their username
-    // must be mapped to a defined password in the database.
-    //
-    if ((testDatabase[username] !== undefined) &&
-        (password === testDatabase[username])) {
-
-      response.send({loginAllowed: true}); 
-    } 
+    if (checkDatabase(loginInfo) === true) {
+      response.send({loginAllowed: true});
+    }
     else {
       response.send({loginAllowed: false});
     }
