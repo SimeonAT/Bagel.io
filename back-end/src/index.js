@@ -139,8 +139,7 @@ server.post("/tasks", (request, response) => {
     } else {
       response.send("Task Not Created"); //task failed
     }
-  }
-  catch (error) {
+  } catch (error) {
     sendError.sendError(error, response);
   }
 });
@@ -156,6 +155,7 @@ class scheduleTask {
 
 //Data sent to server when recording a task being done
 server.post("/scheduleTask", (request, response) => {
+  try {
     response.set("Access-Control-Allow-Origin", "*");
     response.setHeader("Content-Type", "application/json");
 
@@ -178,6 +178,9 @@ server.post("/scheduleTask", (request, response) => {
     } else {
       response.send("Task not recorded");
     }
+  } catch (error) {
+    sendError.sendError(error, response);
+  }
 });
 
 
