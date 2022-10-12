@@ -111,6 +111,19 @@ server.post("/register", (request, response) => {
   }
 });
 
+server.post("/tasks", (request, response) => {
+  try {
+    response.set("Access-Control-Allow-Origin", "*");
+    response.setHeader("Content-Type", "application/json");
+  
+    const taskInfo = JSON.parse(request.body);
+    //Send to the testDB server.
+  }
+  catch (error) {
+    sendError.sendError(error, response);
+  }
+});
+
 server.get("/testdb", testDB.get);
 
 server.listen(PORT, () => {
