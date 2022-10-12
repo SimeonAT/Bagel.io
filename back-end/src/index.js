@@ -7,6 +7,8 @@
  * - https://stackoverflow.com/questions/19696240/proper-way-to-return-json-using-node-or-express
  * - https://expressjs.com/en/api.html#res
  * - https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#server_error_responses
+ * - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse
+ * - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
 */
 require('dotenv').config();
 
@@ -41,9 +43,6 @@ server.post("/logindatabase", (request, response) => {
     response.set("Access-Control-Allow-Origin", "*");
     response.setHeader("Content-Type", "application/json");
   
-    // TO-DO: Look into database to determine if 
-    // login info exists.
-    //
     const loginInfo = JSON.parse(request.body);
     const username = loginInfo.username;
     const password = loginInfo.password;
