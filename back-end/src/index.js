@@ -142,7 +142,14 @@ server.post("/tasks", (request, response) => {
   } catch (error) {
     sendError.sendError(error, response);
   }
+  //Also return a set of pre-set tasks
 });
+
+
+//This will send pre-set tasks to the front-end, the front-end will keep them saved in browser.
+//Front end will have HASH for each pre-set task.
+//server.post("/returnTasks", (request, response) => return a list of preset tasks [array])
+//Most importantly, it will return a specific hash/id referring to the task.
 
 //Object sent when scheduling/recording tasks. //move this to front end?
 class scheduleTask {
@@ -168,7 +175,8 @@ server.post("/scheduleTask", (request, response) => {
 
     var sendTask = new scheduleTask();
     sendTask.taskID = 0; //do this?
-    sendTask.start = unixTimeStamp;
+    sendTask.start = 0; //when you started the task.
+    //sendTask.start = unixTimeStamp;
     sendTask.duration = 0; //get this from infoForTask
 
     //Send "sendTask" to database
