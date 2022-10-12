@@ -15,6 +15,7 @@ require('dotenv').config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const testDB = require("./testDB");
+const sendError = require("./sendError");
 
 const server = express();
 const PORT = 8000;
@@ -60,13 +61,7 @@ server.post("/logindatabase", (request, response) => {
     }
   }
   catch (error) {
-    console.error(error);
-
-    response.status(500);
-    response.send({
-      error: true,
-      message: "Please check back-end console for error info."
-    });
+    sendError.sendError(error, response);
   }
 });
 
@@ -89,13 +84,7 @@ server.post("/register", (request, response) => {
     }
   }
   catch (error) {
-    console.error(error);
-
-    response.status(500);
-    response.send({
-      error: true,
-      message: "Please check back-end console for error info."
-    });
+    sendError.sendError(error, response);
   }
 });
 
