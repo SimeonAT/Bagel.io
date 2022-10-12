@@ -9,7 +9,8 @@
  * - https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#server_error_responses
  * - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse
  * - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
-*/
+ * - https://nodejs.org/en/knowledge/getting-started/what-is-require/
+ * */
 require('dotenv').config();
 
 const express = require("express");
@@ -39,30 +40,26 @@ var testDatabase = {
   user2: "pass2"
 };
 
-/** Returns JSON indicating whether or not 
- *  username and password combination is in the database.
+/** Returns JSON indicating whether or not username
+ *  is in the database
  *  
  *  @param {object} loginInfo - the object of with keys "username" and "password"
- *  @returns {boolean} inDatabase - "true" if username and password in
- *                                  database, and "false" otherwise.
+ *  @returns {boolean} inDatabase - "true" if username in database, 
+ *                                  and "false" otherwise.
 */
-function checkDatabase(loginInfo) {
+function checkUsername(loginInfo) {
   const username = loginInfo.username;
-  const password = loginInfo.password;
 
   // If the user has an account, then their username
   // must be mapped to a defined password in the database.
   //
-  if ((testDatabase[username] !== undefined) &&
-      (password === testDatabase[username])) {
+  if (testDatabase[username] !== undefined) {
 
     return true;
   } 
   else {
     return false;
   }
-
-  return; 
 }
 
 server.post("/logindatabase", (request, response) => {
@@ -71,12 +68,18 @@ server.post("/logindatabase", (request, response) => {
     response.setHeader("Content-Type", "application/json");
   
     const loginInfo = JSON.parse(request.body);
-    if (checkDatabase(loginInfo) === true) {
-      response.send({loginAllowed: true});
+
+    if (checkUsername(loginInfo) === true) {
+      const username = loginInfo.username;
+
+      if (loginInfo.password === testDatabase[username]) {
+        response.send({loginAllowed: true});
+        return;
+      }
     }
-    else {
-      response.send({loginAllowed: false});
-    }
+
+    response.send({loginAllowed: false});
+    return;
   }
   catch (error) {
     sendError.sendError(error, response);
@@ -89,12 +92,13 @@ server.post("/register", (request, response) => {
     response.setHeader("Content-Type", "application/json");
   
     const loginInfo = JSON.parse(request.body);
-    const username = loginInfo.username;
-    const password = loginInfo.password;
 
     // If the username does not exist in DB, create new key-value pair
-    if (testDatabase[username] === undefined) {
+    if (checkUsername(loginInfo) === false) {
+      const username = loginInfo.username;
+      const password = loginInfo.password; 
       testDatabase[username] = password;
+
       response.send({loginAllowed: true}); 
     } 
     else {
