@@ -27,23 +27,7 @@ import '../styles.css';
 import SignIn from "./LoginPage";
 import Copyright from "./Copyright";
 
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
-
-/* Enumerations that indicate what the user is
-   currently doing on the site:
-
-   WELCOME => user is viewing the welcome page
-   REGISTER => user is creating an account
-   LOGIN => user is entering their login information
-*/
-const WELCOME = 0;
-const REGISTER = 1;
-const LOGIN = 2;
+import {Link} from "react-router-dom";
 
 const WelcomeDiv = styled.div`
   display: flex;
@@ -109,7 +93,7 @@ const StyledFooter = styled.footer`
   margin-top: 5em;
 `;
 
-function WelcomeView(props) {
+function HeroView(props) {
   return (
     <div>
       <Link to = "/login">
@@ -140,57 +124,6 @@ function WelcomeView(props) {
           <Copyright />
         </StyledFooter>
       </WelcomeDiv>
-    </div>
-  );
-}
-
-function HeroView() { 
-  let [userStatus, changeStatus] = React.useState(WELCOME);
-
-  const loginHandler = async function() {
-    changeStatus(LOGIN);
-    return;
-  }
-
-  const registerHandler = async function() {
-    changeStatus(REGISTER);
-    return;
-  }
-
-  /* Change what is currently being shown on the webpage
-     depending on the action that the user wants to take.
-  */
-  const changeView = function() {
-    if (userStatus === WELCOME) {
-      return (
-        <div>
-          <WelcomeView loginHandler = {loginHandler} 
-            registerHandler = {registerHandler} />
-        </div>
-      );
-    }
-    else if (userStatus === LOGIN) {
-      return (
-        <SignIn />
-      );
-    } 
-    else if (userStatus === REGISTER) {
-      return (
-        <div>
-          <h3>404 Not Found</h3>
-          <p>
-            Registration page still under construction.
-          </p>
-        </div>
-      );
-    }
-      
-      return;
-    }
-
-  return (
-    <div>
-      {changeView()}
     </div>
   );
 }
