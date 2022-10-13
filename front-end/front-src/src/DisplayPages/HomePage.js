@@ -33,6 +33,7 @@ import Copyright from "./Copyright";
 const BackendURL = "http://localhost:8000";
 const LoginURL = BackendURL + "/logindatabase";
 const RegisterURL = BackendURL + "/register";
+const HomeURL = BackendURL + "/home";
 
 const theme = createTheme( {
   palette: {
@@ -45,7 +46,7 @@ const theme = createTheme( {
   },
   });
 
-export default function Register() {
+export default function Home() {
 
   var numTasks = 3;
 
