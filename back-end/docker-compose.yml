@@ -1,5 +1,3 @@
-version: '3.7'
-
 services:
   postgres:
     container_name: cse115a-timelogger-backend
