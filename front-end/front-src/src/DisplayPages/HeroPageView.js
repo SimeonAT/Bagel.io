@@ -80,6 +80,15 @@ const Button = styled.button`
   background-color: Lavender;
 `;
 
+// FORTESTING
+const TestButton = styled(Button)`
+  width: 800px; 
+  font-size: 20px;
+  position: fixed;
+  left: 0%;
+  top: 0%;
+`;
+
 const LoginButton = styled(Button)`
   position: fixed;
   left: 85%;
@@ -93,7 +102,19 @@ const StyledFooter = styled.footer`
   margin-top: 5em;
 `;
 
+// FORTESTING
+function fetchDB(setButtonText) {
+  fetch('http://localhost:8000/testdb')
+    .then((httpResponse) => {
+      return httpResponse.json();
+    })
+    .then((responseBody) => {
+      setButtonText(responseBody.displayStr)
+    });
+}
+
 function HeroView(props) {
+  const [buttonText, setButtonText] = React.useState('CLick to Test Database')
   return (
     <div>
       <Link to = "/login">
@@ -113,6 +134,11 @@ function HeroView(props) {
           <Perfect>Perfect!</Perfect>
 
         </LogoDiv>
+        
+        {/* FORTESTING */}
+        <TestButton onClick = {(event) => {fetchDB(setButtonText)}}>
+          {buttonText}
+        </TestButton>
           
         <Link to = "/register">
           <RegisterButton>

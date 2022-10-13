@@ -191,8 +191,17 @@ server.post("/scheduleTask", (request, response) => {
   }
 });
 
-
+// FORTESTING
 server.get("/testdb", testDB.get);
+// (request, response) => {
+//   try {
+//     response.set("Access-Control-Allow-Origin", "*");
+//     response.setHeader("Content-Type", "application/json");
+//     response.json({displayStr: 'yo wsp'});
+//   } catch (error) {
+//     sendError.sendError(error, response);
+//   }
+// }
 
 server.listen(PORT, () => {
   console.log("Server is working");
