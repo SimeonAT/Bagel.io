@@ -114,7 +114,7 @@ function fetchDB(setButtonText) {
 }
 
 function HeroView(props) {
-  const [buttonText, setButtonText] = React.useState('CLick to Test Database')
+  const [buttonText, setButtonText] = React.useState('Click to Test Database')
   return (
     <div>
       <Link to = "/login">
