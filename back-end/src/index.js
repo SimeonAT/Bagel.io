@@ -153,7 +153,7 @@ server.post("/tasks", (request, response) => {
 
 //Object sent when scheduling/recording tasks. //move this to front end?
 class scheduleTask {
-  constructorO() {
+  constructor() {
     this.taskID; //taskID referred to.
     this.start;  //start time of task
     this.duration; //duration of task being added.
