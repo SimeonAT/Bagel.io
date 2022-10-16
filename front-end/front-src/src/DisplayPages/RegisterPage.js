@@ -150,14 +150,14 @@ export default function Register() {
             autoComplete="current-password"
           />
 
-<TextField
+          <TextField
             margin="normal"
             required
             fullWidth
             name="pass2"
             label="Confirm Password"
-            type="password2"
-            id="password2"
+            type="password"
+            id="confirm-password"
             autoComplete="password2"
           />
           {renderErrorMessage("passwords_must_match")}
