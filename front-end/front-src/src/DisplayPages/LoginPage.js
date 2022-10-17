@@ -15,6 +15,7 @@
    - https://v5.reactrouter.com/web/example/auth-workflow
    - https://bobbyhadz.com/blog/react-export-redirect-was-not-found-in-react-router-dom
    - https://reactrouter.com/en/main/components/navigate
+   - https://reactjs.org/docs/components-and-props.html
 */
 import {useState} from "react";
 import * as React from 'react';
@@ -32,7 +33,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Copyright from "./Copyright";
 import Home from './HomePage';
-import {Navigate, Route} from "react-router-dom";
+import {Navigate, BrowserRouter, Routes, Route} from "react-router-dom";
 
 const BackendURL = "http://localhost:8000";
 const LoginURL = BackendURL + "/logindatabase";
@@ -49,25 +50,25 @@ const theme = createTheme( {
   },
   });
 
-export default function SignIn() {
+export default function SignIn(props) {
   const [errorMessage, setErrorMessages] = useState({});
   const [loginAllowed, setLoginAllowed] = useState(false);
 
   const errors = {
-    u_name: "invalid username",
+    userName: "invalid username",
     pass: "invalid password"
   };
 
   const handleSubmit = async function(event) {
     event.preventDefault();
-    let { u_name, pass } = document.forms[0];
+    let { userName, pass } = document.forms[0];
 
     // Set username and password to the backend server
     const httpResponse = await fetch(LoginURL, {
       mode: "cors",
       method: "post",
       "Content-Type": "application/json",
-      body: JSON.stringify({username: u_name.value, password: pass.value})
+      body: JSON.stringify({username: userName.value, password: pass.value})
     });
 
     const responseBody = await httpResponse.json();
@@ -75,6 +76,9 @@ export default function SignIn() {
 
     if (responseBody.loginAllowed === true) {
       setLoginAllowed(true);
+      
+      props.setUsername(userName.value);
+      props.setPassword(pass.value);
     }
     else {
       setErrorMessages({ name: "pass", message: errors.pass });
@@ -108,12 +112,12 @@ export default function SignIn() {
             fullWidth
             id="username"
             label="Username"
-            name="u_name"
+            name="userName"
             //autoComplete="email"
             autoFocus
             
           />
-          {renderErrorMessage("u_name")}
+          {renderErrorMessage("userName")}
           <TextField
             margin="normal"
             required

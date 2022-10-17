@@ -15,15 +15,28 @@ import RegisterPage from './DisplayPages/RegisterPage';
 import HomePage from './DisplayPages/HomePage';
 //import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React from "react";
 
 function Main() {
+  const [loginUsername, setUsername] = React.useState("");
+  const [loginPassword, setPassword] = React.useState("");
+
   return (
     <BrowserRouter>
       <Routes>
         <Route exact path='/' element={< HeroView />}></Route>
-        <Route exact path='/login' element={< LoginPage />}></Route>
+        <Route exact path='/login' element={
+          <LoginPage setUsername = {setUsername}
+            setPassword = {setPassword}/>
+
+        }></Route>
         <Route exact path='/register' element={< RegisterPage />}></Route>
-        <Route exact path='/home' element={< HomePage />}></Route>
+        <Route exact path='/home' element={
+          < HomePage 
+            username = {loginUsername}
+            password = {loginPassword}
+          />  
+        }></Route>
       </Routes>
     </BrowserRouter>
   );

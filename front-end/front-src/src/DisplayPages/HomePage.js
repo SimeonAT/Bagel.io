@@ -46,8 +46,7 @@ const theme = createTheme( {
   },
   });
 
-export default function Home() {
-
+export default function Home(props) {
   var numTasks = 3;
 
   const createTask = async function(event) {
@@ -177,6 +176,7 @@ return (
   <div className="HomePage">
     <div className="taskView">
         {renderPage}
+        {console.log(props)}
     </div>
   </div>
 );
