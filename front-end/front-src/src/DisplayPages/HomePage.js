@@ -47,7 +47,10 @@ const theme = createTheme( {
   });
 
 export default function Home(props) {
-  var numTasks = 3;
+  const username = props.username;
+  const password = props.password;
+
+  let numTasks = 3;
 
   const createTask = async function(event) {
     event.preventDefault();
@@ -75,7 +78,7 @@ export default function Home(props) {
         alignItems: 'center'
       }}>
         <Typography component="h1" variant="h4" align="center">
-          Welcome User! 
+          Welcome {username}! 
         </Typography>
       </TableRow>
 
@@ -176,7 +179,6 @@ return (
   <div className="HomePage">
     <div className="taskView">
         {renderPage}
-        {console.log(props)}
     </div>
   </div>
 );
