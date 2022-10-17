@@ -1,2 +1,2 @@
-cd back-end/
-docker compose down
+sudo cd back-end/
+sudo docker compose down

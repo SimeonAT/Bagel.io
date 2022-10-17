@@ -82,7 +82,7 @@ const Button = styled.button`
 
 // FORTESTING
 const TestButton = styled(Button)`
-  width: 800px; 
+  width: 200px; 
   font-size: 20px;
   position: fixed;
   left: 0%;

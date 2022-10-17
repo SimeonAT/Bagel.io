@@ -1,3 +1,4 @@
 cd back-end/
-docker compose up -d
-npm start
+sudo docker compose up -d
+cd ../
+sudo npm start
