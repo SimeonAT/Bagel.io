@@ -10,6 +10,7 @@
    - https://www.npmjs.com/package/body-parser
    - https://dmitripavlutin.com/fetch-with-json/
    - http://expressjs.com/en/resources/middleware/body-parser.html#bodyparserjsonoptions
+   - https://reactrouter.com/en/main/components/navigate
 */
 import {useState} from "react";
 import * as React from 'react';
@@ -26,6 +27,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Copyright from "./Copyright";
+import {Navigate} from "react-router-dom"
 
 const BackendURL = "http://localhost:8000";
 const LoginURL = BackendURL + "/logindatabase";
@@ -42,7 +44,7 @@ const theme = createTheme( {
   },
   });
 
-export default function Register() {
+export default function Register(props) {
   const [errorMessage, setErrorMessages] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -86,6 +88,9 @@ export default function Register() {
     
     if (responseBody.loginAllowed === true) {
       setIsSubmitted(true);
+
+      props.setUsername(u_name.value);
+      props.setPassword(pass.value);
     }
     else {
       setErrorMessages({ name: "u_name_taken", message: errors.u_name_taken });
@@ -184,7 +189,9 @@ return (
   <div className="Login">
     <div className="login-form">
       <div className="title"></div>
-      {isSubmitted ? <div>Account successfully created!</div> : renderForm}
+      {isSubmitted ? (
+        <Navigate to = "/Home" />
+      ) : renderForm}
     </div>
   </div>
 );

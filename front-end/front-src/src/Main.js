@@ -6,6 +6,7 @@
  * - https://www.stackhawk.com/blog/react-cors-guide-what-it-is-and-how-to-enable-it/
  * - https://developer.mozilla.org/en-US/docs/Web/API/Response
  * - https://reactjs.org/docs/hooks-state.html
+ * - https://www.robinwieruch.de/react-event-handler/
 */
 
 import './styles.css';
@@ -30,9 +31,14 @@ function Main() {
             setPassword = {setPassword}/>
 
         }></Route>
-        <Route exact path='/register' element={< RegisterPage />}></Route>
+        <Route exact path='/register' element={
+          <RegisterPage 
+           setUsername = {setUsername}
+           setPassword = {setPassword}
+          />
+        }></Route>
         <Route exact path='/home' element={
-          < HomePage 
+          <HomePage 
             username = {loginUsername}
             password = {loginPassword}
           />  
