@@ -37,7 +37,6 @@ function Main() {
         <Route exact path='/login' element={
           <LoginPage setUsername = {setUsername}
             setPassword = {setPassword}/>
-
         }></Route>
         <Route exact path='/register' element={
           <RegisterPage 
