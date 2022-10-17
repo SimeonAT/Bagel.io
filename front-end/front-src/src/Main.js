@@ -19,6 +19,14 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import React from "react";
 
 function Main() {
+  /** Here's an idea we should try:
+   *      Rather than sending an HTTP request right when we login,
+   *      we can get the server to send user data in its HTTP response
+   *      payload allowing the user to login.
+   * 
+   *      All that data can be passed as props from the LoginPage,
+   *      to Main, then passed down as props to the Home Page.
+   */
   const [loginUsername, setUsername] = React.useState("");
   const [loginPassword, setPassword] = React.useState("");
 
