@@ -10,6 +10,11 @@
    - https://www.npmjs.com/package/body-parser
    - https://dmitripavlutin.com/fetch-with-json/
    - http://expressjs.com/en/resources/middleware/body-parser.html#bodyparserjsonoptions
+   - https://v5.reactrouter.com/web/guides/quick-start/2nd-example-nested-routing
+   - https://v5.reactrouter.com/web/api/Redirect
+   - https://v5.reactrouter.com/web/example/auth-workflow
+   - https://bobbyhadz.com/blog/react-export-redirect-was-not-found-in-react-router-dom
+   - https://reactrouter.com/en/main/components/navigate
 */
 import {useState} from "react";
 import * as React from 'react';
@@ -26,6 +31,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Copyright from "./Copyright";
+import Home from './HomePage';
+import {Navigate, Route} from "react-router-dom";
 
 const BackendURL = "http://localhost:8000";
 const LoginURL = BackendURL + "/logindatabase";
@@ -44,7 +51,7 @@ const theme = createTheme( {
 
 export default function SignIn() {
   const [errorMessage, setErrorMessages] = useState({});
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [loginAllowed, setLoginAllowed] = useState(false);
 
   const errors = {
     u_name: "invalid username",
@@ -67,7 +74,7 @@ export default function SignIn() {
     console.log(responseBody);
 
     if (responseBody.loginAllowed === true) {
-      setIsSubmitted(true);
+      setLoginAllowed(true);
     }
     else {
       setErrorMessages({ name: "pass", message: errors.pass });
@@ -140,8 +147,9 @@ export default function SignIn() {
 return (
   <div className="Login">
     <div className="login-form">
-      <div className="title"></div>
-      {isSubmitted ? <div>User is successfully logged in</div> : renderForm}
+        {loginAllowed ? (
+          <Navigate to = "/home" />
+        ) : renderForm}
     </div>
   </div>
 );
