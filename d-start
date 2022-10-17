@@ -1,0 +1,3 @@
+cd back-end/
+docker compose up -d
+npm start
