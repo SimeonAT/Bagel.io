@@ -49,6 +49,7 @@ const theme = createTheme( {
 export default function Home(props) {
   const username = props.username;
   const password = props.password;
+  const userInfo = props.userInfo;
 
   let numTasks = 3;
 
@@ -179,6 +180,7 @@ return (
   <div className="HomePage">
     <div className="taskView">
         {renderPage}
+        {console.log(userInfo)}
     </div>
   </div>
 );
