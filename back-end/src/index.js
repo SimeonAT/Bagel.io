@@ -12,6 +12,7 @@
  * - https://nodejs.org/en/knowledge/getting-started/what-is-require/
  * - https://jsdoc.app/about-getting-started.html
  * - https://www.npmjs.com/package/body-parser
+ * - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/push
  * */
 require('dotenv').config();
 
@@ -32,6 +33,39 @@ const PORT = 8000;
           Any help to fix this would be greatly appreciated.
 */
 server.use(bodyParser.text());
+
+/** 
+ * Gene's Task Class
+ */
+class Task {
+  constructor(name, startDate, tag) {
+    this.name = name;
+    this.startDate = startDate;
+    this.tag = tag;
+  }
+}
+
+server.post("/scheduletask", (request, response) => {
+  try {
+    response.set("Access-Control-Allow-Origin", "*");
+    response.setHeader("Content-Type", "application/json");
+    
+    const payload = JSON.parse(request.body);
+    const username = payload.username;
+    const taskInfo = payload.taskInfo;
+
+    let newTask = new Task(taskInfo.name, taskInfo.startDate,
+      taskInfo.tag);
+    testDatabase[username].tasks.push(newTask);
+
+    response.status(200);
+    response.send(testDatabase[username].tasks);
+  }
+  catch (error) {
+    sendError.sendError(error);
+  }
+  
+});
 
 /** Temporary Object that will allow us to test
  *  front-end's and back-end's ability to let

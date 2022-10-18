@@ -37,6 +37,7 @@ const BackendURL = "http://localhost:8000";
 const LoginURL = BackendURL + "/logindatabase";
 const RegisterURL = BackendURL + "/register";
 const HomeURL = BackendURL + "/home";
+const scheduleTaskURL = BackendURL + "/scheduletask";
 
 const theme = createTheme( {
   palette: {
@@ -58,8 +59,21 @@ export default function Home(props) {
 
   const createTask = async function(event) {
     event.preventDefault();
-    numTasks +=1;
+    numTasks += 1;
     window.location.reload(false);
+    console.log(event.target.value);
+
+    const tasksPayload = await fetch(scheduleTaskURL, {
+      method: "post",
+      mode: "cors",
+      "Content-Type": "application/json",
+      body: JSON.stringify({
+        username: username
+      })
+    });
+
+    tasksPayload = JSON.parse(tasksPayload);
+    console.log(tasksPayload);
   }
 
   const taskDisplayList = [];
@@ -184,7 +198,6 @@ return (
     <div className="taskView">
         {username === undefined ? <Navigate to = "/login" /> :
          renderPage}
-        {console.log(userInfo)}
     </div>
   </div>
 );
