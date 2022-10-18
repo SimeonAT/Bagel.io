@@ -29,25 +29,31 @@ function Main() {
    */
   const [loginUsername, setUsername] = React.useState("");
   const [loginPassword, setPassword] = React.useState("");
+  const [userInfo, setUserInfo] = React.useState(undefined);
 
   return (
     <BrowserRouter>
       <Routes>
         <Route exact path='/' element={< HeroView />}></Route>
         <Route exact path='/login' element={
-          <LoginPage setUsername = {setUsername}
-            setPassword = {setPassword}/>
+          <LoginPage 
+           setUsername = {setUsername}
+           setPassword = {setPassword}
+           setUserInfo = {setUserInfo}
+           />
         }></Route>
         <Route exact path='/register' element={
           <RegisterPage 
            setUsername = {setUsername}
            setPassword = {setPassword}
+           setUserInfo = {setUserInfo}
           />
         }></Route>
         <Route exact path='/home' element={
           <HomePage 
             username = {loginUsername}
             password = {loginPassword}
+            userInfo = {userInfo}
           />  
         }></Route>
       </Routes>

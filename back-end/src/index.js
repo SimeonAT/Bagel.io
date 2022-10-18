@@ -75,7 +75,10 @@ server.post("/logindatabase", (request, response) => {
       const username = loginInfo.username;
 
       if (loginInfo.password === testDatabase[username].password) {
-        response.send({loginAllowed: true});
+        response.send({
+          loginAllowed: true,
+          payload: testDatabase[username]
+        });
         return;
       }
     }
@@ -100,13 +103,17 @@ server.post("/register", (request, response) => {
     // If the username does not exist in DB, create new key-value pair
     
     if (checkUsername(loginInfo) === false) {
-      testDatabase[username] = {
+      const databaseEntry = {
         username: username,
         password: password,
         tasks: []
-      }
+      };
+      testDatabase[username] = databaseEntry;
 
-      response.send({loginAllowed: true}); 
+      response.send({
+        loginAllowed: true,
+        payload: databaseEntry
+      });
     } 
     else {
       response.send({loginAllowed: false});
