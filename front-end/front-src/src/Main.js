@@ -27,8 +27,8 @@ function Main() {
    *      All that data can be passed as props from the LoginPage,
    *      to Main, then passed down as props to the Home Page.
    */
-  const [loginUsername, setUsername] = React.useState("");
-  const [loginPassword, setPassword] = React.useState("");
+  const [loginUsername, setUsername] = React.useState(undefined);
+  const [loginPassword, setPassword] = React.useState(undefined);
   const [userInfo, setUserInfo] = React.useState(undefined);
 
   return (

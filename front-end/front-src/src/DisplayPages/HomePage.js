@@ -10,6 +10,8 @@
    - https://www.npmjs.com/package/body-parser
    - https://dmitripavlutin.com/fetch-with-json/
    - http://expressjs.com/en/resources/middleware/body-parser.html#bodyparserjsonoptions
+   - https://reactrouter.com/en/main/components/navigate
+   - https://reactjs.org/docs/components-and-props.html
 */
 import {useState} from "react";
 import * as React from 'react';
@@ -29,6 +31,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Copyright from "./Copyright";
+import {Navigate} from "react-router-dom";
 
 const BackendURL = "http://localhost:8000";
 const LoginURL = BackendURL + "/logindatabase";
@@ -179,7 +182,8 @@ export default function Home(props) {
 return (
   <div className="HomePage">
     <div className="taskView">
-        {renderPage}
+        {username === undefined ? <Navigate to = "/login" /> :
+         renderPage}
         {console.log(userInfo)}
     </div>
   </div>

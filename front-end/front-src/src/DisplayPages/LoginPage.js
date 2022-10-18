@@ -33,7 +33,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Copyright from "./Copyright";
 import Home from './HomePage';
-import {Navigate, BrowserRouter, Routes, Route} from "react-router-dom";
+import {Navigate} from "react-router-dom";
 
 const BackendURL = "http://localhost:8000";
 const LoginURL = BackendURL + "/logindatabase";
