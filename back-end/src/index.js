@@ -38,8 +38,8 @@ server.use(bodyParser.text());
  *  users login to their dashboard. 
  */
 var testDatabase = {
-  user1: "pass1",
-  user2: "pass2"
+  user1: {username: "user1", password: "pass1", tasks: []},
+  user2: {username: "user2", password: "pass2", tasks: []}
 };
 
 /** Returns JSON indicating whether or not username
@@ -74,7 +74,7 @@ server.post("/logindatabase", (request, response) => {
     if (checkUsername(loginInfo) === true) {
       const username = loginInfo.username;
 
-      if (loginInfo.password === testDatabase[username]) {
+      if (loginInfo.password === testDatabase[username].password) {
         response.send({loginAllowed: true});
         return;
       }
@@ -94,12 +94,17 @@ server.post("/register", (request, response) => {
     response.setHeader("Content-Type", "application/json");
   
     const loginInfo = JSON.parse(request.body);
+    const username = loginInfo.username;
+    const password = loginInfo.password;
 
     // If the username does not exist in DB, create new key-value pair
+    
     if (checkUsername(loginInfo) === false) {
-      const username = loginInfo.username;
-      const password = loginInfo.password; 
-      testDatabase[username] = password;
+      testDatabase[username] = {
+        username: username,
+        password: password,
+        tasks: []
+      }
 
       response.send({loginAllowed: true}); 
     } 

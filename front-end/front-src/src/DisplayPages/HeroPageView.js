@@ -109,7 +109,7 @@ function fetchDB(setButtonText) {
       return httpResponse.json();
     })
     .then((responseBody) => {
-      setButtonText(responseBody.displayStr)
+      setButtonText(responseBody.displayStr);
     });
 }
 
