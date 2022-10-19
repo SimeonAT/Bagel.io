@@ -72,6 +72,9 @@ export default function SignIn(props) {
     });
 
     const responseBody = await httpResponse.json();
+    console.log(responseBody);
+    console.log(responseBody.payload.tasks);
+
 
     if (responseBody.loginAllowed === true) {
       setLoginAllowed(true);

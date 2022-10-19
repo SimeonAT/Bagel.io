@@ -38,6 +38,7 @@ const LoginURL = BackendURL + "/logindatabase";
 const RegisterURL = BackendURL + "/register";
 const HomeURL = BackendURL + "/home";
 const scheduleTaskURL = BackendURL + "/scheduletask";
+const GetTasks = BackendURL + "/getTasks";
 
 const theme = createTheme( {
   palette: {
@@ -54,8 +55,10 @@ export default function Home(props) {
   const username = props.username;
   const password = props.password;
   const userInfo = props.userInfo;
-
-  let numTasks = 3;
+  console.log(userInfo);
+  console.log(userInfo.tasks);
+  var tempArray = userInfo.tasks;
+  console.log(userInfo.tasks.length);
 
   const createTask = async function(event) {
     event.preventDefault();
@@ -76,11 +79,28 @@ export default function Home(props) {
     console.log(tasksPayload);
   }
 
-  const taskDisplayList = [];
-  for (let i = 0; i < numTasks; i++) {
-    const label = "Task " + i;
-    const checked = i % 2 == 0 ? true : false;
-    taskDisplayList.push(<FormControlLabel control={checked ? <Checkbox defaultChecked /> : <Checkbox />} label={label} />);
+  // const getTaskList = async function() {
+  //     //Get user's tasks from backend server
+  //   const httpResponse = await fetch(GetTasks, {
+  //     mode: "cors",
+  //     method: "post",
+  //     "Content-Type": "application/json",
+  //     body: JSON.stringify({username: username})
+  //   });
+
+  //   const responseBody = await httpResponse.json();
+  //   console.log(responseBody.taskList);
+
+  // }
+  
+  var numTasks = 3;
+  var taskDisplayList = [];
+
+
+  for (let i = 0; i < userInfo.tasks.length; i++) {
+    const label = userInfo.tasks[i].name;
+    const complete = userInfo.tasks[i].complete;
+    taskDisplayList.push(<FormControlLabel control={complete ? <Checkbox defaultChecked /> : <Checkbox />} label={label} />);
   } 
 
   const renderPage = (

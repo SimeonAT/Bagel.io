@@ -38,10 +38,11 @@ server.use(bodyParser.text());
  * Gene's Task Class
  */
 class Task {
-  constructor(name, startDate, tag) {
+  constructor(name, startDate, tag, complete) {
     this.name = name;
     this.startDate = startDate;
     this.tag = tag;
+    this.complete = complete;
   }
 }
 
@@ -67,12 +68,45 @@ server.post("/scheduletask", (request, response) => {
   
 });
 
+/** Temporary Task Objects that will allow us to test
+ *  front-end's and back-end's ability to send task lists back and forth 
+ */
+ var tempTaskList = [];
+ for(let i = 0; i < 5; i++) {
+  var label = '';
+  var complete = true;
+    switch (i) {
+      case 0:
+        label = "Wake up";
+        complete = true;
+        break;
+      case 1:
+        label = "Shower";
+        complete = true;
+        break;
+      case 2:
+        label = "Go sky diving";
+        complete = false;
+        break;
+      case 3:
+        label = "Shower again";
+        complete = false;
+        break;
+      case 4:
+        label = "Tell your friends you hate skydiving";
+        complete = false;
+        break;
+    }
+    var tempTask = new Task(label, new Date(), "Work", complete );
+    tempTaskList.push(tempTask);
+ }
+
 /** Temporary Object that will allow us to test
  *  front-end's and back-end's ability to let
  *  users login to their dashboard. 
  */
 var testDatabase = {
-  user1: {username: "user1", password: "pass1", tasks: []},
+  user1: {username: "user1", password: "pass1", tasks: tempTaskList},
   user2: {username: "user2", password: "pass2", tasks: []}
 };
 
@@ -234,6 +268,31 @@ server.post("/scheduleTask", (request, response) => {
       response.send("Task not recorded");
     }
   } catch (error) {
+    sendError.sendError(error, response);
+  }
+});
+
+//Get task list from DB using username as key & send result to front-end
+server.post("/getTasks", (request, response) => {
+  try {
+    response.set("Access-Control-Allow-Origin", "*");
+    response.setHeader("Content-Type", "application/json");
+  
+    const loginInfo = JSON.parse(request.body);
+    const username = loginInfo.username;
+
+    //Get task list from DB using username as key
+    if (checkUsername(loginInfo) === true) {
+      const taskList = testDatabase[username].tasks;
+      //send task list to front-end
+      response.send({tasksList: taskList });
+    } 
+    else {
+      //send empty list, which will signify that there are no tasks in the list for this user
+      response.send({tasksList: [] });
+    }
+  }
+  catch (error) {
     sendError.sendError(error, response);
   }
 });
