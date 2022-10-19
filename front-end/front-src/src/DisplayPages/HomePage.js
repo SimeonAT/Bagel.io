@@ -12,6 +12,7 @@
    - http://expressjs.com/en/resources/middleware/body-parser.html#bodyparserjsonoptions
    - https://reactrouter.com/en/main/components/navigate
    - https://reactjs.org/docs/components-and-props.html
+   - https://reactjs.org/docs/context.html
 */
 import {useState} from "react";
 import * as React from 'react';
@@ -52,19 +53,16 @@ const theme = createTheme( {
   });
 
 export default function Home(props) {
+  console.log(props);
   const username = props.username;
   const password = props.password;
   const userInfo = props.userInfo;
-  console.log(userInfo);
-  console.log(userInfo.tasks);
-  var tempArray = userInfo.tasks;
-  console.log(userInfo.tasks.length);
+
+  const tasksToDisplay = props.userInfo.tasks;
 
   const createTask = async function(event) {
     event.preventDefault();
-    numTasks += 1;
     window.location.reload(false);
-    console.log(event.target.value);
 
     const tasksPayload = await fetch(scheduleTaskURL, {
       method: "post",
@@ -76,30 +74,13 @@ export default function Home(props) {
     });
 
     tasksPayload = JSON.parse(tasksPayload);
-    console.log(tasksPayload);
   }
-
-  // const getTaskList = async function() {
-  //     //Get user's tasks from backend server
-  //   const httpResponse = await fetch(GetTasks, {
-  //     mode: "cors",
-  //     method: "post",
-  //     "Content-Type": "application/json",
-  //     body: JSON.stringify({username: username})
-  //   });
-
-  //   const responseBody = await httpResponse.json();
-  //   console.log(responseBody.taskList);
-
-  // }
   
-  var numTasks = 3;
   var taskDisplayList = [];
 
-
-  for (let i = 0; i < userInfo.tasks.length; i++) {
-    const label = userInfo.tasks[i].name;
-    const complete = userInfo.tasks[i].complete;
+  for (let i = 0; i < tasksToDisplay.length; i++) {
+    const label = tasksToDisplay[i].name;
+    const complete = tasksToDisplay[i].complete;
     taskDisplayList.push(<FormControlLabel control={complete ? <Checkbox defaultChecked /> : <Checkbox />} label={label} />);
   } 
 

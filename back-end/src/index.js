@@ -97,9 +97,10 @@ server.post("/scheduletask", (request, response) => {
         complete = false;
         break;
     }
+
     var tempTask = new Task(label, new Date(), "Work", complete );
-    tempTaskList.push(tempTask);
- }
+  tempTaskList.push(tempTask);
+}
 
 /** Temporary Object that will allow us to test
  *  front-end's and back-end's ability to let
