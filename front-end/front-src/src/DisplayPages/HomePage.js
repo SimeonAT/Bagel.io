@@ -18,6 +18,7 @@
    - https://stackoverflow.com/questions/51521237/onsubmit-is-not-working-in-react-js
 */
 import {useState} from "react";
+import {useRef} from 'react';
 import * as React from 'react';
 //import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -36,12 +37,17 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Copyright from "./Copyright";
 import {Navigate} from "react-router-dom";
+import dayjs, { Dayjs } from 'dayjs';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import Stack from '@mui/material/Stack';
 
 const BackendURL = "http://localhost:8000";
 const LoginURL = BackendURL + "/logindatabase";
 const RegisterURL = BackendURL + "/register";
 const HomeURL = BackendURL + "/home";
-const scheduleTaskURL = BackendURL + "/scheduletask";
+const scheduleTaskURL = BackendURL + "/scheduleTask";
 const GetTasks = BackendURL + "/getTasks";
 
 const theme = createTheme( {
@@ -78,26 +84,55 @@ export default function Home(props) {
       );
     }
   }
-  
-  const createTask = async function(event) {
-    console.log("Hello world!");
-    event.preventDefault();
-    window.location.reload(false);
 
-    const tasksPayload = await fetch(scheduleTaskURL, {
-      method: "post",
+  const [startValue, setStartValue] = React.useState(
+    dayjs()
+  );
+
+  const handleStartChange = (newValue) => {
+    setStartValue(newValue);
+  };
+
+  const [endValue, setEndValue] = React.useState(
+    dayjs(dayjs()+1)
+  );
+
+  const handleEndChange = (newValue) => {
+    setEndValue(newValue);
+  };
+  
+  const taskNameRef = useRef('');
+  const taskStartRef = useRef('');
+  const taskEndRef = useRef('');
+  const categoryRef = useRef('');
+
+
+  const createTask = async function(event) {
+    event.preventDefault();
+
+    //Set username and password to the backend server
+    const httpResponse = await fetch(scheduleTaskURL, {
       mode: "cors",
+      method: "post",
       "Content-Type": "application/json",
       body: JSON.stringify({
-        username: username
+        username: username,
+        taskName: taskNameRef.current.value,
+        startDate: taskStartRef.current.value,
+        endDate: taskEndRef.current.value,
+        tag: categoryRef.current.value
       })
     });
 
-    tasksPayload = JSON.parse(tasksPayload);
-  }
+    const responseBody = await httpResponse.json();
+    console.log(responseBody);
+
+  };
+
 
   const renderPage = (
     <ThemeProvider theme={theme}>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
     <Container component="main">
       <CssBaseline />
       
@@ -136,8 +171,9 @@ export default function Home(props) {
             Add New Task
           </Typography>
 
-          <Box component="form" onSubmit={createTask} noValidate sx={{ mt: 1 }}>
+          <Box noValidate sx={{ mt: 1 }}>
             <TextField
+              inputRef={taskNameRef}
               margin="normal"
               required
               fullWidth
@@ -148,29 +184,50 @@ export default function Home(props) {
             />
 
             <TextField
+              inputRef={categoryRef}
               margin="normal"
               required
               fullWidth
-              name="email"
-              label="Date"
-              id="taskDate"
+              name="category"
+              label="Category"
+              id="category"
+              sx={{ mb: 3 }}
             />
+            
+            <Stack spacing={3}>
+              <DateTimePicker
+                inputRef={taskStartRef}
+                margin="normal"
+                required
+                fullWidth
+                name="startDate"
+                label="Start Date/Time"
+                id="startDate"
+                value={startValue}
+                onChange={handleStartChange}
+                renderInput={(params) => <TextField {...params} />}
+              />
 
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="startTime"
-              label="Start Time"
-              id="startTime"
-              autoComplete="current-password"
-            />
+              <DateTimePicker
+                inputRef={taskEndRef}
+                margin="normal"
+                required
+                fullWidth
+                name="endDate"
+                label="End Date/Time"
+                id="endDate"
+                value={endValue}
+                onChange={handleEndChange}
+                renderInput={(params) => <TextField {...params} />}
+              />
+            </Stack>
 
             <Button
               color="primary"
               type="submit"
               fullWidth
               variant="outlined"
+              onClick={createTask}
               sx={{ mt: 3, mb: 2 }}
             >
               Add Task
@@ -196,14 +253,13 @@ export default function Home(props) {
 
           <FormGroup sx={{ width:1 }}>
             {taskDisplayList}
-            {/* <FormControlLabel control={<Checkbox defaultChecked />} label="Label" />
-            <FormControlLabel disabled control={<Checkbox />} label="Disabled" /> */}
           </FormGroup>
 
         </Box>
       </TableRow>
       <Copyright sx={{ mt: 8, mb: 4 }} />
     </Container>
+    </LocalizationProvider>
   </ThemeProvider>
 );
 return (
