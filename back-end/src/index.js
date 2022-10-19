@@ -37,38 +37,17 @@ const PORT = 8000;
 server.use(bodyParser.text());
 
 /** 
- * Gene's Task Class
+ * Task Class we will be using
  */
-class Task {
-  constructor(name, startDate, tag, complete) {
+ class Task {
+  constructor(name, startDate, endDate, tag, complete) {
     this.name = name;
     this.startDate = startDate;
+    this.endDate = endDate;
     this.tag = tag;
     this.complete = complete;
   }
 }
-
-server.post("/scheduletask", (request, response) => {
-  try {
-    response.set("Access-Control-Allow-Origin", "*");
-    response.setHeader("Content-Type", "application/json");
-    
-    const payload = JSON.parse(request.body);
-    const username = payload.username;
-    const taskInfo = payload.taskInfo;
-
-    let newTask = new Task(taskInfo.name, taskInfo.startDate,
-      taskInfo.tag);
-    testDatabase[username].tasks.push(newTask);
-
-    response.status(200);
-    response.send(testDatabase[username].tasks);
-  }
-  catch (error) {
-    sendError.sendError(error);
-  }
-  
-});
 
 /** Temporary Task Objects that will allow us to test
  *  front-end's and back-end's ability to send task lists back and forth 
@@ -172,7 +151,6 @@ server.post("/register", (request, response) => {
     const password = loginInfo.password;
 
     // If the username does not exist in DB, create new key-value pair
-    
     if (checkUsername(loginInfo) === false) {
       const databaseEntry = {
         username: username,
@@ -196,86 +174,43 @@ server.post("/register", (request, response) => {
 });
 
 
-//Pre-set task structure. //? Probably have to move this somewhere else later?
-class task {
-  constructor() {
-    this.id;     //unique ID for referencing.
-    this.extra;  //allows us to extend task functionality.
-  }
-};
-
-//Data sent when creating a pre-set task.
-server.post("/tasks", (request, response) => {
-  try {
-    response.set("Access-Control-Allow-Origin", "*");
-    response.setHeader("Content-Type", "application/json");
-  
-    var taskInfo = JSON.parse(request.body);
-
-
-    //Send to the testDB server.
-    //receieve success or fail based on whether task was added successfully or not
-    const taskAdded = true; //SOME FUNCTION HERE TO ADD THE TASK AND RETURN TRUE/FALSE.
-    
-    //Send task added status.
-    if(taskAdded) {
-      response.send("Task Created"); //confirm task
-    } else {
-      response.send("Task Not Created"); //task failed
-    }
-  } catch (error) {
-    sendError.sendError(error, response);
-  }
-  //Also return a set of pre-set tasks
-});
-
-
-//This will send pre-set tasks to the front-end, the front-end will keep them saved in browser.
-//Front end will have HASH for each pre-set task.
-//server.post("/returnTasks", (request, response) => return a list of preset tasks [array])
-//Most importantly, it will return a specific hash/id referring to the task.
-
-//Object sent when scheduling/recording tasks. //move this to front end?
-class scheduleTask {
-  constructor() {
-    this.taskID; //taskID referred to.
-    this.start;  //start time of task
-    this.duration; //duration of task being added.
-  }
-};
-
-//Data sent to server when recording a task being done
+/** Function to create a new task in the backend from info sent by front-end
+ *  
+ *  @param {object} request - task data sent from front-end
+ *  @returns {boolean} - "true" if task is successfully created, and "false" otherwise.
+ *                                  
+*/
 server.post("/scheduleTask", (request, response) => {
   try {
     response.set("Access-Control-Allow-Origin", "*");
     response.setHeader("Content-Type", "application/json");
+    
+    const payload = JSON.parse(request.body);
+    const username = payload.username;
+    const taskName = payload.taskName;
+    const startDate = payload.startDate;
+    const endDate = payload.endDate;
+    const tag = payload.tag;
 
-    var infoForTask = JSON.parse(request.body);
+    let newTask = new Task(taskName, startDate, endDate, tag, false);
+    testDatabase[username].tasks.push(newTask);
 
-    //Get the current time, convert to UNIX timestamp
-    var currentDate = new Date();
-    var currentTime = currentDate.getTime();
-    const unixTimeStamp = currentTime/1000; //Get the UNIX date timestamp.
-
-    var sendTask = new scheduleTask();
-    sendTask.taskID = 0; //do this?
-    sendTask.start = 0; //when you started the task.
-    //sendTask.start = unixTimeStamp;
-    sendTask.duration = 0; //get this from infoForTask
-
-    //Send "sendTask" to database
-    var sendTaskWork = true;
-    if(sendTaskWork) {
-      response.send("Task recorded");
-    } else {
-      response.send("Task not recorded");
-    }
-  } catch (error) {
-    sendError.sendError(error, response);
+    response.status(200);
+    var flag = testDatabase[username].tasks.length === 7 ? true : false;
+    response.send(flag);
   }
+  catch (error) {
+    sendError.sendError(error);
+  }
+  
 });
 
-//Get task list from DB using username as key & send result to front-end
+/** Get task list from DB using username as key & send result to front-end
+ *  
+ *  @param {object} request - user data sent from front-end
+ *  @returns {Array(Task)} - array of task objects for the associated user
+ *                                  
+*/
 server.post("/getTasks", (request, response) => {
   try {
     response.set("Access-Control-Allow-Origin", "*");
@@ -301,6 +236,7 @@ server.post("/getTasks", (request, response) => {
 });
 
 // FORTESTING
+// Foresting? The act of going into forests? :)
 server.get("/testdb", testDB.get);
 
 server.listen(PORT, () => {
