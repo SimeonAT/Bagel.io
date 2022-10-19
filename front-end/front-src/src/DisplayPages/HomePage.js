@@ -61,6 +61,7 @@ export default function Home(props) {
   const tasksToDisplay = props.userInfo.tasks;
 
   const createTask = async function(event) {
+    console.log("Hello world!");
     event.preventDefault();
     window.location.reload(false);
 
@@ -76,12 +77,16 @@ export default function Home(props) {
     tasksPayload = JSON.parse(tasksPayload);
   }
   
-  var taskDisplayList = [];
+  let taskDisplayList = [];
 
   for (let i = 0; i < tasksToDisplay.length; i++) {
     const label = tasksToDisplay[i].name;
     const complete = tasksToDisplay[i].complete;
-    taskDisplayList.push(<FormControlLabel control={complete ? <Checkbox defaultChecked /> : <Checkbox />} label={label} />);
+    taskDisplayList.push(
+      <FormControlLabel 
+       control={complete ? <Checkbox defaultChecked /> : <Checkbox />} 
+       label={label} />
+    );
   } 
 
   const renderPage = (
