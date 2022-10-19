@@ -13,6 +13,9 @@
    - https://reactrouter.com/en/main/components/navigate
    - https://reactjs.org/docs/components-and-props.html
    - https://reactjs.org/docs/context.html
+
+   - https://stackoverflow.com/questions/35098324/react-form-component-onsubmit-handler-not-working
+   - https://stackoverflow.com/questions/51521237/onsubmit-is-not-working-in-react-js
 */
 import {useState} from "react";
 import * as React from 'react';
@@ -54,12 +57,28 @@ const theme = createTheme( {
 
 export default function Home(props) {
   console.log(props);
+
   const username = props.username;
   const password = props.password;
   const userInfo = props.userInfo;
 
-  const tasksToDisplay = props.userInfo.tasks;
+  let tasksToDisplay = undefined;
+  let taskDisplayList = [];
 
+  if (userInfo !== undefined) {
+    tasksToDisplay = props.userInfo.tasks;
+  
+    for (let i = 0; i < tasksToDisplay.length; i++) {
+      const label = tasksToDisplay[i].name;
+      const complete = tasksToDisplay[i].complete;
+      taskDisplayList.push(
+        <FormControlLabel 
+          control={complete ? <Checkbox defaultChecked /> : <Checkbox />} 
+          label={label} />
+      );
+    }
+  }
+  
   const createTask = async function(event) {
     console.log("Hello world!");
     event.preventDefault();
@@ -76,18 +95,6 @@ export default function Home(props) {
 
     tasksPayload = JSON.parse(tasksPayload);
   }
-  
-  let taskDisplayList = [];
-
-  for (let i = 0; i < tasksToDisplay.length; i++) {
-    const label = tasksToDisplay[i].name;
-    const complete = tasksToDisplay[i].complete;
-    taskDisplayList.push(
-      <FormControlLabel 
-       control={complete ? <Checkbox defaultChecked /> : <Checkbox />} 
-       label={label} />
-    );
-  } 
 
   const renderPage = (
     <ThemeProvider theme={theme}>
