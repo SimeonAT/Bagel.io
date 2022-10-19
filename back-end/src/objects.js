@@ -1,4 +1,23 @@
-class task {
+
+
+class user {
+	constructor() {
+		this.username;
+		this.password;
+		this.tasks = [];
+	}
+
+	authenticate() {
+		//authenticate
+	}
+
+	addTask(task) {
+		this.tasks.push(task);
+	}
+
+};
+
+class task {	
 	constructor() {
 		this.name;
 		this.startTime;
@@ -6,34 +25,17 @@ class task {
 		this.duration;
 		this.date;
 		this.tag;
+		this.completed;
 	}
 
-	setDate() {
-		var currentDate = new Date();
-		//year, month, day, hours, minutes, seconds, in UTC time.
-		this.date = currentDate.getUTCFullYear() + "-"
-			    currentDate.getUTCMonth() + "-"
-			    currentDate.getUTCDate() + "-"
-			    currentDate.getUTCHours() + "-"
-			    currentDate.getUTCMinutes() + "-"
-			    currentDate.getUTCSeconds();
+	setStartTime(time) { //please use ISO string format
+		this.date = new Date(time); //creates Date object for when task start.
+		this.startTime = this.date.getTime();
 	}
 
-	setStartTime() {
-		var temp = new Date();
-		var startDate = temp.getTime();
-		this.startTime = startDate; //returns miliseconds since January 1st, 1970, 00:00:00 UTC.
-	}
-
-	markEndTime(hours, minutes) { //this is for manually setting how long the task took.
-		this.endTime = hours * 3600000 + minutes * 60000;// + seconds * 1000; saves in milliseconds.
-		this.duration = this.endTime - this.startTime; //setting end time also sets duration.
-	}
-
-	setEndTime() { //for start-stop timer.
-		var temp = new Date();
-		var endDate = temp.getTime();
-		this.endTime = endDate;
+	setEndTime(time) { //this is for manually setting how long the task took.
+		var end = new Date(time);
+		this.endTime = end.getTime();
 		this.duration = this.endTime - this.startTime;
 	}
 };
