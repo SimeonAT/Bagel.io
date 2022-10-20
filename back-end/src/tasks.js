@@ -1,10 +1,11 @@
 /** 
- * Gene's Task Class
+ * Task Class we will be using
  */
-class Task {
-  constructor(name, startDate, tag, complete) {
+ class Task {
+  constructor(name, startDate, endDate, tag, complete) {
     this.name = name;
     this.startDate = startDate;
+    this.endDate = endDate;
     this.tag = tag;
     this.complete = complete;
   }
@@ -137,15 +138,12 @@ exports.register = async (request, response) => {
   try {
     response.set("Access-Control-Allow-Origin", "*");
     response.setHeader("Content-Type", "application/json");
-    
-    console.log("hereRegister");
-
+  
     const loginInfo = JSON.parse(request.body);
     const username = loginInfo.username;
     const password = loginInfo.password;
 
     // If the username does not exist in DB, create new key-value pair
-    
     if (checkUsername(loginInfo) === false) {
       const databaseEntry = {
         username: username,
