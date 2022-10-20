@@ -15,7 +15,7 @@
  * - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/push
  * */
 require('dotenv').config();
-var objects = require("./objects.js");
+const objects = require("./objects");
 
 //import "objects.js"; import these files somehow?
 

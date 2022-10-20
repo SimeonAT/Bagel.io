@@ -11,9 +11,12 @@
         "start": "(npm run start-backend) & (npm run start-frontend)"
     },
     "dependencies": {
+        "@date-io/dayjs": "^2.16.0",
         "@emotion/react": "^11.10.4",
         "@emotion/styled": "^11.10.4",
         "@mui/material": "^5.10.8",
+        "@mui/x-date-pickers": "^5.0.4",
+        "dayjs": "^1.11.5",
         "dotenv": "^16.0.3",
         "pg": "^8.8.0",
         "react-router-dom": "^6.4.2"
