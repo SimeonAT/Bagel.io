@@ -69,7 +69,6 @@ export default function Register(props) {
     const pass_empty = (pass.value === '') ? true : false;
     const pass2_empty = (pass2.value === '') ? true : false;
 
-
     //Set username and password to the backend server
     const httpResponse = await fetch(RegisterURL, {
       mode: "cors",
@@ -128,7 +127,6 @@ export default function Register(props) {
             name="u_name"
             //autoComplete="email"
             autoFocus
-            
           />
           {renderErrorMessage("u_name_taken")}
 

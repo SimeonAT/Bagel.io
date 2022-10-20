@@ -40,7 +40,7 @@ function Main() {
            setUsername = {setUsername}
            setPassword = {setPassword}
            setUserInfo = {setUserInfo}
-           />
+          />
         }></Route>
         <Route exact path='/register' element={
           <RegisterPage 
