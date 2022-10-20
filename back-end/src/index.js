@@ -15,6 +15,7 @@
  * - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/push
  * */
 require('dotenv').config();
+var objects = require("./objects.js");
 
 //import "objects.js"; import these files somehow?
 
@@ -22,6 +23,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const testDB = require("./testDB");
 const sendError = require("./sendError");
+const { response } = require('express');
+const { replicationStart } = require('pg-protocol/dist/messages.js');
 
 const server = express();
 const PORT = 8000;
@@ -36,112 +39,21 @@ const PORT = 8000;
 */
 server.use(bodyParser.text());
 
-/** 
- * Task Class we will be using
- */
- class Task {
-  constructor(name, startDate, endDate, tag, complete) {
-    this.name = name;
-    this.startDate = startDate;
-    this.endDate = endDate;
-    this.tag = tag;
-    this.complete = complete;
-  }
-}
+//CHECK OBJECTS.JS FOR MOCKDATABASE + TASK OBJ IMPLEMENTATION.
+//IMPORTANT
+//Mock-database
+var Task = objects.Task; //dear god fix this.
+var mockDatabase = new objects.mockDatabase();
+var temp_user_obj = new objects.user("user1", "pass1", "");
+temp_user_obj = mockDatabase.registerUser(temp_user_obj);
+temp_user_obj.addTask(new Task("test", 0, new Date(), "Work", true));
+//var tempTask = new Task(label, new Date(), "Work", complete );
 
-/** Temporary Task Objects that will allow us to test
- *  front-end's and back-end's ability to send task lists back and forth 
- */
- var tempTaskList = [];
- for(let i = 0; i < 5; i++) {
-  var label = '';
-  var complete = true;
-    switch (i) {
-      case 0:
-        label = "Wake up";
-        complete = true;
-        break;
-      case 1:
-        label = "Shower";
-        complete = true;
-        break;
-      case 2:
-        label = "Go sky diving";
-        complete = false;
-        break;
-      case 3:
-        label = "Shower again";
-        complete = false;
-        break;
-      case 4:
-        label = "Tell your friends you hate skydiving";
-        complete = false;
-        break;
-    }
+console.log("LOAD MOCK DATABASE", mockDatabase); //check mockdatabase.
 
-    var tempTask = new Task(label, new Date(), "Work", complete );
-  tempTaskList.push(tempTask);
-}
-
-/** Temporary Object that will allow us to test
- *  front-end's and back-end's ability to let
- *  users login to their dashboard. 
- */
-var testDatabase = {
-  user1: {username: "user1", password: "pass1", tasks: tempTaskList},
-  user2: {username: "user2", password: "pass2", tasks: []}
-};
-
-/** Returns JSON indicating whether or not username
- *  is in the database
- *  
- *  @param {object} loginInfo - the object of with keys "username" and "password"
- *  @returns {boolean} inDatabase - "true" if username in database, 
- *                                  and "false" otherwise.
-*/
-function checkUsername(loginInfo) {
-  const username = loginInfo.username;
-
-  // If the user has an account, then their username
-  // must be mapped to a defined password in the database.
-  //
-  if (testDatabase[username] !== undefined) {
-
-    return true;
-  } 
-  else {
-    return false;
-  }
-}
-
-server.post("/logindatabase", (request, response) => {
-  try {
-    response.set("Access-Control-Allow-Origin", "*");
-    response.setHeader("Content-Type", "application/json");
-  
-    const loginInfo = JSON.parse(request.body);
-
-    if (checkUsername(loginInfo) === true) {
-      const username = loginInfo.username;
-
-      if (loginInfo.password === testDatabase[username].password) {
-        response.send({
-          loginAllowed: true,
-          payload: testDatabase[username]
-        });
-        return;
-      }
-    }
-
-    response.send({loginAllowed: false});
-    return;
-  }
-  catch (error) {
-    sendError.sendError(error, response);
-  }
-});
-
+//register new user.
 server.post("/register", (request, response) => {
+  //console.log("HELLO");
   try {
     response.set("Access-Control-Allow-Origin", "*");
     response.setHeader("Content-Type", "application/json");
@@ -151,66 +63,55 @@ server.post("/register", (request, response) => {
     const password = loginInfo.password;
 
     // If the username does not exist in DB, create new key-value pair
-    if (checkUsername(loginInfo) === false) {
-      const databaseEntry = {
-        username: username,
-        password: password,
-        tasks: []
-      };
-      testDatabase[username] = databaseEntry;
-
+    var userObj = new objects.user(username, password, "");
+    var added = mockDatabase.registerUser(userObj);
+    if(added !== null) {
       response.send({
         loginAllowed: true,
-        payload: databaseEntry
+        payload: added
       });
-    } 
-    else {
-      response.send({loginAllowed: false});
+    } else {
+      response.send({
+        loginAllowed: false
+      });
     }
   }
   catch (error) {
+    console.log("Register failed");
     sendError.sendError(error, response);
   }
 });
 
-
-/** Function to create a new task in the backend from info sent by front-end
- *  
- *  @param {object} request - task data sent from front-end
- *  @returns {boolean} - "true" if task is successfully created, and "false" otherwise.
- *                                  
-*/
-server.post("/scheduleTask", (request, response) => {
+server.post("/logindatabase", (request, response) => {
+  //console.log("Here?");
   try {
     response.set("Access-Control-Allow-Origin", "*");
     response.setHeader("Content-Type", "application/json");
-    
-    const payload = JSON.parse(request.body);
-    const username = payload.username;
-    const taskName = payload.taskName;
-    const startDate = payload.startDate;
-    const endDate = payload.endDate;
-    const tag = payload.tag;
-
-    let newTask = new Task(taskName, startDate, endDate, tag, false);
-    testDatabase[username].tasks.push(newTask);
-
-    response.status(200);
-    var flag = testDatabase[username].tasks.length === 7 ? true : false;
-    response.send(flag);
-  }
-  catch (error) {
-    sendError.sendError(error);
-  }
   
+    const loginInfo = JSON.parse(request.body);
+
+    var userObj = new objects.user(loginInfo.username, loginInfo.password, "");
+    var user = mockDatabase.loginUser(userObj);
+    //response.send({loginAllowed: false});
+    if(user !== null) {
+      console.log("Login successful");
+      console.log(user);
+      response.send({
+        loginAllowed: true,
+        payload: user
+      });
+      return;
+    } else {
+      response.send({loginAllowed: false});
+    }
+
+  } catch (error) {
+    console.log("Login unsuccessful");
+    sendError.sendError(error, response);
+  }
 });
 
-/** Get task list from DB using username as key & send result to front-end
- *  
- *  @param {object} request - user data sent from front-end
- *  @returns {Array(Task)} - array of task objects for the associated user
- *                                  
-*/
+//Get task list from DB using username as key & send result to front-end
 server.post("/getTasks", (request, response) => {
   try {
     response.set("Access-Control-Allow-Origin", "*");
@@ -219,15 +120,10 @@ server.post("/getTasks", (request, response) => {
     const loginInfo = JSON.parse(request.body);
     const username = loginInfo.username;
 
-    //Get task list from DB using username as key
-    if (checkUsername(loginInfo) === true) {
-      const taskList = testDatabase[username].tasks;
-      //send task list to front-end
-      response.send({tasksList: taskList });
-    } 
-    else {
-      //send empty list, which will signify that there are no tasks in the list for this user
-      response.send({tasksList: [] });
+    if (mockDatabase.getTasks(username) === null) {
+      response.send({taskList: []});
+    } else {
+      response.send({taskList: mockDatabase.getTasks(username)})
     }
   }
   catch (error) {
@@ -235,23 +131,47 @@ server.post("/getTasks", (request, response) => {
   }
 });
 
+//when scheduling a task please have proper "taskInfo" string field.
+server.post("/scheduletask", (request, response) => {
+  try {
+    response.set("Access-Control-Allow-Origin", "*");
+    response.setHeader("Content-Type", "application/json");
+    
+    //check createtask() in HomePage.js, it's formatted like below.
+    //Also check objects.js to see how to format Task() objects.
+    const payload = JSON.parse(request.body);
+    const username = payload.username;
+    const taskName = payload.taskName;
+    const startDate = payload.startDate;
+    const endDate = payload.endDate;
+    const tag = payload.tag;
+
+    var userObj = mockDatabase.getUser(username);
+    let newTask;
+    if(payload !== undefined) {
+      newTask = new Task(taskName, startDate, endDate, tag, true);
+    } else {
+      console.log("No payload (no body) added.");
+      newTask = new Task("Test_task", 0, new Date(), 1, true);
+    }
+    //let newTask = new Task("Test_task", new Date(), 1, true);
+    userObj.addTask(newTask);
+    console.log("PRINT USER DATABASE STORAGE:\n",userObj);
+    //taskList.addTask(date.getTime(),newTask);
+
+    response.status(200);
+    //response.send(testDatabase[username].tasks);
+    response.send(userObj.tasks);
+  }
+  catch (error) {
+    sendError.sendError(error);
+  }
+  
+});
+
 // FORTESTING
-// Foresting? The act of going into forests? :)
 server.get("/testdb", testDB.get);
 
 server.listen(PORT, () => {
   console.log("Server is working");
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
