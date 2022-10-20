@@ -16,16 +16,18 @@ exports.register = async (request, response) => {
     const loginInfo = JSON.parse(request.body);
     const username = loginInfo.username;
     const password = loginInfo.password;
-
+    console.log("Registration Info: ", loginInfo);
     // If the username does not exist in DB, create new key-value pair
     var userObj = new objects.user(username, password, "");
     var added = mockDatabase.registerUser(userObj);
     if(added !== null) {
+      console.log("Register succeeded");
       response.send({
         loginAllowed: true,
         payload: added
       });
     } else {
+      console.log("Register failed - Account already exists");
       response.send({
         loginAllowed: false
       });

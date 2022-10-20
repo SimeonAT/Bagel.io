@@ -54,122 +54,127 @@ temp_user_obj.addTask(new Task("test", 0, new Date(), "Work", true));
 console.log("LOAD MOCK DATABASE", mockDatabase); //check mockdatabase.
 
 //register new user.
-server.post("/register", (request, response) => {
-  //console.log("HELLO");
-  try {
-    response.set("Access-Control-Allow-Origin", "*");
-    response.setHeader("Content-Type", "application/json");
+server.post("/register", tasks.register);
+// server.post("/register", (request, response) => {
+//   //console.log("HELLO");
+//   try {
+//     response.set("Access-Control-Allow-Origin", "*");
+//     response.setHeader("Content-Type", "application/json");
   
-    const loginInfo = JSON.parse(request.body);
-    const username = loginInfo.username;
-    const password = loginInfo.password;
+//     const loginInfo = JSON.parse(request.body);
+//     const username = loginInfo.username;
+//     const password = loginInfo.password;
 
-    // If the username does not exist in DB, create new key-value pair
-    var userObj = new objects.user(username, password, "");
-    var added = mockDatabase.registerUser(userObj);
-    if(added !== null) {
-      response.send({
-        loginAllowed: true,
-        payload: added
-      });
-    } else {
-      response.send({
-        loginAllowed: false
-      });
-    }
-  }
-  catch (error) {
-    console.log("Register failed");
-    sendError.sendError(error, response);
-  }
-});
+//     // If the username does not exist in DB, create new key-value pair
+//     var userObj = new objects.user(username, password, "");
+//     var added = mockDatabase.registerUser(userObj);
+//     if(added !== null) {
+//       response.send({
+//         loginAllowed: true,
+//         payload: added
+//       });
+//     } else {
+//       response.send({
+//         loginAllowed: false
+//       });
+//     }
+//   }
+//   catch (error) {
+//     console.log("Register failed");
+//     sendError.sendError(error, response);
+//   }
+// });
 
-server.post("/logindatabase", (request, response) => {
-  //console.log("Here?");
-  try {
-    response.set("Access-Control-Allow-Origin", "*");
-    response.setHeader("Content-Type", "application/json");
+//login
+server.post("/logindatabase", tasks.loginDatabase);
+// server.post("/logindatabase", (request, response) => {
+//   //console.log("Here?");
+//   try {
+//     response.set("Access-Control-Allow-Origin", "*");
+//     response.setHeader("Content-Type", "application/json");
   
-    const loginInfo = JSON.parse(request.body);
+//     const loginInfo = JSON.parse(request.body);
 
-    var userObj = new objects.user(loginInfo.username, loginInfo.password, "");
-    var user = mockDatabase.loginUser(userObj);
-    //response.send({loginAllowed: false});
-    if(user !== null) {
-      console.log("Login successful");
-      console.log(user);
-      response.send({
-        loginAllowed: true,
-        payload: user
-      });
-      return;
-    } else {
-      response.send({loginAllowed: false});
-    }
+//     var userObj = new objects.user(loginInfo.username, loginInfo.password, "");
+//     var user = mockDatabase.loginUser(userObj);
+//     //response.send({loginAllowed: false});
+//     if(user !== null) {
+//       console.log("Login successful");
+//       console.log(user);
+//       response.send({
+//         loginAllowed: true,
+//         payload: user
+//       });
+//       return;
+//     } else {
+//       response.send({loginAllowed: false});
+//     }
 
-  } catch (error) {
-    console.log("Login unsuccessful");
-    sendError.sendError(error, response);
-  }
-});
+//   } catch (error) {
+//     console.log("Login unsuccessful");
+//     sendError.sendError(error, response);
+//   }
+// });
 
 //Get task list from DB using username as key & send result to front-end
-server.post("/getTasks", (request, response) => {
-  try {
-    response.set("Access-Control-Allow-Origin", "*");
-    response.setHeader("Content-Type", "application/json");
+server.post("/getTasks", tasks.getTasks);
+// server.post("/getTasks", (request, response) => {
+//   try {
+//     response.set("Access-Control-Allow-Origin", "*");
+//     response.setHeader("Content-Type", "application/json");
   
-    const loginInfo = JSON.parse(request.body);
-    const username = loginInfo.username;
+//     const loginInfo = JSON.parse(request.body);
+//     const username = loginInfo.username;
 
-    if (mockDatabase.getTasks(username) === null) {
-      response.send({taskList: []});
-    } else {
-      response.send({taskList: mockDatabase.getTasks(username)})
-    }
-  }
-  catch (error) {
-    sendError.sendError(error, response);
-  }
-});
+//     if (mockDatabase.getTasks(username) === null) {
+//       response.send({taskList: []});
+//     } else {
+//       response.send({taskList: mockDatabase.getTasks(username)})
+//     }
+//   }
+//   catch (error) {
+//     sendError.sendError(error, response);
+//   }
+// });
 
 //when scheduling a task please have proper "taskInfo" string field.
-server.post("/scheduletask", (request, response) => {
-  try {
-    response.set("Access-Control-Allow-Origin", "*");
-    response.setHeader("Content-Type", "application/json");
+server.post("/scheduletask", tasks.scheduletask);
+// server.post("/scheduletask", (request, response) => {
+//   try {
+//     response.set("Access-Control-Allow-Origin", "*");
+//     response.setHeader("Content-Type", "application/json");
     
-    //check createtask() in HomePage.js, it's formatted like below.
-    //Also check objects.js to see how to format Task() objects.
-    const payload = JSON.parse(request.body);
-    const username = payload.username;
-    const taskName = payload.taskName;
-    const startDate = payload.startDate;
-    const endDate = payload.endDate;
-    const tag = payload.tag;
+//     //check createtask() in HomePage.js, it's formatted like below.
+//     //Also check objects.js to see how to format Task() objects.
+//     const payload = JSON.parse(request.body);
+//     const username = payload.username;
+//     const taskName = payload.taskName;
+//     const startDate = payload.startDate;
+//     const endDate = payload.endDate;
+//     const tag = payload.tag;
 
-    var userObj = mockDatabase.getUser(username);
-    let newTask;
-    if(payload !== undefined) {
-      newTask = new Task(taskName, startDate, endDate, tag, true);
-    } else {
-      console.log("No payload (no body) added.");
-      newTask = new Task("Test_task", 0, new Date(), 1, true);
-    }
-    //let newTask = new Task("Test_task", new Date(), 1, true);
-    userObj.addTask(newTask);
-    console.log("PRINT USER DATABASE STORAGE:\n",userObj);
-    //taskList.addTask(date.getTime(),newTask);
+//     var userObj = mockDatabase.getUser(username);
+//     let newTask;
+//     if(payload !== undefined) {
+//       newTask = new Task(taskName, startDate, endDate, tag, true);
+//     } else {
+//       console.log("No payload (no body) added.");
+//       newTask = new Task("Test_task", 0, new Date(), 1, true);
+//     }
+//     //let newTask = new Task("Test_task", new Date(), 1, true);
+//     userObj.addTask(newTask);
+//     console.log("PRINT USER DATABASE STORAGE:\n",userObj);
+//     //taskList.addTask(date.getTime(),newTask);
 
-    response.status(200);
-    //response.send(testDatabase[username].tasks);
-    response.send(userObj.tasks);
-  }
-  catch (error) {
-    sendError.sendError(error);
-  }
+//     response.status(200);
+//     //response.send(testDatabase[username].tasks);
+//     response.send(userObj.tasks);
+//   }
+//   catch (error) {
+//     sendError.sendError(error);
+//   }
   
-});
+// });
 
 // FORTESTING
 server.get("/testdb", testDB.get);
