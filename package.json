@@ -8,7 +8,8 @@
     "scripts": {
         "start-backend": "cd back-end && npm run start",
         "start-frontend": "cd front-end/front-src && npm start",
-        "start": "(npm run start-backend) & (npm run start-frontend)"
+        "start": "(npm run start-backend) & (npm run start-frontend)",
+        "getdeps": "npm install && cd back-end/ && npm install && cd ../front-end/ && npm install && cd front-src/ && npm install && cd ../../"
     },
     "dependencies": {
         "@date-io/dayjs": "^2.16.0",
