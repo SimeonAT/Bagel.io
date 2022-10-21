@@ -1,11 +1,18 @@
+// FRONT END PEOPLE: modify this file, creating/deleting functions and adding comments with calls to the database function you would like me to implement later in dbUtils.js.
+// Then use the mock database to test it for the time being
+
 const sendError = require("./sendError");
 const objects = require("./objects");
+const dbUtils = require("./dbUtils");
 
+//CHECK OBJECTS.JS FOR MOCKDATABASE + TASK OBJ IMPLEMENTATION.
 let Task = objects.Task; //dear god fix this.
 let mockDatabase = new objects.mockDatabase();
 let temp_user_obj = new objects.user("user1", "pass1", "");
 temp_user_obj = mockDatabase.registerUser(temp_user_obj);
 temp_user_obj.addTask(new Task("test", 0, new Date(), "Work", true));
+
+exports.mockDatabase = mockDatabase;
 
 exports.register = async (request, response) => {
   //console.log("HELLO");
@@ -124,6 +131,13 @@ exports.scheduletask = async (request, response) => {
   
 }
 
+exports.testDBGet = async (request, response) => {
+  response.set("Access-Control-Allow-Origin", "*");
+  response.setHeader("Content-Type", "application/json");
+  const queryResult = await dbUtils.selectAll();
+  response.status(200).json({displayStr: `Miliseconds Since 1970: [${new Date().getTime()}], 
+      First DB Entry Inserted At: [${queryResult}]`});
+};
 // //Data sent when creating a pre-set task.
 // exports.tasks = async (request, response) => {
 //   try {

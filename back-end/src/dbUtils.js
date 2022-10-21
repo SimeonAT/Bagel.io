@@ -35,6 +35,16 @@ exports.getMemberScheduledTasks = async (emailAddress) => {
     return rows;
 };
 
+exports.selectAll = async () => {
+    const select = 'SELECT * FROM foobar';
+    const query = {
+        text: select,
+        values: [],
+    };
+    const {rows} = await pool.query(query);
+    return rows[0].thetime;
+};
+
 
 
 
