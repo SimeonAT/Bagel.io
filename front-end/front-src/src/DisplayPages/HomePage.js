@@ -80,7 +80,9 @@ export default function Home(props) {
       taskDisplayList.push(
         <FormControlLabel 
           control={complete ? <Checkbox defaultChecked /> : <Checkbox />} 
-          label={label} />
+          label={label}
+          key = {i}
+           />
       );
     }
   }
@@ -135,128 +137,142 @@ export default function Home(props) {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
     <Container component="main">
       <CssBaseline />
-      
-      <TableRow label="title-row"
-      sx={{
-        marginTop: 8,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center'
-      }}>
-        <Typography component="h1" variant="h4" align="center">
-          Welcome {username}! 
-        </Typography>
-      </TableRow>
-
-      <TableRow label="task-row"
-        sx={{
-          marginTop: 2,
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'left'
-        }}
-      >
-        <Box label="create-task-column"
+      <table>
+        <tbody>
+          <TableRow label="title-row"
           sx={{
             marginTop: 8,
-            marginRight: 12,
-            marginLeft: 12,
-            width: 1,
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Typography component="h1" variant="h5">
-            Add New Task
-          </Typography>
-
-          <Box noValidate sx={{ mt: 1 }}>
-            <TextField
-              inputRef={taskNameRef}
-              margin="normal"
-              required
-              fullWidth
-              id="taskName"
-              label="Task Name"
-              name="taskName"
-              autoFocus
-            />
-
-            <TextField
-              inputRef={categoryRef}
-              margin="normal"
-              required
-              fullWidth
-              name="category"
-              label="Category"
-              id="category"
-              sx={{ mb: 3 }}
-            />
+            alignItems: 'center'
+          }}>
+            <td><Typography component="h1" variant="h4" align="center">
+              Welcome {username}! 
+            </Typography></td>
             
-            <Stack spacing={3}>
-              <DateTimePicker
-                inputRef={taskStartRef}
-                margin="normal"
-                required
-                fullWidth
-                name="startDate"
-                label="Start Date/Time"
-                id="startDate"
-                value={startValue}
-                onChange={handleStartChange}
-                renderInput={(params) => <TextField {...params} />}
-              />
+          </TableRow>
 
-              <DateTimePicker
-                inputRef={taskEndRef}
-                margin="normal"
-                required
-                fullWidth
-                name="endDate"
-                label="End Date/Time"
-                id="endDate"
-                value={endValue}
-                onChange={handleEndChange}
-                renderInput={(params) => <TextField {...params} />}
-              />
-            </Stack>
-
-            <Button
-              color="primary"
-              type="submit"
-              fullWidth
-              variant="outlined"
-              onClick={createTask}
-              sx={{ mt: 3, mb: 2 }}
+          <TableRow label="task-row"
+            sx={{
+              marginTop: 2,
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'left'
+            }}
+          >
+            <td>
+            <Box label="create-task-column"
+              sx={{
+                marginTop: 8,
+                marginRight: 12,
+                marginLeft: 12,
+                width: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+              }}
             >
-              Add Task
-            </Button>
+              
+              <Typography component="h1" variant="h5">
+                Add New Task
+              </Typography>
+              
+              <Box noValidate sx={{ mt: 1 }}>
+                <TextField
+                  inputRef={taskNameRef}
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="taskName"
+                  label="Task Name"
+                  name="taskName"
+                  autoFocus
+                />
 
-          </Box>
-        </Box>
+                <TextField
+                  inputRef={categoryRef}
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="category"
+                  label="Category"
+                  id="category"
+                  sx={{ mb: 3 }}
+                />
+                
+                <Stack spacing={3}>
+                  <DateTimePicker
+                    
+                    renderInput={(params) => <TextField {...params} 
+                    inputRef={taskStartRef}
+                     />}
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="startDate"
+                    label="Start Date/Time"
+                    id="startDate"
+                    value={startValue}
+                    onChange={handleStartChange}
+                    
+                  />
 
-        <Box label="see-task-list-column"
-          sx={{
-            marginTop: 8,
-            marginLeft: 12,
-            marginRight: 12,
-            width: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Typography component="h1" variant="h5" sx={{ mb: 2 }}>
-            Today's Tasks
-          </Typography>
+                  <DateTimePicker
+                    
+                    renderInput={(params) => <TextField {...params} 
+                    inputRef={taskEndRef}
+                    />}
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="endDate"
+                    label="End Date/Time"
+                    id="endDate"
+                    value={endValue}
+                    onChange={handleEndChange}
+                    
+                  />
+                </Stack>
 
-          <FormGroup sx={{ width:1 }}>
-            {taskDisplayList}
-          </FormGroup>
+                <Button
+                  color="primary"
+                  type="submit"
+                  fullWidth
+                  variant="outlined"
+                  onClick={createTask}
+                  sx={{ mt: 3, mb: 2 }}
+                >
+                  Add Task
+                </Button>
 
-        </Box>
-      </TableRow>
+              </Box>
+            </Box>
+            </td>
+            <td>
+            <Box label="see-task-list-column"
+              sx={{
+                marginTop: 8,
+                marginLeft: 12,
+                marginRight: 12,
+                width: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+              }}
+            >
+              <Typography component="h1" variant="h5" sx={{ mb: 2 }}>
+                Today's Tasks
+              </Typography>
+
+              <FormGroup sx={{ width:1 }}>
+                {taskDisplayList}
+              </FormGroup>
+
+            </Box>
+            </td>
+          </TableRow>
+        </tbody>
+      </table>
       <Copyright sx={{ mt: 8, mb: 4 }} />
     </Container>
     </LocalizationProvider>
