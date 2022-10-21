@@ -14,6 +14,7 @@ import HeroView from "./DisplayPages/HeroPageView";
 import LoginPage from './DisplayPages/LoginPage';
 import RegisterPage from './DisplayPages/RegisterPage';
 import HomePage from './DisplayPages/HomePage';
+import DashboardPage from './DisplayPages/DashboardPage';
 //import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import React from "react";
@@ -51,6 +52,13 @@ function Main() {
         }></Route>
         <Route exact path='/home' element={
           <HomePage 
+            username = {loginUsername}
+            password = {loginPassword}
+            userInfo = {userInfo}
+          />  
+        }></Route>
+          <Route exact path='/dashboard' element={
+          <DashboardPage 
             username = {loginUsername}
             password = {loginPassword}
             userInfo = {userInfo}
