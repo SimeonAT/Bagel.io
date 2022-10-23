@@ -70,7 +70,7 @@ exports.mockDatabase = class mockDatabase {
 
 	loginUser(userObj) {
 		if (this.users[userObj.username] === undefined) {
-			return {loginAllowed: false}; //no users
+			return null; //no users
 		} else {
 			if (userObj.password === this.users[userObj.username].password) {
 				// return {loginAllowed: true,

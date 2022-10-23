@@ -20,15 +20,27 @@ exports.getMembers = async () => {
     return rows;
 };
 
-exports.getMemberScheduledTasks = async (emailAddress) => {
-    const select = `SELECT taskpreset.taskname, taskpreset.tasktag, taskscheduled.starttime, taskscheduled.endtime 
+exports.getMemberScheduledTasks = async (username) => {
+    const select = `SELECT taskpreset.taskname, taskpreset.tasktag, taskscheduled.starttime, taskscheduled.endtime, taskscheduled.complete 
                     FROM member, taskpreset, taskscheduled
-                    WHERE member.emailaddress = $1
-                        AND taskpreset.presetid = taskscheduled.presetid
-                        AND member.emailaddress = taskpreset.emailaddress`;
+                    WHERE member.username = $1
+                        AND member.username = taskpreset.username
+                        AND taskpreset.presetid = taskscheduled.presetid`;
     const query = {
         text: select,
-        values: [emailAddress],
+        values: [username],
+    };
+    const {rows} = await pool.query(query);
+    // console.log(`rows: ${rows}`);
+    return rows[0];
+};
+
+exports.insertUser = async (username, email, password) => {
+    const insert = `INSERT INTO member(username, email, memberpassword) 
+                    VALUES ($1, $2, $3)`;
+    const query = {
+        text: insert,
+        values: [username, email, password],
     };
     const {rows} = await pool.query(query);
     // console.log(`rows: ${rows}`);
@@ -44,6 +56,8 @@ exports.selectAll = async () => {
     const {rows} = await pool.query(query);
     return rows[0].thetime;
 };
+
+
 
 
 

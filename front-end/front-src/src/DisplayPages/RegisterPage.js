@@ -63,6 +63,7 @@ export default function Register(props) {
     console.log(pass.value);
     console.log(pass2.value);
 
+    // FIXME: veryfy pass === pass2
     // these will be used to implement field verifications
     const u_name_empty = (u_name.value === '') ? true : false;
     const email_empty = (email.value === '') ? true : false;
@@ -74,7 +75,7 @@ export default function Register(props) {
       mode: "cors",
       method: "post",
       "Content-Type": "application/json",
-      body: JSON.stringify({username: u_name.value, password: pass.value})
+      body: JSON.stringify({username: u_name.value, password: pass.value, email: email.value, password: pass.value})
     });
 
     const responseBody = await httpResponse.json();

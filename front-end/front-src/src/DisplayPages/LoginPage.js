@@ -73,15 +73,16 @@ export default function SignIn(props) {
 
     const responseBody = await httpResponse.json();
     console.log(responseBody);
-    console.log(responseBody.payload.tasks);
-
+    if (responseBody.loginAllowed) {
+      console.log(responseBody.payload.tasks);
+    }
 
     if (responseBody.loginAllowed === true) {
       setLoginAllowed(true);
-      
       props.setUsername(userName.value);
       props.setPassword(pass.value);
       props.setUserInfo(responseBody.payload);
+      console.log(`requestbody.payload: ${JSON.stringify(responseBody.payload)}`);
     }
     else {
       setErrorMessages({ name: "pass", message: errors.pass });

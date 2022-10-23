@@ -38,14 +38,11 @@ const PORT = 8000;
 server.use(bodyParser.text());
 console.log("LOAD MOCK DATABASE", tasks.mockDatabase); //check mockdatabase.
 
-//register new user.
 server.post("/register", tasks.register);
-//login
 server.post("/logindatabase", tasks.loginDatabase);
-//Get task list from DB using username as key & send result to front-end
 server.post("/getTasks", tasks.getTasks);
-//when scheduling a task please have proper "taskInfo" string field.
 server.post("/scheduletask", tasks.scheduletask);
+
 // FORTESTING
 server.get("/testdb", tasks.testDBGet);
 
