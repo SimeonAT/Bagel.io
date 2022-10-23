@@ -32,7 +32,7 @@ exports.getMemberScheduledTasks = async (username) => {
     };
     const {rows} = await pool.query(query);
     // console.log(`rows: ${rows}`);
-    return rows[0];
+    return rows;
 };
 
 exports.insertUser = async (username, email, password) => {
@@ -45,6 +45,26 @@ exports.insertUser = async (username, email, password) => {
     const {rows} = await pool.query(query);
     // console.log(`rows: ${rows}`);
     return rows;
+};
+
+exports.insertTask = async (username, taskName, startDate, endDate, tagName, presetid) => {
+    let insert = `INSERT INTO taskpreset(taskname, presetid, tasktag, username) 
+                    VALUES ($1, $2, $3, $4)
+                    RETURNING *`;
+    let query = {
+        text: insert,
+        values: [taskName, presetid, tagName, username]
+    };
+    let preset = await pool.query(query);
+    insert = `INSERT INTO taskscheduled(starttime, endtime, complete, presetid) 
+              VALUES ($1, $2, $3, $4)
+              RETURNING *`;
+    query = {
+        text: insert,
+        values: [startDate, endDate, 'false', presetid]
+    };
+    let scheduled = await pool.query(query);
+    return [preset.rows[0], scheduled.rows[0]];
 };
 
 exports.selectAll = async () => {

@@ -1,9 +1,10 @@
-// FRONT END PEOPLE: modify this file, creating/deleting functions and adding comments with calls to the database function you would like me to implement later in dbUtils.js.
+// NOTE: modify this file, creating/editing functions and adding comments with calls to the database function you would like me to implement later in dbUtils.js.
 // Then use the mock database to test it for the time being
 
 const sendError = require("./sendError");
 const objects = require("./objects");
 const dbUtils = require("./dbUtils");
+const { v4: uuidv4 } = require('uuid')
 
 //CHECK OBJECTS.JS FOR MOCKDATABASE + TASK OBJ IMPLEMENTATION.
 let Task = objects.Task;
@@ -80,24 +81,26 @@ exports.loginDatabase = async (request, response) => {
       console.log(`theUser: ${JSON.stringify(theUser)}`);
       console.log(`theUserTasks: ${JSON.stringify(theUserTasks)}`);
       // make tasks array
-      let payloadObj = {
-        "username": theUser.username,
-        "password": theUser.memberpassword,
-        "email": theUser.email,
-        "tasks": [
-          {
-            "name": theUserTasks.taskname,
-            "startDate": theUserTasks.starttime,
-            "endDate": theUserTasks.endtime,
-            "tag": theUserTasks.tasktag,
-            "complete": theUserTasks.complete,
-          }
-        ]
-      };
-      console.log(`payloadObj: ${JSON.stringify(payloadObj)}`);
+      const taskArray = [];
+      for (const task of theUserTasks) {
+        console.log(`task: ${JSON.stringify(task)}`);
+        taskArray.push({
+          "name": task.taskname,
+          "startDate": task.starttime,
+          "endDate": task.endtime,
+          "tag": task.tasktag,
+          "complete": task.complete,
+        })
+      }
+      console.log(`taskArray: ${JSON.stringify(taskArray)}`);
       response.send({
         loginAllowed: true,
-        payload: payloadObj
+        payload: {
+          "username": theUser.username,
+          "password": theUser.memberpassword,
+          "email": theUser.email,
+          "tasks": taskArray,
+        }
       });
     } else {
       response.send({loginAllowed: false});
@@ -108,20 +111,28 @@ exports.loginDatabase = async (request, response) => {
   }
 }
 
-// NOT CONNECTED TO DB
 //Get task list from DB using username as key & send result to front-end
 exports.getTasks = async (request, response) => {
   try {
     response.set("Access-Control-Allow-Origin", "*");
     response.setHeader("Content-Type", "application/json");
-  
-    const loginInfo = JSON.parse(request.body);
-    const username = loginInfo.username;
 
-    if (mockDatabase.getTasks(username) === null) {
-      response.send({taskList: []});
+    const loginInfo = JSON.parse(request.body);
+    let theUserTasks = await dbUtils.getMemberScheduledTasks(loginInfo.username);
+    const taskArray = [];
+    if (!theUserTasks) {
+      response.send({taskList: taskArray});
     } else {
-      response.send({taskList: mockDatabase.getTasks(username)})
+      for (const task of theUserTasks) {
+        taskArray.push({
+          "name": task.taskname,
+          "startDate": task.starttime,
+          "endDate": task.endtime,
+          "tag": task.tasktag,
+          "complete": task.complete,
+        })
+      }
+      response.send({taskList: taskArray});
     }
   }
   catch (error) {
@@ -129,8 +140,7 @@ exports.getTasks = async (request, response) => {
   }
 }
 
-// NOT CONNECTED TO DB
-//when scheduling a task please have proper "taskInfo" string field.
+// Adds task to database, returns code 200 on success
 exports.scheduletask = async (request, response) => {
   try {
     response.set("Access-Control-Allow-Origin", "*");
@@ -139,28 +149,39 @@ exports.scheduletask = async (request, response) => {
     //check createtask() in HomePage.js, it's formatted like below.
     //Also check objects.js to see how to format Task() objects.
     const payload = JSON.parse(request.body);
-    const username = payload.username;
-    const taskName = payload.taskName;
-    const startDate = payload.startDate;
-    const endDate = payload.endDate;
-    const tag = payload.tag;
-
-    var userObj = mockDatabase.getUser(username);
-    let newTask;
-    if(payload !== undefined) {
-      newTask = new Task(taskName, startDate, endDate, tag, true);
+    if (!payload || !payload.username || !payload.taskName || !payload.startDate || !payload.endDate || !payload.tag) {
+      console.log("No payload (no body) or payload missing fields.");
+      response.status(500).send();
     } else {
-      console.log("No payload (no body) added.");
-      newTask = new Task("Test_task", 0, new Date(), 1, true);
+      let presetid = uuidv4();
+      let startDateExact = new Date(payload.startDate).getTime().toString();
+      let endDateExact = new Date(payload.endDate).getTime().toString();
+      let result = await dbUtils.insertTask(payload.username, payload.taskName, startDateExact, endDateExact, payload.tag, presetid);
+      console.log(JSON.stringify(result));
+      response.status(200).send();
     }
-    //let newTask = new Task("Test_task", new Date(), 1, true);
-    userObj.addTask(newTask);
-    console.log("PRINT USER DATABASE STORAGE:\n",userObj);
-    //taskList.addTask(date.getTime(),newTask);
+  //   const username = payload.username;
+  //   const taskName = payload.taskName;
+  //   const startDate = payload.startDate;
+  //   const endDate = payload.endDate;
+  //   const tag = payload.tag;
 
-    response.status(200);
-    //response.send(testDatabase[username].tasks);
-    response.send(userObj.tasks);
+  //   var userObj = mockDatabase.getUser(username);
+  //   let newTask;
+  //   if(payload !== undefined) {
+  //     newTask = new Task(taskName, startDate, endDate, tag, true);
+  //   } else {
+  //     console.log("No payload (no body) added.");
+  //     newTask = new Task("Test_task", 0, new Date(), 1, true);
+  //   }
+  //   //let newTask = new Task("Test_task", new Date(), 1, true);
+  //   userObj.addTask(newTask);
+  //   console.log("PRINT USER DATABASE STORAGE:\n",userObj);
+  //   //taskList.addTask(date.getTime(),newTask);
+
+  //   response.status(200);
+  //   //response.send(testDatabase[username].tasks);
+  //   response.send(userObj.tasks);
   }
   catch (error) {
     sendError.sendError(error);

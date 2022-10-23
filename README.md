@@ -37,3 +37,11 @@ npm start; <--might take a while
 npm install pg;
 npm install dotenv;
 ---
+
+### Things to discuss with team
+* how to store dates in database? I think we should use new Date().getTIme()
+* code organization isues in backend
+- "payload"
+* what specifically will createTask() in HomePage.jsx do?
+* what specifically should exports.scheduleTask send back?
+* when changing the tasks, will change frontend then change backend seperatlely when adding new task or should we have a callback where the backend function sends the updated task list to the frontend to confirm that the frontend and backend match

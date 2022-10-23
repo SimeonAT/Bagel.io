@@ -113,7 +113,7 @@ export default function Home(props) {
 
   const createTask = async function(event) {
     event.preventDefault();
-
+    // console.log(`taskStartRef.current.value: ${new Date(taskStartRef.current.value).toISOString()}`);
     //Set username and password to the backend server
     const httpResponse = await fetch(scheduleTaskURL, {
       mode: "cors",
@@ -128,9 +128,9 @@ export default function Home(props) {
       })
     });
 
-    const responseBody = await httpResponse.json();
-    console.log(responseBody);
-
+    // const responseBody = await httpResponse.json();
+    // console.log(responseBody);
+    console.log('task added to db');
   };
 
 
