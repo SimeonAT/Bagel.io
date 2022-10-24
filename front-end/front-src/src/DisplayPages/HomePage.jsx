@@ -72,6 +72,7 @@ const theme = createTheme( {
   });
 
 export default function Home(props) {
+  const [dashboardView, openDashboard] = useState(false);
   console.log(props);
 
   const username = props.username;
@@ -165,6 +166,10 @@ export default function Home(props) {
     updateList(newList);
   };
 
+  const navigateToDashboard = async function(event) {
+    event.preventDefault();
+    openDashboard(true);
+  }
 
   const renderPage = (
     <ThemeProvider theme={theme}>
@@ -287,6 +292,21 @@ export default function Home(props) {
                   </Grid>
                 </Grid>
 
+                <Box>
+                    <Button
+                      color="primary"
+                      type="submit"
+                      fullWidth
+                      variant="outlined"
+                      onClick = {navigateToDashboard}
+                      sx={{ mt: 6, mb: 2, 
+                        fontSize: 22,
+                        border: 2}}
+                      >
+                      Go To Dashboard
+                    </Button>
+                </Box>
+
           </Box>         
 
         <Copyright sx={{ mt: 8, mb: 4 }} />
@@ -297,8 +317,8 @@ export default function Home(props) {
 return (
   <div className="HomePage">
     <div className="taskView">
-        {username === undefined ? <Navigate to = "/login" /> :
-         renderPage}
+    {dashboardView ? (<Navigate to = "/dashboard" />) : 
+    (username === undefined ? <Navigate to = "/login" /> : renderPage)}
     </div>
   </div>
 );

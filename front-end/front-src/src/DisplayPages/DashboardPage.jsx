@@ -103,7 +103,7 @@ export default function Dashboard(props) {
                 >
 
                 <Typography component="h1" variant="h5">
-                  *Your* Dashboard!
+                  {username}'s Dashboard!
                 </Typography>
 
                 <Grid container spacing={2} >
