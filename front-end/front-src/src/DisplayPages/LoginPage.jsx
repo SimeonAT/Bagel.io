@@ -155,9 +155,7 @@ export default function SignIn(props) {
 return (
   <div className="Login">
     <div className="login-form">
-        {loginAllowed ? (
-          <Navigate to = "/home" />
-        ) : renderForm}
+        {loginAllowed ? (<Navigate to = "/home" />) : renderForm}
     </div>
   </div>
 );
