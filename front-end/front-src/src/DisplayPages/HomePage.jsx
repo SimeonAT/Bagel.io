@@ -14,8 +14,17 @@
    - https://reactjs.org/docs/components-and-props.html
    - https://reactjs.org/docs/context.html
 
+   - https://reactjs.org/docs/state-and-lifecycle.html
+   - https://reactjs.org/docs/hooks-intro.html
+   - https://beta.reactjs.org/learn/updating-arrays-in-state
+   - https://www.robinwieruch.de/react-update-item-in-list/
+   - https://reactjs.org/docs/lists-and-keys.html
+   - https://www.freecodecamp.org/news/how-to-clone-an-array-in-javascript-1d3183468f6a/
+
    - https://stackoverflow.com/questions/35098324/react-form-component-onsubmit-handler-not-working
    - https://stackoverflow.com/questions/51521237/onsubmit-is-not-working-in-react-js
+   - https://stackoverflow.com/questions/69128531/react-to-do-list-not-updating
+   - https://stackoverflow.com/questions/71790680/react-not-rendering-list-after-the-state-is-changed
 */
 import {useState} from "react";
 import {useRef} from 'react';
@@ -89,6 +98,8 @@ export default function Home(props) {
     }
   }
 
+  const [taskListToRender, updateList] = React.useState(taskDisplayList);
+
   const [startValue, setStartValue] = React.useState(
     dayjs()
   );
@@ -112,6 +123,7 @@ export default function Home(props) {
 
 
   const createTask = async function(event) {
+    console.log('Task added to database');
     event.preventDefault();
     // console.log(`taskStartRef.current.value: ${new Date(taskStartRef.current.value).toISOString()}`);
     //Set username and password to the backend server
@@ -128,9 +140,29 @@ export default function Home(props) {
       })
     });
 
-    // const responseBody = await httpResponse.json();
-    // console.log(responseBody);
-    console.log('task added to db');
+    /**
+     * React will not re-render the task list if we add a new task.
+     * We have to save the task list as a React state. Whenever
+     * we want to update the task list, we need to make a copy of the
+     * old task list, insert the new task, and set the task list state
+     * as the old task list + the new task.
+     */
+    const newList = [...taskListToRender];
+
+    // The new task will be at the end of the array.
+    const newTaskIndex = newList.length;
+
+    const newTaskLabel = taskNameRef.current.value;
+    const newTaskComplete = false;
+    newList.push(
+      <FormControlLabel 
+        sx={{ ml: 7, mr: 7 }}
+        control={newTaskComplete ? <Checkbox defaultChecked /> : <Checkbox />} 
+        label={newTaskLabel}
+        key = {newTaskIndex}
+         />
+    );
+    updateList(newList);
   };
 
 
@@ -248,7 +280,7 @@ export default function Home(props) {
                       </Typography>
 
                       <FormGroup sx={{ width:1 }}>
-                        {taskDisplayList}
+                        {taskListToRender}
                       </FormGroup>
 
                     </Box>
