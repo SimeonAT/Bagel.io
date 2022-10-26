@@ -122,7 +122,7 @@ exports.loginDatabase = async (request, response) => {
   }
 }
 
-//Get task list from DB using username as key & send result to front-end
+// Get task list from DB using username as key & send result to front-end
 // <Inputs> request body: {username:""}
 // <Functionality> queries db for all tasks associated with username
 // <Returns> sends response with body: {taskList: taskArray}
@@ -186,6 +186,27 @@ exports.scheduletask = async (request, response) => {
   }
   
 }
+
+
+// Updates task parameters using ID as primary key
+// <Inputs> request body: {taskId:"", taskName:"", startDate:"", endDate:"", tag:"", complete:"" }
+// <Functionality> updates task with whatever data is sent in body (some fields may be received as blank)
+// <Returns> sends response with body: {success: true}
+exports.updateTask = async (request, response) => {
+  try {
+    response.set("Access-Control-Allow-Origin", "*");
+    response.setHeader("Content-Type", "application/json");
+
+    const getReqBody = JSON.parse(request.body);
+    //dbUtils.updateTask(getReqBody.taskId, getReqBody.startDate, getReqBody.endDate, getReqBody.tag, getReqBody.complete );
+
+    response.send({success: true});
+  }
+  catch (error) {
+    sendError.sendError(error, response);
+  }
+}
+
 
 // FORTESTING
 exports.testDBGet = async (request, response) => {

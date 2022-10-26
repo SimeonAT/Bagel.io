@@ -41,6 +41,7 @@ server.post("/register", tasks.register);
 server.post("/logindatabase", tasks.loginDatabase);
 server.post("/getTasks", tasks.getTasks);
 server.post("/scheduletask", tasks.scheduletask);
+server.post("/updateTask", tasks.updateTask);
 
 // FORTESTING
 server.get("/testdb", tasks.testDBGet);
