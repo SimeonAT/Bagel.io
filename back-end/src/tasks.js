@@ -4,7 +4,8 @@
 const sendError = require("./sendError");
 const objects = require("./objects");
 const dbUtils = require("./dbUtils");
-const { v4: uuidv4 } = require('uuid')
+const { v4: uuidv4 } = require('uuid');
+const { uuid } = require("uuidv4");
 
 //CHECK OBJECTS.JS FOR MOCKDATABASE + TASK OBJ IMPLEMENTATION.
 let Task = objects.Task;
@@ -62,8 +63,8 @@ exports.loginDatabase = async (request, response) => {
     const loginInfo = JSON.parse(request.body);
     // get users from db
     const users = await dbUtils.getMembers();
-    console.log(`loginInfo: ${JSON.stringify(loginInfo)}`);
-    console.log(`users: ${JSON.stringify(users)}`);
+    // console.log(`loginInfo: ${JSON.stringify(loginInfo)}`);
+    // console.log(`users: ${JSON.stringify(users)}`);
     // check if user in db
     let theUser = null;
     let userInDatabase = false;
@@ -74,25 +75,27 @@ exports.loginDatabase = async (request, response) => {
         break;
       }
     }
-    console.log(`userInDatabase: ${userInDatabase}`);
+    // console.log(`userInDatabase: ${userInDatabase}`);
     if (userInDatabase) {
       // get tasks from db
       let theUserTasks = await dbUtils.getMemberScheduledTasks(theUser.username);
-      console.log(`theUser: ${JSON.stringify(theUser)}`);
-      console.log(`theUserTasks: ${JSON.stringify(theUserTasks)}`);
+      // console.log(`theUser: ${JSON.stringify(theUser)}`);
+      // console.log(`theUserTasks: ${JSON.stringify(theUserTasks)}`);
       // make tasks array
       const taskArray = [];
       for (const task of theUserTasks) {
-        console.log(`task: ${JSON.stringify(task)}`);
+        // console.log(`(loginDatabase)taskid: ${task.scheduledid}`);
+        // console.log(`task: ${JSON.stringify(task)}`);
         taskArray.push({
           "name": task.taskname,
           "startDate": task.starttime,
           "endDate": task.endtime,
           "tag": task.tasktag,
           "complete": task.complete,
+          "taskid": task.scheduledid,
         })
       }
-      console.log(`taskArray: ${JSON.stringify(taskArray)}`);
+      // console.log(`taskArray: ${JSON.stringify(taskArray)}`);
       response.send({
         loginAllowed: true,
         payload: {
@@ -130,6 +133,7 @@ exports.getTasks = async (request, response) => {
           "endDate": task.endtime,
           "tag": task.tasktag,
           "complete": task.complete,
+          "taskid": task.scheduledid,
         })
       }
       response.send({taskList: taskArray});
@@ -141,24 +145,26 @@ exports.getTasks = async (request, response) => {
 }
 
 // Adds task to database, returns code 200 on success
+// NOTE: any Date() in the request body must have been 
+// converted to a UTC string with the "new Date().toUTCString()" method
 exports.scheduletask = async (request, response) => {
   try {
     response.set("Access-Control-Allow-Origin", "*");
     response.setHeader("Content-Type", "application/json");
     
-    //check createtask() in HomePage.js, it's formatted like below.
-    //Also check objects.js to see how to format Task() objects.
+    // check createtask() in HomePage.js, it's formatted like below.
+    // Also check objects.js to see how to format Task() objects.
     const payload = JSON.parse(request.body);
     if (!payload || !payload.username || !payload.taskName || !payload.startDate || !payload.endDate || !payload.tag) {
       console.log("No payload (no body) or payload missing fields.");
       response.status(500).send();
     } else {
       let presetid = uuidv4();
-      let startDateExact = new Date(payload.startDate).getTime().toString();
-      let endDateExact = new Date(payload.endDate).getTime().toString();
-      let result = await dbUtils.insertTask(payload.username, payload.taskName, startDateExact, endDateExact, payload.tag, presetid);
-      console.log(JSON.stringify(result));
-      response.status(200).send();
+      let scheduledid = uuidv4();
+      // console.log(payload.startDate);
+      let result = await dbUtils.insertTask(payload.username, payload.taskName, payload.startDate, payload.endDate, payload.tag, presetid, scheduledid);
+      // console.log(JSON.stringify(result));
+      response.status(200).send({taskid: result[1].scheduledid});
     }
   //   const username = payload.username;
   //   const taskName = payload.taskName;

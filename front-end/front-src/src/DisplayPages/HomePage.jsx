@@ -88,14 +88,17 @@ export default function Home(props) {
     for (let i = 0; i < tasksToDisplay.length; i++) {
       const label = tasksToDisplay[i].name;
       const complete = tasksToDisplay[i].complete;
+      const taskid = tasksToDisplay[i].taskid;
       taskDisplayList.push(
         <FormControlLabel 
           sx={{ ml: 7, mr: 7 }}
           control={complete ? <Checkbox defaultChecked /> : <Checkbox />} 
           label={label}
-          key = {i}
-           />
+          key={i}
+          taskid={taskid}
+        />
       );
+      // console.log(`tasksToDisplay[${i}]: ${JSON.stringify(tasksToDisplay[i])}`);
     }
   }
 
@@ -122,10 +125,14 @@ export default function Home(props) {
   const taskEndRef = useRef('');
   const categoryRef = useRef('');
 
-
   const createTask = async function(event) {
-    console.log('Task added to database');
     event.preventDefault();
+
+    // NOTE: must convert dates to ISO strings on front end to make this happend on the users local machine
+    let taskStartISO = new Date(taskStartRef.current.value).toISOString();
+    let taskEndISO = new Date(taskEndRef.current.value).toISOString();
+    // FIXME: add check to make sure taskEndISO >= taskStartISO
+
     // console.log(`taskStartRef.current.value: ${new Date(taskStartRef.current.value).toISOString()}`);
     //Set username and password to the backend server
     const httpResponse = await fetch(scheduleTaskURL, {
@@ -135,12 +142,16 @@ export default function Home(props) {
       body: JSON.stringify({
         username: username,
         taskName: taskNameRef.current.value,
-        startDate: taskStartRef.current.value,
-        endDate: taskEndRef.current.value,
+        startDate: taskStartISO,
+        endDate: taskEndISO,
         tag: categoryRef.current.value
       })
     });
-
+    if (!httpResponse.ok) {
+      console.log("Missing task info");
+      return;
+    }
+    let responseBody = await httpResponse.json();
     /**
      * React will not re-render the task list if we add a new task.
      * We have to save the task list as a React state. Whenever
@@ -149,20 +160,21 @@ export default function Home(props) {
      * as the old task list + the new task.
      */
     const newList = [...taskListToRender];
-
     // The new task will be at the end of the array.
     const newTaskIndex = newList.length;
-
     const newTaskLabel = taskNameRef.current.value;
     const newTaskComplete = false;
+    const newTaskid = responseBody.taskid;
     newList.push(
       <FormControlLabel 
         sx={{ ml: 7, mr: 7 }}
         control={newTaskComplete ? <Checkbox defaultChecked /> : <Checkbox />} 
         label={newTaskLabel}
-        key = {newTaskIndex}
-         />
+        key={newTaskIndex}
+        taskid={newTaskid}
+      />
     );
+    console.log(`newTask.taskid: ${JSON.stringify(responseBody.taskid)}`);
     updateList(newList);
   };
 

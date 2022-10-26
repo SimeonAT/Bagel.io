@@ -36,7 +36,6 @@ const PORT = 8000;
           Any help to fix this would be greatly appreciated.
 */
 server.use(bodyParser.text());
-console.log("LOAD MOCK DATABASE", tasks.mockDatabase); //check mockdatabase.
 
 server.post("/register", tasks.register);
 server.post("/logindatabase", tasks.loginDatabase);

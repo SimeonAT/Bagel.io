@@ -78,13 +78,16 @@ export default function Dashboard(props) {
     for (let i = 0; i < tasksToDisplay.length; i++) {
       const label = tasksToDisplay[i].name;
       const complete = tasksToDisplay[i].complete;
+      const taskid = tasksToDisplay[i].taskid;
       taskDisplayList.push(
         <FormControlLabel 
           control={complete ? <Checkbox defaultChecked /> : <Checkbox />} 
           label={label}
-          key = {i}
-           />
+          key={i}
+          taskid={taskid}
+        />
       );
+      // console.log(`tasksToDisplay[${i}]: ${JSON.stringify(tasksToDisplay[i])}`);
     }
   }
 

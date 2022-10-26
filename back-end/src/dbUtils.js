@@ -21,7 +21,7 @@ exports.getMembers = async () => {
 };
 
 exports.getMemberScheduledTasks = async (username) => {
-    const select = `SELECT taskpreset.taskname, taskpreset.tasktag, taskscheduled.starttime, taskscheduled.endtime, taskscheduled.complete 
+    const select = `SELECT taskpreset.taskname, taskpreset.tasktag, taskscheduled.starttime, taskscheduled.endtime, taskscheduled.complete, taskscheduled.scheduledid 
                     FROM member, taskpreset, taskscheduled
                     WHERE member.username = $1
                         AND member.username = taskpreset.username
@@ -47,7 +47,7 @@ exports.insertUser = async (username, email, password) => {
     return rows;
 };
 
-exports.insertTask = async (username, taskName, startDate, endDate, tagName, presetid) => {
+exports.insertTask = async (username, taskName, startDate, endDate, tagName, presetid, scheduledid) => {
     let insert = `INSERT INTO taskpreset(taskname, presetid, tasktag, username) 
                     VALUES ($1, $2, $3, $4)
                     RETURNING *`;
@@ -56,12 +56,12 @@ exports.insertTask = async (username, taskName, startDate, endDate, tagName, pre
         values: [taskName, presetid, tagName, username]
     };
     let preset = await pool.query(query);
-    insert = `INSERT INTO taskscheduled(starttime, endtime, complete, presetid) 
-              VALUES ($1, $2, $3, $4)
+    insert = `INSERT INTO taskscheduled(starttime, scheduledid, endtime, complete, presetid) 
+              VALUES ($1, $2, $3, $4, $5)
               RETURNING *`;
     query = {
         text: insert,
-        values: [startDate, endDate, 'false', presetid]
+        values: [startDate, scheduledid, endDate, 'false', presetid]
     };
     let scheduled = await pool.query(query);
     return [preset.rows[0], scheduled.rows[0]];
