@@ -170,6 +170,8 @@ export default function Dashboard(props) {
                               opacity: [0.5, 0.5, 0.5],},
                           }}
                         />
+
+                        {taskListToRender}
                       </Box>
                     </Box>
                   </Grid>
