@@ -194,7 +194,9 @@ export default function Dashboard(props) {
 return (
   <div className="DashboardPage">
     <div className="dashboardView">
-        {renderPage}
+        {(username === undefined ? 
+          <Navigate to = "/login" />
+         : renderPage)}
     </div>
   </div>
 );
