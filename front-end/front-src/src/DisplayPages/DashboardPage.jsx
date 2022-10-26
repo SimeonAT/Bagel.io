@@ -23,6 +23,19 @@
    - https://www.robinwieruch.de/react-update-item-in-list/
    - https://reactjs.org/docs/lists-and-keys.html
    - https://www.freecodecamp.org/news/how-to-clone-an-array-in-javascript-1d3183468f6a/
+
+   - https://styled-components.com/docs/api#primary
+   - https://styled-components.com/
+
+   - https://www.w3schools.com/css/css_font.asp
+   - https://www.w3schools.com/css/css_inline-block.asp
+   - https://www.w3schools.com/colors/colors_picker.asp
+   - https://www.w3schools.com/colors/colors_names.asp
+   - https://www.w3schools.com/css/css_positioning.asp
+   - https://www.w3schools.com/cssref/pr_font_weight.asp
+   - https://www.w3schools.com/css/css_margin.asp
+   - https://www.w3schools.com/css/css_padding.asp
+   - https://www.w3schools.com/css/css_boxmodel.as
 */
 import {useState} from "react";
 import {useRef} from 'react';
@@ -50,12 +63,22 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Grid from '@mui/material/Grid';
 
+import styled from "styled-components";
+
 const BackendURL = "http://localhost:8000";
 const LoginURL = BackendURL + "/logindatabase";
 const RegisterURL = BackendURL + "/register";
 const HomeURL = BackendURL + "/home";
 const scheduleTaskURL = BackendURL + "/scheduleTask";
 const GetTasks = BackendURL + "/getTasks";
+
+const ConfirmButton = styled.button`
+  font-size: 18px;
+  width: 50px;
+  height: 30px;
+  margin: 1%;
+  background-color: Lavender;
+`;
 
 const theme = createTheme( {
   palette: {
@@ -98,6 +121,11 @@ export default function Dashboard(props) {
         }}>
           <div>Task Name: {label}</div>
           <div>Task ID: {taskid}</div>
+          <div>
+            Did you complete the task?
+            <ConfirmButton>Yes</ConfirmButton>
+            <ConfirmButton>No</ConfirmButton>
+          </div>
         </Box>
       );
       // console.log(`tasksToDisplay[${i}]: ${JSON.stringify(tasksToDisplay[i])}`);
