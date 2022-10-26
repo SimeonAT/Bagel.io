@@ -16,6 +16,13 @@
 
    - https://stackoverflow.com/questions/35098324/react-form-component-onsubmit-handler-not-working
    - https://stackoverflow.com/questions/51521237/onsubmit-is-not-working-in-react-js
+
+   - https://reactjs.org/docs/state-and-lifecycle.html
+   - https://reactjs.org/docs/hooks-intro.html
+   - https://beta.reactjs.org/learn/updating-arrays-in-state
+   - https://www.robinwieruch.de/react-update-item-in-list/
+   - https://reactjs.org/docs/lists-and-keys.html
+   - https://www.freecodecamp.org/news/how-to-clone-an-array-in-javascript-1d3183468f6a/
 */
 import {useState} from "react";
 import {useRef} from 'react';
@@ -62,8 +69,6 @@ const theme = createTheme( {
   });
 
 export default function Dashboard(props) {
-  console.log(props);
-
   const username = props.username;
   const password = props.password;
   const userInfo = props.userInfo;
@@ -92,6 +97,8 @@ export default function Dashboard(props) {
       // console.log(`tasksToDisplay[${i}]: ${JSON.stringify(tasksToDisplay[i])}`);
     }
   }
+
+  const [taskListToRender, setTaskList] = React.useState(taskDisplayList);
 
   const renderPage = (
     <ThemeProvider theme={theme}>
