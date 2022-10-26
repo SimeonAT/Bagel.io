@@ -87,12 +87,18 @@ export default function Dashboard(props) {
       const complete = tasksToDisplay[i].complete;
       const taskid = tasksToDisplay[i].taskid;
       taskDisplayList.push(
-        <FormControlLabel 
-          control={complete ? <Checkbox defaultChecked /> : <Checkbox />} 
-          label={label}
-          key={i}
-          taskid={taskid}
-        />
+        <Box sx={{
+          height: 300,
+          border: '2px dashed grey',
+          margin: 'auto',
+          mb: 2,
+          '&:hover': {
+            backgroundColor: 'blue',
+            opacity: [0.5, 0.5, 0.5],},
+        }}>
+          <div>Task Name: {label}</div>
+          <div>Task ID: {taskid}</div>
+        </Box>
       );
       // console.log(`tasksToDisplay[${i}]: ${JSON.stringify(tasksToDisplay[i])}`);
     }
@@ -128,51 +134,11 @@ export default function Dashboard(props) {
                         alignItems: 'center',
                       }}
                       >
-
                       <Typography component="h1" variant="h5" sx={{ mb: 1 }}>
                         Check in your completed tasks!
                       </Typography>
 
-                      <Box noValidate sx={{ mt: 1 }}>
-                        <Box
-                          sx={{
-                            height: 300,
-                            border: '2px dashed grey',
-                            margin: 'auto',
-                            mb: 2,
-                            '&:hover': {
-                              backgroundColor: 'blue',
-                              opacity: [0.5, 0.5, 0.5],},
-                          }}
-                        />
-
-                        <Box
-                          sx={{
-                            height: 300,
-                            border: '2px dashed grey',
-                            margin: 'auto',
-                            mb: 2,
-                            '&:hover': {
-                              backgroundColor: 'blue',
-                              opacity: [0.5, 0.5, 0.5],},
-                          }}
-                        />
-
-                        <Box
-                          sx={{
-                            width: 500,
-                            height: 300,
-                            border: '2px dashed grey',
-                            margin: 'auto',
-                            mb: 2,
-                            '&:hover': {
-                              backgroundColor: 'blue',
-                              opacity: [0.5, 0.5, 0.5],},
-                          }}
-                        />
-
-                        {taskListToRender}
-                      </Box>
+                      {taskListToRender}
                     </Box>
                   </Grid>
 
