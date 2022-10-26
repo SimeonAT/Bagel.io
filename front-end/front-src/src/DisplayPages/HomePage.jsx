@@ -73,7 +73,6 @@ const theme = createTheme( {
 
 export default function Home(props) {
   const [dashboardView, openDashboard] = useState(false);
-  console.log(props);
 
   const username = props.username;
   const password = props.password;

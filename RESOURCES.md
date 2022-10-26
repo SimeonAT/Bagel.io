@@ -35,3 +35,8 @@ source code.
  * -https://www.npmjs.com/package/nodemon  
 -----
 * https://www.geeksforgeeks.org/how-to-connect-node-js-with-react-js/
+
+## Other Sources 
+-----
+ * https://eslint.org/
+ * https://medium.com/@RossWhitehouse/setting-up-eslint-in-react-c20015ef35f7

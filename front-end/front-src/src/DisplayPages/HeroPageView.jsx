@@ -20,6 +20,9 @@
  * - https://www.w3schools.com/colors/colors_names.asp
  * - https://www.w3schools.com/css/css_positioning.asp
  * - https://www.w3schools.com/cssref/pr_font_weight.asp
+ * - https://www.w3schools.com/css/css_margin.asp
+ * - https://www.w3schools.com/css/css_padding.asp
+ * - https://www.w3schools.com/css/css_boxmodel.asp
 */
 import React from "react";
 import styled from "styled-components";
