@@ -37,7 +37,7 @@ const theme = createTheme( {
   palette: {
     primary: {
       light: '#d1ccdc',
-      main: '##886f68',
+      main: '#263238',
       dark: '#424c55',
       contrastText: '#fff',
     },
@@ -166,17 +166,17 @@ export default function Register(props) {
           />
           {renderErrorMessage("passwords_must_match")}
 
-
-          <Button
-            color="primary"
-            type="submit"
-            fullWidth
-            
-            variant="outlined"
-            sx={{ mt: 3, mb: 2 }}
-          >
-            Register
-          </Button>
+          <Box textAlign='center'>
+            <Button
+              color="primary"
+              type="submit"
+              variant="outlined"
+              sx={{ mt: 3, mb: 2,
+                pr: 7, pl: 7, 
+                border: 2 }} >
+              Register
+            </Button>
+          </Box>
 
         </Box>
       </Box>

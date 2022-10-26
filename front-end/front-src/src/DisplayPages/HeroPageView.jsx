@@ -29,8 +29,21 @@ import styled from "styled-components";
 import '../styles.css';
 import SignIn from "./LoginPage";
 import Copyright from "./Copyright";
+import {Box, Button, createTheme, ThemeProvider, CssBaseline} from '@mui/material';
 
 import {Link} from "react-router-dom";
+import { blueGrey } from "@mui/material/colors";
+
+const theme = createTheme( {
+  palette: {
+    primary: {
+      light: '#d1ccdc',
+      main: '#263238',
+      dark: '#424c55',
+      contrastText: '#fff',
+    },
+  },
+  });
 
 const WelcomeDiv = styled.div`
   display: flex;
@@ -74,14 +87,14 @@ const Perfect = styled(SellingPoint)`
   margin-left: 7em;
 `;
 
-const Button = styled.button`
-  font-size: 30px;
-  font-family: Ubuntu, Courier;
+// const Button = styled.button`
+//   font-size: 30px;
+//   font-family: Ubuntu, Courier;
 
-  width: 200px;
-  height: 50px;
-  background-color: Lavender;
-`;
+//   width: 200px;
+//   height: 50px;
+//   background-color: Lavender;
+// `;
 
 // FORTESTING
 const TestButton = styled(Button)`
@@ -92,10 +105,10 @@ const TestButton = styled(Button)`
   top: 0%;
 `;
 
-const LoginButton = styled(Button)`
-  position: fixed;
-  left: 85%;
-`;
+// const LoginButton = styled(Button)`
+//   position: fixed;
+//   left: 85%;
+// `;
 
 const RegisterButton = styled(Button)`
   width: 500px;
@@ -118,42 +131,70 @@ function fetchDB(setButtonText) {
 
 function HeroView(props) {
   const [buttonText, setButtonText] = React.useState('Click to Test Database')
-  return (
-    <div>
-      <Link to = "/login">
-        <LoginButton onClick = {props.loginHandler}>
-          Login
-        </LoginButton>
-      </Link>
 
-      <WelcomeDiv>
-        <LogoDiv>
-          <MainLetter>B</MainLetter>
-          <SubLetters>agel.io</SubLetters>
-          <Tagline>Take back your time!</Tagline>
-
-          <Prioritize>Prioritize!</Prioritize>
-          <SellingPoint>Plan!</SellingPoint>
-          <Perfect>Perfect!</Perfect>
-
-        </LogoDiv>
-        
-        {/* FORTESTING */}
-        <TestButton onClick = {(event) => {fetchDB(setButtonText)}}>
-          {buttonText}
-        </TestButton>
-          
-        <Link to = "/register">
-          <RegisterButton>
-            Make your account now!
-          </RegisterButton>
+  const renderForm = (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <div>
+        <Link to = "/login" style={{ textDecoration: 'none' }}>
+          <Box textAlign='right'>
+              <Button
+                color="primary"
+                type="submit"
+                onClick = {props.loginHandler}
+                sx={{ mt: 3, mb: 2, mr: 5,
+                  pr: 7, pl: 7, 
+                  border: 2,
+                  fontWeight: 600,
+                  fontSize: 16 }} >
+                Login
+              </Button>
+            </Box>
         </Link>
 
-        <StyledFooter>
-          <Copyright />
-        </StyledFooter>
-      </WelcomeDiv>
-    </div>
+        <WelcomeDiv>
+          <LogoDiv>
+            <MainLetter>B</MainLetter>
+            <SubLetters>agel.io</SubLetters>
+            <Tagline>Take back your time!</Tagline>
+
+            <Prioritize>Prioritize!</Prioritize>
+            <SellingPoint>Plan!</SellingPoint>
+            <Perfect>Perfect!</Perfect>
+
+          </LogoDiv>
+          
+          {/* FORTESTING */}
+          {/* <TestButton onClick = {(event) => {fetchDB(setButtonText)}}>
+            {buttonText}
+          </TestButton> */}
+            
+          <Link to = "/register" style={{ textDecoration: 'none' }}>
+            <Box textAlign='right'>
+              <Button
+                color="primary"
+                type="submit"
+                onClick = {props.loginHandler}
+                sx={{ mt: 8, mb: 2,
+                  pr: 7, pl: 7, 
+                  border: 2,
+                  fontWeight: 600,
+                  fontSize: 20 }} >
+                Create your account now!
+              </Button>
+            </Box>
+          </Link>
+
+          <StyledFooter>
+            <Copyright />
+          </StyledFooter>
+        </WelcomeDiv>
+      </div>
+    </ThemeProvider>
+  );
+
+  return (
+    renderForm
   );
 }
 
