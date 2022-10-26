@@ -71,7 +71,9 @@ export default function Dashboard(props) {
   let tasksToDisplay = undefined;
   let taskDisplayList = [];
 
-  //Leaving this for now, since very similar logic will be used to pull tasks and create task box list to displayh
+  // Leaving this for now, since very similar logic will be used to
+  // pull tasks and create task box list to display
+  //
   if (userInfo !== undefined) {
     tasksToDisplay = props.userInfo.tasks;
   
