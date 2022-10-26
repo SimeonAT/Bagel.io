@@ -71,6 +71,7 @@ const RegisterURL = BackendURL + "/register";
 const HomeURL = BackendURL + "/home";
 const scheduleTaskURL = BackendURL + "/scheduleTask";
 const GetTasks = BackendURL + "/getTasks";
+const checkInTask = BackendURL + "/checkInTask";
 
 const ConfirmButton = styled.button`
   font-size: 18px;
@@ -84,7 +85,7 @@ const theme = createTheme( {
   palette: {
     primary: {
       light: '#d1ccdc',
-      main: '##886f68',
+      main: '#263238',
       dark: '#424c55',
       contrastText: '#fff',
     },
@@ -133,6 +134,17 @@ export default function Dashboard(props) {
   }
 
   const [taskListToRender, setTaskList] = React.useState(taskDisplayList);
+
+  const updateTask = async function(event, taskId, startDate, endDate, tag, complete) {
+    event.preventDefault();
+    //Send new task data to server
+    const httpResponse = await fetch(RegisterURL, {
+      mode: "cors",
+      method: "post",
+      "Content-Type": "application/json",
+      body: JSON.stringify({taskId: taskId, startDate: startDate, endDate: endDate, tag: tag, complete: complete})
+    });
+  }
 
   const renderPage = (
     <ThemeProvider theme={theme}>

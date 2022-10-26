@@ -64,7 +64,7 @@ const theme = createTheme( {
   palette: {
     primary: {
       light: '#d1ccdc',
-      main: '##886f68',
+      main: '#263238',
       dark: '#424c55',
       contrastText: '#fff',
     },
@@ -268,16 +268,19 @@ export default function Home(props) {
                           />
                         </Stack>
 
-                        <Button
-                          color="primary"
-                          type="submit"
-                          fullWidth
-                          variant="outlined"
-                          onClick={createTask}
-                          sx={{ mt: 3, mb: 2 }}
-                          >
-                          Add Task
-                        </Button>
+                        <Box textAlign='center'>
+                          <Button
+                            color="primary"
+                            type="submit"
+                            variant="outlined"
+                            onClick={createTask}
+                            sx={{ mt: 3, mb: 2, 
+                                  pr: 7, pl: 7, 
+                                  border: 2 }}
+                            >
+                            Add Task
+                          </Button>
+                        </Box>
                       </Box>
                     </Box>
                   </Grid>
@@ -310,9 +313,11 @@ export default function Home(props) {
                       fullWidth
                       variant="outlined"
                       onClick = {navigateToDashboard}
-                      sx={{ mt: 6, mb: 2, 
+                      sx={{ mt: 6, mb: 2,
+                        pr: 5, pl: 5,
+                        border: 2, 
                         fontSize: 22,
-                        border: 2}}
+                       }}
                       >
                       Go To Dashboard
                     </Button>
