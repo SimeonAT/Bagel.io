@@ -5,7 +5,10 @@
    - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
    - https://expressjs.com/en/4x/api.html#express.json
    - https://www.stackhawk.com/blog/react-cors-guide-what-it-is-and-how-to-enable-it/
+
    - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
+   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
+   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString
 
    - https://stackabuse.com/get-http-post-body-in-express-js/
    - https://www.npmjs.com/package/body-parser
@@ -108,13 +111,10 @@ export default function Dashboard(props) {
     tasksToDisplay = props.userInfo.tasks;
 
     taskDisplayList = tasksToDisplay.map((task) => {
-      const label = task.name;
-      const complete = task.complete;
-      const taskid = task.taskid;
-      // console.log(`tasksToDisplay[${i}]: ${JSON.stringify(tasksToDisplay[i])}`);
-
+      console.log(task.taskid);
+      console.log(new Date(task.startDate));
       return (
-        <Box sx={{
+        <Box key = {task.taskid} sx={{
           height: 300,
           border: '2px dashed grey',
           margin: 'auto',
@@ -122,14 +122,19 @@ export default function Dashboard(props) {
           '&:hover': {
             backgroundColor: 'blue',
             opacity: [0.5, 0.5, 0.5],},
-        }}>
-          <div>Task Name: {label}</div>
-          <div>Task ID: {taskid}</div>
-          <div>
-            Did you complete the task?
-            <ConfirmButton>Yes</ConfirmButton>
-            <ConfirmButton>No</ConfirmButton>
-          </div>
+          }}>
+            <div>Task Name: {task.name}</div>
+            <div>Category: {task.tag}</div>
+            <div>Start Time: {new Date(task.startDate).toLocaleString()}</div>
+            <div>End Time: {new Date(task.endDate).toLocaleString()}</div>
+
+            <div>
+              Did you complete the task?
+            </div>
+            <div>
+              <ConfirmButton>Yes</ConfirmButton>
+              <ConfirmButton>No</ConfirmButton>
+            </div>
         </Box>
       );
     });
