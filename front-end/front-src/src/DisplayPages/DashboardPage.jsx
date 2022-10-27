@@ -77,12 +77,18 @@ const scheduleTaskURL = BackendURL + "/scheduleTask";
 const GetTasks = BackendURL + "/getTasks";
 const checkInTask = BackendURL + "/checkInTask";
 
-const ConfirmButton = styled.button`
+const CompleteButton = styled.button`
   font-size: 18px;
-  width: 50px;
-  height: 30px;
-  margin: 1%;
+  width: 200px;
+  height: 40px;
+  margin-left: 15%;
   background-color: Lavender;
+`;
+
+const TaskDisplay = styled.div`
+  padding-top: 3%;
+  padding-left: 10%;
+  padding-right: 10%;
 `;
 
 const theme = createTheme( {
@@ -115,7 +121,7 @@ export default function Dashboard(props) {
       console.log(new Date(task.startDate));
       return (
         <Box key = {task.taskid} sx={{
-          height: 300,
+          width: 450,
           border: '2px dashed grey',
           margin: 'auto',
           mb: 2,
@@ -123,18 +129,23 @@ export default function Dashboard(props) {
             backgroundColor: 'blue',
             opacity: [0.5, 0.5, 0.5],},
           }}>
-            <div>Task Name: {task.name}</div>
-            <div>Category: {task.tag}</div>
-            <div>Start Time: {new Date(task.startDate).toLocaleString()}</div>
-            <div>End Time: {new Date(task.endDate).toLocaleString()}</div>
-
-            <div>
-              Did you complete the task?
-            </div>
-            <div>
-              <ConfirmButton>Yes</ConfirmButton>
-              <ConfirmButton>No</ConfirmButton>
-            </div>
+            <TaskDisplay>
+              <div>
+                <b>Task Name:</b> {task.name}
+              </div>
+              <div>
+              <b>Category:</b> {task.tag}
+              </div>
+              <div>
+                <b>Start Time:</b> {new Date(task.startDate).toLocaleString()}
+              </div>
+              <div>
+                <b>End Time:</b> {new Date(task.endDate).toLocaleString()}
+              </div>
+              <CompleteButton>
+                I completed this task
+              </CompleteButton>
+            </TaskDisplay>
         </Box>
       );
     });
