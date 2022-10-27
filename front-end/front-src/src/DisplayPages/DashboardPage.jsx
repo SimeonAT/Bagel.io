@@ -102,6 +102,53 @@ const theme = createTheme( {
   },
   });
 
+/** Given the lists of task objects, returns the
+ *  JSX that will render a list of boxes, which each box
+ *  representing each task.
+ *
+ * @param {array} tasksToDisplay - the list of tasks to display 
+ * @returns {array} taskDisplayList - the JSX array that will
+ *                                    render each task as a box in
+ *                                    the webpage
+ */
+function getTaskDisplayList(tasksToDisplay) {
+  return tasksToDisplay.map((task) => {
+    console.log(task.taskid);
+    console.log(new Date(task.startDate));
+    return (
+      <Box key = {task.taskid} sx={{
+        width: 450,
+        border: '2px dashed grey',
+        margin: 'auto',
+        mb: 2,
+        '&:hover': {
+          backgroundColor: 'blue',
+          opacity: [0.5, 0.5, 0.5],},
+        }}>
+          <TaskDisplay>
+            <div>
+              <b>Task Name:</b> {task.name}
+            </div>
+            <div>
+            <b>Category:</b> {task.tag}
+            </div>
+            <div>
+              <b>Start Time:</b> {new Date(task.startDate).toLocaleString()}
+            </div>
+            <div>
+              <b>End Time:</b> {new Date(task.endDate).toLocaleString()}
+            </div>
+            <CompleteButton onClick = {() => {
+              console.log('Hello World!');
+            }}>
+              I completed this task
+            </CompleteButton>
+          </TaskDisplay>
+      </Box>
+    );
+  });
+}
+
 export default function Dashboard(props) {
   const username = props.username;
   const password = props.password;
@@ -115,40 +162,7 @@ export default function Dashboard(props) {
   //
   if (userInfo !== undefined) {
     tasksToDisplay = props.userInfo.tasks;
-
-    taskDisplayList = tasksToDisplay.map((task) => {
-      console.log(task.taskid);
-      console.log(new Date(task.startDate));
-      return (
-        <Box key = {task.taskid} sx={{
-          width: 450,
-          border: '2px dashed grey',
-          margin: 'auto',
-          mb: 2,
-          '&:hover': {
-            backgroundColor: 'blue',
-            opacity: [0.5, 0.5, 0.5],},
-          }}>
-            <TaskDisplay>
-              <div>
-                <b>Task Name:</b> {task.name}
-              </div>
-              <div>
-              <b>Category:</b> {task.tag}
-              </div>
-              <div>
-                <b>Start Time:</b> {new Date(task.startDate).toLocaleString()}
-              </div>
-              <div>
-                <b>End Time:</b> {new Date(task.endDate).toLocaleString()}
-              </div>
-              <CompleteButton>
-                I completed this task
-              </CompleteButton>
-            </TaskDisplay>
-        </Box>
-      );
-    });
+    taskDisplayList = getTaskDisplayList(tasksToDisplay);
   }
 
   const [taskListToRender, setTaskList] = React.useState(taskDisplayList);
