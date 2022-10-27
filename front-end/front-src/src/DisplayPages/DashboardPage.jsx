@@ -9,6 +9,7 @@
    - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
    - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
    - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString
+   - https://jsdoc.app/about-getting-started.html
 
    - https://stackabuse.com/get-http-post-body-in-express-js/
    - https://www.npmjs.com/package/body-parser
@@ -138,8 +139,10 @@ function getTaskDisplayList(tasksToDisplay) {
             <div>
               <b>End Time:</b> {new Date(task.endDate).toLocaleString()}
             </div>
-            <CompleteButton onClick = {() => {
-              console.log('Hello World!');
+            <CompleteButton onClick = {(event) => {
+              // Removes the task from the task display list,
+              // and updates the state of the display list.
+              //
             }}>
               I completed this task
             </CompleteButton>
