@@ -5,6 +5,7 @@
    - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
    - https://expressjs.com/en/4x/api.html#express.json
    - https://www.stackhawk.com/blog/react-cors-guide-what-it-is-and-how-to-enable-it/
+   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
 
    - https://stackabuse.com/get-http-post-body-in-express-js/
    - https://www.npmjs.com/package/body-parser
@@ -105,12 +106,14 @@ export default function Dashboard(props) {
   //
   if (userInfo !== undefined) {
     tasksToDisplay = props.userInfo.tasks;
-  
-    for (let i = 0; i < tasksToDisplay.length; i++) {
-      const label = tasksToDisplay[i].name;
-      const complete = tasksToDisplay[i].complete;
-      const taskid = tasksToDisplay[i].taskid;
-      taskDisplayList.push(
+
+    taskDisplayList = tasksToDisplay.map((task) => {
+      const label = task.name;
+      const complete = task.complete;
+      const taskid = task.taskid;
+      // console.log(`tasksToDisplay[${i}]: ${JSON.stringify(tasksToDisplay[i])}`);
+
+      return (
         <Box sx={{
           height: 300,
           border: '2px dashed grey',
@@ -129,8 +132,7 @@ export default function Dashboard(props) {
           </div>
         </Box>
       );
-      // console.log(`tasksToDisplay[${i}]: ${JSON.stringify(tasksToDisplay[i])}`);
-    }
+    });
   }
 
   const [taskListToRender, setTaskList] = React.useState(taskDisplayList);
