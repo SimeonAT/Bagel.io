@@ -99,12 +99,13 @@ exports.updateTask = async (taskId, startDate, endDate, tag, complete) => {
         values: [startDate, endDate, complete, taskId],
     }
     const scheduled = await pool.query(query);
+    console.log("dbUtils.js:102 "+scheduled.rows[0].presetid);
     update = `UPDATE taskpreset
               SET taskpreset.tasktag = $1
               WHERE taskpreset.presetid = $2`;
     query = {
         text: update,
-        values: [tag, scheduled.rows[0]],
+        values: [tag, scheduled.rows[0].presetid],
     }
     await pool.query(query);
     return;
