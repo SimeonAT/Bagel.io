@@ -34,7 +34,7 @@ npm start; <--might take a while
 ---
 
 ## Things to discuss with team
-* ~~how to store dates in database? I think we should use newDate().getTIme()~~
+* ~~how to store dates in database? I think we should use new Date().toISOString()~~
 * ~~code organization isues in backend~~
     * ~~"payload"~~
 * ~~what specifically will createTask() in HomePage.jsx do?~~
@@ -46,6 +46,7 @@ npm start; <--might take a while
 * ~~suggestion for variables in general: try not to assign "baz = foo.bar", keep things as "foo.bar" when possible, that way its easier for those reading the code to pick it up easily~~
 * ~~search codebas for "taskid={taskid}": can you add whatever ~~prop you want to react components??
 * ~~when adding a new task: HomePage.jsx:76 runs twice~~
+* in update task shouldnt we be able to update name of a task too?
 
 
 

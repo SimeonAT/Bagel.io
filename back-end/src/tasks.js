@@ -196,10 +196,9 @@ exports.updateTask = async (request, response) => {
   try {
     response.set("Access-Control-Allow-Origin", "*");
     response.setHeader("Content-Type", "application/json");
-
-    const getReqBody = JSON.parse(request.body);
-    //dbUtils.updateTask(getReqBody.taskId, getReqBody.startDate, getReqBody.endDate, getReqBody.tag, getReqBody.complete );
-
+    const updateTaskReqBody = JSON.parse(request.body);
+    // dbUtils.updateTask(updateTaskReqBody.taskId, updateTaskReqBody.startDate, updateTaskReqBody.endDate, 
+    //   updateTaskReqBody.tag, updateTaskReqBody.complete);
     response.send({success: true});
   }
   catch (error) {

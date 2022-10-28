@@ -49,8 +49,8 @@ exports.insertUser = async (username, email, password) => {
 
 exports.insertTask = async (username, taskName, startDate, endDate, tagName, presetid, scheduledid) => {
     let insert = `INSERT INTO taskpreset(taskname, presetid, tasktag, username) 
-                    VALUES ($1, $2, $3, $4)
-                    RETURNING *`;
+                  VALUES ($1, $2, $3, $4)
+                  RETURNING *`;
     let query = {
         text: insert,
         values: [taskName, presetid, tagName, username]
@@ -76,6 +76,39 @@ exports.selectAll = async () => {
     const {rows} = await pool.query(query);
     return rows[0].thetime;
 };
+
+exports.deleteTask = async (taskId) => {
+    const deleteSQL = `DELETE FROM taskscheduled
+                       WHERE tasksched.taskid = $1
+                       RETURNING taskscheduled.presetid`;
+    const query = {
+        text: deleteSQL,
+        values: [taskId]
+    }
+    const {rows} = await pool.query(query);
+    return rows;
+}
+
+exports.updateTask = async (taskId, startDate, endDate, tag, complete) => {
+    let update = `UPDATE taskscheduled
+                  SET taskscheduled.starttime = $1, taskscheduled.endtime = $2, taskscheduled.complete = $3
+                  WHERE taskscheduled.scheduledid = $4
+                  RETURNING taskscheduled.presetid`;
+    let query = {
+        text: update,
+        values: [startDate, endDate, complete, taskId],
+    }
+    const scheduled = await pool.query(query);
+    update = `UPDATE taskpreset
+              SET taskpreset.tasktag = $1
+              WHERE taskpreset.presetid = $2`;
+    query = {
+        text: update,
+        values: [tag, scheduled.rows[0]],
+    }
+    await pool.query(query);
+    return;
+}
 
 
 //New Request for function:
