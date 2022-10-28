@@ -158,7 +158,7 @@ export default function Home(props) {
       return;
     }
     let responseBody = await httpResponse.json();
-
+    console.log(`responseBody: ${JSON.stringify(responseBody)}`);
     /**
      * Update the front end's userInfo task list with the new
      * task.
