@@ -7,6 +7,7 @@
  * - https://developer.mozilla.org/en-US/docs/Web/API/Response
  * - https://reactjs.org/docs/hooks-state.html
  * - https://www.robinwieruch.de/react-event-handler/
+ * - https://reactjs.org/docs/context.html
 */
 
 import './styles.css';
@@ -64,11 +65,7 @@ function Main() {
             />
           }></Route>
           <Route exact path='/dashboard' element={
-            <DashboardPage
-              username = {loginUsername}
-              password = {loginPassword}
-              userInfo = {userInfo}
-            />
+            <DashboardPage />
           }></Route>
         </Routes>
       </BrowserRouter>

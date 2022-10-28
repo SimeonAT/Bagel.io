@@ -1,4 +1,8 @@
 import React from 'react';
+/**
+ * --- SOURCES UTILIZED ----
+ * - https://reactjs.org/docs/context.html
+ */
 
 /**
  * The React Context that <Main /> will utilize to ensure that

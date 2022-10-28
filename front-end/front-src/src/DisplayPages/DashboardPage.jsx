@@ -154,24 +154,13 @@ function getTaskDisplayList(tasksToDisplay) {
 }
 
 export default function Dashboard(props) {
-  const userInfo = props.userInfo;
-
   let tasksToDisplay = undefined;
   let taskDisplayList = [];
-
-  // Leaving this for now, since very similar logic will be used to
-  // pull tasks and create task box list to display
-  //
-  if (userInfo !== undefined) {
-    tasksToDisplay = props.userInfo.tasks;
-    taskDisplayList = getTaskDisplayList(tasksToDisplay);
-  }
-
-  const [taskListToRender, setTaskList] = React.useState(taskDisplayList);
+  const [taskListToRender, setTaskList] = React.useState([]);
 
   const updateTask = async function(event, taskId, startDate, endDate, tag, complete) {
     event.preventDefault();
-    //Send new task data to server
+    // Send new task data to server
     const httpResponse = await fetch(RegisterURL, {
       mode: "cors",
       method: "post",
@@ -218,7 +207,13 @@ export default function Dashboard(props) {
                         Check in your completed tasks!
                       </Typography>
 
-                      {taskListToRender}
+                      <UserInfo.Consumer>
+                        {({username, password, userInfo}) => {
+                          tasksToDisplay = userInfo.tasks;
+                          taskDisplayList = getTaskDisplayList(tasksToDisplay);
+                          return (taskDisplayList);
+                        }}
+                      </UserInfo.Consumer>
                     </Box>
                   </Grid>
 
