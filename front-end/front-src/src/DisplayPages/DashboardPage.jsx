@@ -10,6 +10,9 @@
    - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
    - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString
    - https://jsdoc.app/about-getting-started.html
+   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
+   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
+   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
 
    - https://stackabuse.com/get-http-post-body-in-express-js/
    - https://www.npmjs.com/package/body-parser
@@ -115,8 +118,6 @@ const theme = createTheme( {
  */
 function getTaskDisplayList(tasksToDisplay) {
   return tasksToDisplay.map((task) => {
-    console.log(task.taskid);
-    console.log(new Date(task.startDate));
     return (
       <Box key = {task.taskid} sx={{
         width: 450,
@@ -140,10 +141,17 @@ function getTaskDisplayList(tasksToDisplay) {
             <div>
               <b>End Time:</b> {new Date(task.endDate).toLocaleString()}
             </div>
-            <CompleteButton onClick = {(event) => {
+            <CompleteButton onClick = {() => {
               // Removes the task from the task display list,
               // and updates the state of the display list.
               //
+              const taskToRemove = task;
+              tasksToDisplay = tasksToDisplay.filter((task) => {
+                return task === taskToRemove;
+              });
+
+              console.log(tasksToDisplay);
+              return;
             }}>
               I completed this task
             </CompleteButton>
