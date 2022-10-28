@@ -163,6 +163,7 @@ function getTaskDisplayList(tasksToDisplay) {
 }
 
 export default function Dashboard(props) {
+  const [homeView, openHome] = useState(false);
   let tasksToDisplay = undefined;
   let taskDisplayList = [];
   const [taskListToRender, setTaskList] = React.useState([]);
@@ -178,14 +179,36 @@ export default function Dashboard(props) {
     });
   }
 
+  const navigateToHome = async function(event) {
+    event.preventDefault();
+    openHome(true);
+    return;
+  }
+
   const renderPage = (
     <ThemeProvider theme={theme}>
+
+      <Link href = '/home' style={{ textDecoration: 'none' }}>
+        <Box textAlign='left'>
+            <Button 
+              color="primary"
+              type="submit"
+              onClick = {navigateToHome}
+              sx={{ mt: 3, mb: 2, mr: 5, ml: 5,
+                pr: 7, pl: 7, 
+                border: 2,
+                fontWeight: 600,
+                fontSize: 16 }} >
+              Home
+            </Button>
+          </Box>
+      </Link>
+
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Container component="main">
           <CssBaseline />
               <Box
                 sx={{
-                  marginTop: 8,
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
@@ -257,8 +280,8 @@ return (
         {({username, password, userInfo}) => {
           return (
             <div>
-              {(username === undefined ? 
-               <Navigate to = "/login" /> : (<div>{renderPage}</div>))}
+              {homeView ? (<Navigate to = "/home" />) : 
+              (username === undefined ? <Navigate to = "/login" /> : renderPage)}
             </div>
           );
         }}

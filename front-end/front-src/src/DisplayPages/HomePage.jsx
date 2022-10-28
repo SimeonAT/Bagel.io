@@ -110,21 +110,12 @@ export default function Home(props) {
 
   const [taskListToRender, updateList] = React.useState(taskDisplayList);
 
-  const [startValue, setStartValue] = React.useState(
-    dayjs()
-  );
+  const [startDateWithNoInitialValue, setStartDateWithNoInitialValue] =
+    React.useState(null);
 
-  const handleStartChange = (newValue) => {
-    setStartValue(newValue);
-  };
+  const [endDateWithNoInitialValue, setEndDateWithNoInitialValue] =
+    React.useState(null);
 
-  const [endValue, setEndValue] = React.useState(
-    dayjs(dayjs()+1)
-  );
-
-  const handleEndChange = (newValue) => {
-    setEndValue(newValue);
-  };
   
   const taskNameRef = useRef('');
   const taskStartRef = useRef('');
@@ -206,6 +197,11 @@ export default function Home(props) {
     );
     console.log(`newTask.taskid: ${JSON.stringify(responseBody.taskid)}`);
     updateList(newList);
+
+    taskNameRef.current.value = '';
+    categoryRef.current.value = '';
+    setEndDateWithNoInitialValue(null);
+    setStartDateWithNoInitialValue(null);
   };
 
   const navigateToDashboard = async function(event) {
@@ -223,11 +219,27 @@ export default function Home(props) {
   const renderPage = (
     <ThemeProvider theme={theme}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
+
+        <Link href = '/' style={{ textDecoration: 'none' }}>
+          <Box textAlign='left'>
+              <Button 
+                color="primary"
+                type="submit"
+                sx={{ mt: 3, mb: 2, mr: 5, ml: 5,
+                  pr: 7, pl: 7, 
+                  border: 2,
+                  fontWeight: 600,
+                  fontSize: 16 }} >
+                Logout
+              </Button>
+            </Box>
+        </Link>
+
         <Container component="main">
           <CssBaseline />
             <Box
               sx={{
-                marginTop: 8,
+                marginTop: 5,
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
@@ -287,8 +299,8 @@ export default function Home(props) {
                             name="startDate"
                             label="Start Date/Time"
                             id="startDate"
-                            value={startValue}
-                            onChange={handleStartChange}
+                            value={startDateWithNoInitialValue}
+                            onChange={(newValue) => setStartDateWithNoInitialValue(newValue)}
                           />
 
                           <DateTimePicker
@@ -301,8 +313,8 @@ export default function Home(props) {
                             name="endDate"
                             label="End Date/Time"
                             id="endDate"
-                            value={endValue}
-                            onChange={handleEndChange}
+                            value={endDateWithNoInitialValue}
+                            onChange={(newValue) => setEndDateWithNoInitialValue(newValue)}
                           />
                         </Stack>
 
