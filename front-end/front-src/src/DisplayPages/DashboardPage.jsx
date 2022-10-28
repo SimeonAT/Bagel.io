@@ -68,6 +68,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Grid from '@mui/material/Grid';
 
+import UserInfo from '../UserContext';
 import styled from "styled-components";
 
 const BackendURL = "http://localhost:8000";
@@ -153,8 +154,6 @@ function getTaskDisplayList(tasksToDisplay) {
 }
 
 export default function Dashboard(props) {
-  const username = props.username;
-  const password = props.password;
   const userInfo = props.userInfo;
 
   let tasksToDisplay = undefined;
@@ -195,9 +194,15 @@ export default function Dashboard(props) {
                 }}
                 >
 
-                <Typography component="h1" variant="h5">
-                  {username}'s Dashboard!
-                </Typography>
+                <UserInfo.Consumer>
+                  {({username, password, userInfo}) => {
+                    return (
+                      <Typography component="h1" variant="h5">
+                          {username}'s Dashboard
+                      </Typography>
+                    );
+                  }}
+                </UserInfo.Consumer>
 
                 <Grid container spacing={2} >
                   <Grid item xs={6}>
@@ -244,9 +249,16 @@ export default function Dashboard(props) {
 return (
   <div className="DashboardPage">
     <div className="dashboardView">
-        {(username === undefined ? 
-          <Navigate to = "/login" />
-         : renderPage)}
+      <UserInfo.Consumer>
+        {({username, password, userInfo}) => {
+          return (
+            <div>
+              {(username === undefined ? 
+               <Navigate to = "/login" /> : (<div>{renderPage}</div>))}
+            </div>
+          );
+        }}
+      </UserInfo.Consumer>
     </div>
   </div>
 );
