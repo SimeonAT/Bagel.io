@@ -73,7 +73,6 @@ const theme = createTheme( {
 
 export default function Home(props) {
   const [dashboardView, openDashboard] = useState(false);
-
   const username = props.username;
   const password = props.password;
 
@@ -84,8 +83,8 @@ export default function Home(props) {
   //  - "username"
   // for any given user.
   //
-  const userInfo = props.userInfo;
-  const setUserInfo = props.setUserInfo;
+  const [userInfo, updateUserInfo] = React.useState(props.userInfo);
+  const giveMainUserInfo = props.setUserInfo;
 
   let tasksToDisplay = undefined;
   let taskDisplayList = [];
@@ -142,7 +141,7 @@ export default function Home(props) {
     // FIXME: add check to make sure taskEndISO >= taskStartISO
 
     // console.log(`taskStartRef.current.value: ${new Date(taskStartRef.current.value).toISOString()}`);
-    //Set username and password to the backend server
+    // Set username and password to the backend server
     const httpResponse = await fetch(scheduleTaskURL, {
       mode: "cors",
       method: "post",
@@ -160,6 +159,28 @@ export default function Home(props) {
       return;
     }
     let responseBody = await httpResponse.json();
+
+    /**
+     * Update the front end's userInfo task list with the new
+     * task.
+     * 
+     * NOTE AND FIXME:
+     *    There is a potential bug here. This code currently
+     *    has no way to track whether or not a task has been completed.
+     *    We need the server to send, in its response, back the updated list,
+     *    so the front-end can also update its list.
+     */
+     const newUserInfo = userInfo;
+     newUserInfo.tasks.push({
+      username: username,
+      taskName: taskNameRef.current.value,
+      startDate: taskStartISO,
+      endDate: taskEndISO,
+      tag: categoryRef.current.value,
+      complete: false,
+     });
+     updateUserInfo(newUserInfo);
+
     /**
      * React will not re-render the task list if we add a new task.
      * We have to save the task list as a React state. Whenever
