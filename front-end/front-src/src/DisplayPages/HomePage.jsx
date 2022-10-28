@@ -76,7 +76,16 @@ export default function Home(props) {
 
   const username = props.username;
   const password = props.password;
+
+  // UserInfo is an object containing the variables:
+  //  - "email"
+  //  - "password"
+  //  - "list" (of tasks)
+  //  - "username"
+  // for any given user.
+  //
   const userInfo = props.userInfo;
+  const setUserInfo = props.setUserInfo;
 
   let tasksToDisplay = undefined;
   let taskDisplayList = [];
@@ -180,6 +189,13 @@ export default function Home(props) {
   const navigateToDashboard = async function(event) {
     event.preventDefault();
     openDashboard(true);
+
+    // In the event the user adds new tasks,
+    // give <Main /> the new list of tasks,
+    // so it can be passed down to <Dashboard />
+    // through the use of Context.
+    //
+    return;
   }
 
   const renderPage = (

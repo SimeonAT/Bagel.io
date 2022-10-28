@@ -62,6 +62,7 @@ function Main() {
               username = {loginUsername}
               password = {loginPassword}
               userInfo = {userInfo}
+              setUserInfo = {setUserInfo}
             />
           }></Route>
           <Route exact path='/dashboard' element={
