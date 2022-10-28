@@ -44,8 +44,7 @@ import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Copyright from "./Copyright";
-import Calendar from "./Calendar";
+
 import {Navigate} from "react-router-dom";
 import dayjs, { Dayjs } from 'dayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
@@ -54,10 +53,14 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Grid';
 
+import Copyright from "./Copyright";
+import Calendar from "./Calendar";
+
+
 const BackendURL = "http://localhost:8000";
-// const LoginURL = BackendURL + "/logindatabase";
-// const RegisterURL = BackendURL + "/register";
-// const HomeURL = BackendURL + "/home";
+const LoginURL = BackendURL + "/logindatabase";
+const RegisterURL = BackendURL + "/register";
+const HomeURL = BackendURL + "/home";
 const scheduleTaskURL = BackendURL + "/scheduleTask";
 const GetTasks = BackendURL + "/getTasks";
 
@@ -73,9 +76,8 @@ const theme = createTheme( {
   });
 
 export default function Home(props) {
-  //console.log("These are the props");
-  //console.log(props);
-
+  const [dashboardView, openDashboard] = useState(false);
+  console.log(props);
 
   const username = props.username;
   const password = props.password;
@@ -84,15 +86,11 @@ export default function Home(props) {
   let tasksToDisplay = undefined;
   let taskDisplayList = [];
 
-  console.log("the props bestie")
-  console.log(props.userInfo)
-
   if (userInfo !== undefined) {
     tasksToDisplay = props.userInfo.tasks;
   
     for (let i = 0; i < tasksToDisplay.length; i++) {
       const label = tasksToDisplay[i].name;
-      //console.log(tasksToDisplay[i].name);
       const complete = tasksToDisplay[i].complete;
       taskDisplayList.push(
         <FormControlLabel 
@@ -172,6 +170,10 @@ export default function Home(props) {
     updateList(newList);
   };
 
+  const navigateToDashboard = async function(event) {
+    event.preventDefault();
+    openDashboard(true);
+  }
 
   const renderPage = (
     <ThemeProvider theme={theme}>
@@ -193,29 +195,32 @@ export default function Home(props) {
 
                 <Grid container spacing={2}>
                   <Grid item xs={6}>
-                      <Box label="see-calendar-column"
+                    <Box label="calendar-column"
                         sx={{
                           width: 1,
                           display: 'flex',
                           flexDirection: 'column',
                           alignItems: 'center',
                         }}
-                      >
-                        <Typography component="h1" variant="h5" sx={{ mb: 2 }}>
-                          Today's Tasks
-                        </Typography>
+                        >
+                          <Typography component="h1" variant="h5">
+                            Today's Tasks
+                          </Typography>
 
-                        
-                        <Calendar
-                        userInfo = {props.userInfo}
-                        
-                        />
+                          <Calendar
+                            userInfo = {props.userInfo}
+                          />
 
-                      </Box>
-                    </Grid>
+
+
+
+                    </Box>
+                    
+                  </Grid>
 
                   <Grid item xs={6}>
-                    <Box label="create-task-column"
+
+                  <Box label="create-task-column"
                       sx={{
                         width: 1,
                         display: 'flex',
@@ -294,29 +299,43 @@ export default function Home(props) {
                       </Box>
                     </Box>
 
+
+
+
                     <Box label="see-task-list-column"
-                        sx={{
-                          width: 1,
-                          display: 'flex',
-                          flexDirection: 'column',
-                          alignItems: 'center',
-                        }}
-                      >
-                        <Typography component="h1" variant="h5" sx={{ mb: 2 }}>
-                          Additional tasks
-                        </Typography>
+                      sx={{
+                        width: 1,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                      }}
+                     >
+                      <Typography component="h1" variant="h5" sx={{ mb: 2 }}>
+                        Today's Tasks
+                      </Typography>
 
-                        <FormGroup sx={{ width:1 }}>
-                            {taskListToRender}
-                        </FormGroup>
+                      <FormGroup sx={{ width:1 }}>
+                        {taskListToRender}
+                      </FormGroup>
 
-                      </Box>
-                      
-                      
+                    </Box>
                   </Grid>
-
-                  
                 </Grid>
+
+                <Box>
+                    <Button
+                      color="primary"
+                      type="submit"
+                      fullWidth
+                      variant="outlined"
+                      onClick = {navigateToDashboard}
+                      sx={{ mt: 6, mb: 2, 
+                        fontSize: 22,
+                        border: 2}}
+                      >
+                      Go To Dashboard
+                    </Button>
+                </Box>
 
           </Box>         
 
@@ -328,8 +347,8 @@ export default function Home(props) {
 return (
   <div className="HomePage">
     <div className="taskView">
-        {username === undefined ? <Navigate to = "/login" /> :
-         renderPage}
+    {dashboardView ? (<Navigate to = "/dashboard" />) : 
+    (username === undefined ? <Navigate to = "/login" /> : renderPage)}
     </div>
   </div>
 );

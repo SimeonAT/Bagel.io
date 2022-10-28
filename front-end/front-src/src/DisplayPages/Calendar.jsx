@@ -11,7 +11,7 @@ import {
 } from '@devexpress/dx-react-scheduler-material-ui';
 const BackendURL = "http://localhost:8000";
 
-const currentDate = new Date();
+const currentDate = new Date(); 
 
 
 function Calendar(props) {
@@ -26,10 +26,13 @@ function Calendar(props) {
     if(userInfo !== undefined) {
         calendarTasks = props.userInfo.tasks;
         for(let i = 0; i < calendarTasks.length; i++) {
+            //let epcochToStart = 
+            //let epcochToEnd = new Date(calendarTasks[i].startDate/1);
+            
             calendarData.push( {
                 title: calendarTasks[i].name,
-                startDate: new Date(2022, 9, 26, 14, 30),
-                endDate: new Date(2022, 9, 26, 16, 0), 
+                startDate: new Date(calendarTasks[i].startDate/1),
+                endDate: new Date(calendarTasks[i].endDate/1), 
                 id: {i}
                 //startDate: calendarTasks[i].startDate,
                 //endDate: calendarTasks[i].endDate,
@@ -40,7 +43,7 @@ function Calendar(props) {
         console.log(calendarData);
         console.log("yeet");
     }
-   let tasksToDisplay =[];
+   //let tasksToDisplay =[];
     return (
         <Paper>
             <Scheduler
