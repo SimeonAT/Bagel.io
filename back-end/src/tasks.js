@@ -2,20 +2,24 @@
 // Then use the mock database to test it for the time being
 
 const sendError = require("./sendError");
-const objects = require("./objects");
 const dbUtils = require("./dbUtils");
-const { v4: uuidv4 } = require('uuid')
+const { v4: uuidv4 } = require('uuid');
 
-//CHECK OBJECTS.JS FOR MOCKDATABASE + TASK OBJ IMPLEMENTATION.
-let Task = objects.Task;
-let mockDatabase = new objects.mockDatabase();
-let temp_user_obj = new objects.user("user1", "pass1", "");
-temp_user_obj = mockDatabase.registerUser(temp_user_obj);
-temp_user_obj.addTask(new Task("test", 0, new Date(), "Work", true));
+// //CHECK OBJECTS.JS FOR MOCKDATABASE + TASK OBJ IMPLEMENTATION.
+// const objects = require("./objects");
+// let Task = objects.Task;
+// let mockDatabase = new objects.mockDatabase();
+// let temp_user_obj = new objects.user("user1", "pass1", "");
+// temp_user_obj = mockDatabase.registerUser(temp_user_obj);
+// temp_user_obj.addTask(new Task("test", 0, new Date(), "Work", true));
+// exports.mockDatabase = mockDatabase;
 
-exports.mockDatabase = mockDatabase;
-
-//register new user
+// register new user
+// <Inputs> request body: {username:"", email:"", password:""}
+// <Functionality> compares given username & email with the usernames & emails in db
+// if no duplicates, adds given username, email, password to database
+// <Returns> sends response with body: {loginAllowed: true} if register successful,
+// {loginAllowed: false} if unsuccessful
 exports.register = async (request, response) => {
   //console.log("HELLO");
   try {
@@ -23,12 +27,12 @@ exports.register = async (request, response) => {
     response.set("Access-Control-Allow-Origin", "*");
     response.setHeader("Content-Type", "application/json");
     // get username/email/password from request body
-    const registerInfo = JSON.parse(request.body);    
+    const registerReqBody = JSON.parse(request.body);    
     // check if username/email in db
     const users = await dbUtils.getMembers();
     let alreadyInUse = false;
     for (const userObj of users) {
-      if (userObj.username === registerInfo.username || userObj.email === registerInfo.email) {
+      if (userObj.username === registerReqBody.username || userObj.email === registerReqBody.email) {
         alreadyInUse = true;
         break;
       }
@@ -40,7 +44,7 @@ exports.register = async (request, response) => {
         loginAllowed: false
       });
     } else {
-      await dbUtils.insertUser(registerInfo.username, registerInfo.email, registerInfo.password);
+      await dbUtils.insertUser(registerReqBody.username, registerReqBody.email, registerReqBody.password);
       console.log("Register succeeded");
       response.send({
         loginAllowed: true,
@@ -53,46 +57,53 @@ exports.register = async (request, response) => {
   }
 }
 
-//login
+// Log user in
+// <Inputs> request body: {username:"", email:"", password:""}
+// <Functionality> compares given username & password with the usernames & passwords in db
+// <Returns> sends response with body: {loginAllowed: true, payload: {}} if match,
+// {loginAllowed: false} if no match
 exports.loginDatabase = async (request, response) => {
   //console.log("Here?");
   try {
     response.set("Access-Control-Allow-Origin", "*");
     response.setHeader("Content-Type", "application/json");
-    const loginInfo = JSON.parse(request.body);
+    const loginReqBody = JSON.parse(request.body);
     // get users from db
     const users = await dbUtils.getMembers();
-    console.log(`loginInfo: ${JSON.stringify(loginInfo)}`);
-    console.log(`users: ${JSON.stringify(users)}`);
+    // console.log(`loginInfo: ${JSON.stringify(loginInfo)}`);
+    // console.log(`users: ${JSON.stringify(users)}`);
     // check if user in db
     let theUser = null;
     let userInDatabase = false;
     for (const userObj of users) {
-      if (userObj.username === loginInfo.username && userObj.memberpassword === loginInfo.password) {
+      if (userObj.username === loginReqBody.username && userObj.memberpassword === loginReqBody.password) {
         userInDatabase = true;
         theUser = userObj;
         break;
       }
     }
-    console.log(`userInDatabase: ${userInDatabase}`);
+    // console.log(`userInDatabase: ${userInDatabase}`);
     if (userInDatabase) {
       // get tasks from db
       let theUserTasks = await dbUtils.getMemberScheduledTasks(theUser.username);
-      console.log(`theUser: ${JSON.stringify(theUser)}`);
-      console.log(`theUserTasks: ${JSON.stringify(theUserTasks)}`);
-      // make tasks array
+      // console.log(`theUser: ${JSON.stringify(theUser)}`);
+      // console.log(`theUserTasks: ${JSON.stringify(theUserTasks)}`);
+      // make task array
       const taskArray = [];
       for (const task of theUserTasks) {
-        console.log(`task: ${JSON.stringify(task)}`);
+        // console.log(`(loginDatabase)taskid: ${task.scheduledid}`);
+        // console.log(`task: ${JSON.stringify(task)}`);
         taskArray.push({
           "name": task.taskname,
           "startDate": task.starttime,
           "endDate": task.endtime,
           "tag": task.tasktag,
           "complete": task.complete,
+          "taskid": task.scheduledid,
         })
       }
-      console.log(`taskArray: ${JSON.stringify(taskArray)}`);
+      // console.log(`taskArray: ${JSON.stringify(taskArray)}`);
+      // send response with user info in body
       response.send({
         loginAllowed: true,
         payload: {
@@ -111,14 +122,17 @@ exports.loginDatabase = async (request, response) => {
   }
 }
 
-//Get task list from DB using username as key & send result to front-end
+// Get task list from DB using username as key & send result to front-end
+// <Inputs> request body: {username:""}
+// <Functionality> queries db for all tasks associated with username
+// <Returns> sends response with body: {taskList: taskArray}
 exports.getTasks = async (request, response) => {
   try {
     response.set("Access-Control-Allow-Origin", "*");
     response.setHeader("Content-Type", "application/json");
 
-    const loginInfo = JSON.parse(request.body);
-    let theUserTasks = await dbUtils.getMemberScheduledTasks(loginInfo.username);
+    const getReqBody = JSON.parse(request.body);
+    let theUserTasks = await dbUtils.getMemberScheduledTasks(getReqBody.username);
     const taskArray = [];
     if (!theUserTasks) {
       response.send({taskList: taskArray});
@@ -130,6 +144,7 @@ exports.getTasks = async (request, response) => {
           "endDate": task.endtime,
           "tag": task.tasktag,
           "complete": task.complete,
+          "taskid": task.scheduledid,
         })
       }
       response.send({taskList: taskArray});
@@ -141,53 +156,56 @@ exports.getTasks = async (request, response) => {
 }
 
 // Adds task to database, returns code 200 on success
+// <Inputs> request body: {username:"", taskName:"", startDate:"", endDate:"", tag:""}
+// <Functionality> inserts task described in request body into the database
+// <Returns> taskid of the inserted task
+// NOTE: any Date() in the request body must have been 
+// converted to a UTC string with the "new Date().toUTCString()" method
 exports.scheduletask = async (request, response) => {
   try {
     response.set("Access-Control-Allow-Origin", "*");
     response.setHeader("Content-Type", "application/json");
     
-    //check createtask() in HomePage.js, it's formatted like below.
-    //Also check objects.js to see how to format Task() objects.
-    const payload = JSON.parse(request.body);
-    if (!payload || !payload.username || !payload.taskName || !payload.startDate || !payload.endDate || !payload.tag) {
-      console.log("No payload (no body) or payload missing fields.");
+    // check createtask() in HomePage.js, it's formatted like below.
+    // Also check objects.js to see how to format Task() objects.
+    const schedReqBody = JSON.parse(request.body);
+    if (!schedReqBody || !schedReqBody.username || !schedReqBody.taskName || !schedReqBody.startDate || !schedReqBody.endDate || !schedReqBody.tag) {
+      console.log("No request body or request body missing fields.");
       response.status(500).send();
     } else {
       let presetid = uuidv4();
-      let startDateExact = new Date(payload.startDate).getTime().toString();
-      let endDateExact = new Date(payload.endDate).getTime().toString();
-      let result = await dbUtils.insertTask(payload.username, payload.taskName, startDateExact, endDateExact, payload.tag, presetid);
-      console.log(JSON.stringify(result));
-      response.status(200).send();
+      let scheduledid = uuidv4();
+      // console.log(payload.startDate);
+      let result = await dbUtils.insertTask(schedReqBody.username, schedReqBody.taskName, schedReqBody.startDate, schedReqBody.endDate, schedReqBody.tag, presetid, scheduledid);
+      // console.log(JSON.stringify(result));
+      response.status(200).send({taskid: result[1].scheduledid});
     }
-  //   const username = payload.username;
-  //   const taskName = payload.taskName;
-  //   const startDate = payload.startDate;
-  //   const endDate = payload.endDate;
-  //   const tag = payload.tag;
-
-  //   var userObj = mockDatabase.getUser(username);
-  //   let newTask;
-  //   if(payload !== undefined) {
-  //     newTask = new Task(taskName, startDate, endDate, tag, true);
-  //   } else {
-  //     console.log("No payload (no body) added.");
-  //     newTask = new Task("Test_task", 0, new Date(), 1, true);
-  //   }
-  //   //let newTask = new Task("Test_task", new Date(), 1, true);
-  //   userObj.addTask(newTask);
-  //   console.log("PRINT USER DATABASE STORAGE:\n",userObj);
-  //   //taskList.addTask(date.getTime(),newTask);
-
-  //   response.status(200);
-  //   //response.send(testDatabase[username].tasks);
-  //   response.send(userObj.tasks);
   }
   catch (error) {
     sendError.sendError(error);
   }
   
 }
+
+
+// Updates task parameters using ID as primary key
+// <Inputs> request body: {taskId:"", taskName:"", startDate:"", endDate:"", tag:"", complete:"" }
+// <Functionality> updates task with whatever data is sent in body (some fields may be received as blank)
+// <Returns> sends response with body: {success: true}
+exports.updateTask = async (request, response) => {
+  try {
+    response.set("Access-Control-Allow-Origin", "*");
+    response.setHeader("Content-Type", "application/json");
+    const updateTaskReqBody = JSON.parse(request.body);
+    // dbUtils.updateTask(updateTaskReqBody.taskId, updateTaskReqBody.startDate, updateTaskReqBody.endDate, 
+    //   updateTaskReqBody.tag, updateTaskReqBody.complete);
+    response.send({success: true});
+  }
+  catch (error) {
+    sendError.sendError(error, response);
+  }
+}
+
 
 // FORTESTING
 exports.testDBGet = async (request, response) => {

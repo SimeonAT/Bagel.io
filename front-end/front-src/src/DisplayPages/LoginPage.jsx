@@ -43,7 +43,7 @@ const theme = createTheme( {
   palette: {
     primary: {
       light: '#d1ccdc',
-      main: '##886f68',
+      main: '#263238',
       dark: '#424c55',
       contrastText: '#fff',
     },
@@ -93,6 +93,7 @@ export default function SignIn(props) {
   name === errorMessage.name && (
     <div className="error">{errorMessage.message}</div>
   );
+  
   const renderForm = (
     <ThemeProvider theme={theme}>
     <Container component="main" maxWidth="xs">
@@ -103,8 +104,7 @@ export default function SignIn(props) {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-        }}
-      >
+        }}>
 
         <Typography component="h1" variant="h5">
           Sign in
@@ -134,17 +134,17 @@ export default function SignIn(props) {
           />
           {renderErrorMessage("pass")}
 
-
-          <Button
-            color="primary"
-            type="submit"
-            fullWidth
-            
-            variant="outlined"
-            sx={{ mt: 3, mb: 2 }}
-          >
-            Sign In
-          </Button>
+          <Box textAlign='center'>
+            <Button
+              color="primary"
+              type="submit"
+              variant="outlined"
+              sx={{ mt: 3, mb: 2,
+                pr: 7, pl: 7,
+                border: 2, }}>
+              Sign In
+            </Button>
+          </Box>
 
         </Box>
       </Box>
@@ -152,12 +152,11 @@ export default function SignIn(props) {
     </Container>
   </ThemeProvider>
 );
+
 return (
   <div className="Login">
     <div className="login-form">
-        {loginAllowed ? (
-          <Navigate to = "/home" />
-        ) : renderForm}
+        {loginAllowed ? (<Navigate to = "/home" />) : renderForm}
     </div>
   </div>
 );

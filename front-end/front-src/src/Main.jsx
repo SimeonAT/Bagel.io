@@ -10,21 +10,21 @@
 */
 
 import './styles.css';
-import HeroView from "./DisplayPages/HeroPageView";
+import HeroView from './DisplayPages/HeroPageView';
 import LoginPage from './DisplayPages/LoginPage';
 import RegisterPage from './DisplayPages/RegisterPage';
 import HomePage from './DisplayPages/HomePage';
 import DashboardPage from './DisplayPages/DashboardPage';
-//import ReactDOM from "react-dom/client";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import React from "react";
+// import ReactDOM from "react-dom/client";
+import {BrowserRouter, Routes, Route} from 'react-router-dom';
+import React from 'react';
 
 function Main() {
   /** Here's an idea we should try:
    *      Rather than sending an HTTP request right when we login,
    *      we can get the server to send user data in its HTTP response
    *      payload allowing the user to login.
-   * 
+   *
    *      All that data can be passed as props from the LoginPage,
    *      to Main, then passed down as props to the Home Page.
    */
@@ -37,32 +37,32 @@ function Main() {
       <Routes>
         <Route exact path='/' element={< HeroView />}></Route>
         <Route exact path='/login' element={
-          <LoginPage 
-           setUsername = {setUsername}
-           setPassword = {setPassword}
-           setUserInfo = {setUserInfo}
+          <LoginPage
+            setUsername = {setUsername}
+            setPassword = {setPassword}
+            setUserInfo = {setUserInfo}
           />
         }></Route>
         <Route exact path='/register' element={
-          <RegisterPage 
-           setUsername = {setUsername}
-           setPassword = {setPassword}
-           setUserInfo = {setUserInfo}
+          <RegisterPage
+            setUsername = {setUsername}
+            setPassword = {setPassword}
+            setUserInfo = {setUserInfo}
           />
         }></Route>
         <Route exact path='/home' element={
-          <HomePage 
+          <HomePage
             username = {loginUsername}
             password = {loginPassword}
             userInfo = {userInfo}
-          />  
+          />
         }></Route>
-          <Route exact path='/dashboard' element={
-          <DashboardPage 
+        <Route exact path='/dashboard' element={
+          <DashboardPage
             username = {loginUsername}
             password = {loginPassword}
             userInfo = {userInfo}
-          />  
+          />
         }></Route>
       </Routes>
     </BrowserRouter>

@@ -136,7 +136,7 @@ button {
 
 button:hover {
   color: #553c9a;
-  box-shadow: 0 0 5vw rgba(0, 128, 128, 0.6);
+  box-shadow: 0 0 5vw rgba(135, 142, 98, 0.6);
   background-color: #FFEADF;
 }
 

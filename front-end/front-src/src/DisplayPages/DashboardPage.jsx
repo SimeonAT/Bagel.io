@@ -6,6 +6,11 @@
    - https://expressjs.com/en/4x/api.html#express.json
    - https://www.stackhawk.com/blog/react-cors-guide-what-it-is-and-how-to-enable-it/
 
+   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
+   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
+   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString
+   - https://jsdoc.app/about-getting-started.html
+
    - https://stackabuse.com/get-http-post-body-in-express-js/
    - https://www.npmjs.com/package/body-parser
    - https://dmitripavlutin.com/fetch-with-json/
@@ -16,6 +21,26 @@
 
    - https://stackoverflow.com/questions/35098324/react-form-component-onsubmit-handler-not-working
    - https://stackoverflow.com/questions/51521237/onsubmit-is-not-working-in-react-js
+
+   - https://reactjs.org/docs/state-and-lifecycle.html
+   - https://reactjs.org/docs/hooks-intro.html
+   - https://beta.reactjs.org/learn/updating-arrays-in-state
+   - https://www.robinwieruch.de/react-update-item-in-list/
+   - https://reactjs.org/docs/lists-and-keys.html
+   - https://www.freecodecamp.org/news/how-to-clone-an-array-in-javascript-1d3183468f6a/
+
+   - https://styled-components.com/docs/api#primary
+   - https://styled-components.com/
+
+   - https://www.w3schools.com/css/css_font.asp
+   - https://www.w3schools.com/css/css_inline-block.asp
+   - https://www.w3schools.com/colors/colors_picker.asp
+   - https://www.w3schools.com/colors/colors_names.asp
+   - https://www.w3schools.com/css/css_positioning.asp
+   - https://www.w3schools.com/cssref/pr_font_weight.asp
+   - https://www.w3schools.com/css/css_margin.asp
+   - https://www.w3schools.com/css/css_padding.asp
+   - https://www.w3schools.com/css/css_boxmodel.as
 */
 import {useState} from "react";
 import {useRef} from 'react';
@@ -43,27 +68,91 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Grid from '@mui/material/Grid';
 
+import styled from "styled-components";
+
 const BackendURL = "http://localhost:8000";
 const LoginURL = BackendURL + "/logindatabase";
 const RegisterURL = BackendURL + "/register";
 const HomeURL = BackendURL + "/home";
 const scheduleTaskURL = BackendURL + "/scheduleTask";
 const GetTasks = BackendURL + "/getTasks";
+const checkInTask = BackendURL + "/checkInTask";
+
+const CompleteButton = styled.button`
+  font-size: 18px;
+  width: 200px;
+  height: 40px;
+  margin-left: 15%;
+  background-color: Lavender;
+`;
+
+const TaskDisplay = styled.div`
+  padding-top: 3%;
+  padding-left: 10%;
+  padding-right: 10%;
+`;
 
 const theme = createTheme( {
   palette: {
     primary: {
       light: '#d1ccdc',
-      main: '##886f68',
+      main: '#263238',
       dark: '#424c55',
       contrastText: '#fff',
     },
   },
   });
 
-export default function Dashboard(props) {
-  console.log(props);
+/** Given the lists of task objects, returns the
+ *  JSX that will render a list of boxes, which each box
+ *  representing each task.
+ *
+ * @param {array} tasksToDisplay - the list of tasks to display 
+ * @returns {array} taskDisplayList - the JSX array that will
+ *                                    render each task as a box in
+ *                                    the webpage
+ */
+function getTaskDisplayList(tasksToDisplay) {
+  return tasksToDisplay.map((task) => {
+    console.log(task.taskid);
+    console.log(new Date(task.startDate));
+    return (
+      <Box key = {task.taskid} sx={{
+        width: 450,
+        border: '2px dashed grey',
+        margin: 'auto',
+        mb: 2,
+        '&:hover': {
+          backgroundColor: 'blue',
+          opacity: [0.5, 0.5, 0.5],},
+        }}>
+          <TaskDisplay>
+            <div>
+              <b>Task Name:</b> {task.name}
+            </div>
+            <div>
+            <b>Category:</b> {task.tag}
+            </div>
+            <div>
+              <b>Start Time:</b> {new Date(task.startDate).toLocaleString()}
+            </div>
+            <div>
+              <b>End Time:</b> {new Date(task.endDate).toLocaleString()}
+            </div>
+            <CompleteButton onClick = {(event) => {
+              // Removes the task from the task display list,
+              // and updates the state of the display list.
+              //
+            }}>
+              I completed this task
+            </CompleteButton>
+          </TaskDisplay>
+      </Box>
+    );
+  });
+}
 
+export default function Dashboard(props) {
   const username = props.username;
   const password = props.password;
   const userInfo = props.userInfo;
@@ -71,21 +160,25 @@ export default function Dashboard(props) {
   let tasksToDisplay = undefined;
   let taskDisplayList = [];
 
-  //Leaving this for now, since very similar logic will be used to pull tasks and create task box list to displayh
+  // Leaving this for now, since very similar logic will be used to
+  // pull tasks and create task box list to display
+  //
   if (userInfo !== undefined) {
     tasksToDisplay = props.userInfo.tasks;
-  
-    for (let i = 0; i < tasksToDisplay.length; i++) {
-      const label = tasksToDisplay[i].name;
-      const complete = tasksToDisplay[i].complete;
-      taskDisplayList.push(
-        <FormControlLabel 
-          control={complete ? <Checkbox defaultChecked /> : <Checkbox />} 
-          label={label}
-          key = {i}
-           />
-      );
-    }
+    taskDisplayList = getTaskDisplayList(tasksToDisplay);
+  }
+
+  const [taskListToRender, setTaskList] = React.useState(taskDisplayList);
+
+  const updateTask = async function(event, taskId, startDate, endDate, tag, complete) {
+    event.preventDefault();
+    //Send new task data to server
+    const httpResponse = await fetch(RegisterURL, {
+      mode: "cors",
+      method: "post",
+      "Content-Type": "application/json",
+      body: JSON.stringify({taskId: taskId, startDate: startDate, endDate: endDate, tag: tag, complete: complete})
+    });
   }
 
   const renderPage = (
@@ -103,7 +196,7 @@ export default function Dashboard(props) {
                 >
 
                 <Typography component="h1" variant="h5">
-                  *Your* Dashboard!
+                  {username}'s Dashboard!
                 </Typography>
 
                 <Grid container spacing={2} >
@@ -116,49 +209,11 @@ export default function Dashboard(props) {
                         alignItems: 'center',
                       }}
                       >
-
                       <Typography component="h1" variant="h5" sx={{ mb: 1 }}>
                         Check in your completed tasks!
                       </Typography>
 
-                      <Box noValidate sx={{ mt: 1 }}>
-                        <Box
-                          sx={{
-                            height: 300,
-                            border: '2px dashed grey',
-                            margin: 'auto',
-                            mb: 2,
-                            '&:hover': {
-                              backgroundColor: 'blue',
-                              opacity: [0.5, 0.5, 0.5],},
-                          }}
-                        />
-
-                        <Box
-                          sx={{
-                            height: 300,
-                            border: '2px dashed grey',
-                            margin: 'auto',
-                            mb: 2,
-                            '&:hover': {
-                              backgroundColor: 'blue',
-                              opacity: [0.5, 0.5, 0.5],},
-                          }}
-                        />
-
-                        <Box
-                          sx={{
-                            width: 500,
-                            height: 300,
-                            border: '2px dashed grey',
-                            margin: 'auto',
-                            mb: 2,
-                            '&:hover': {
-                              backgroundColor: 'blue',
-                              opacity: [0.5, 0.5, 0.5],},
-                          }}
-                        />
-                      </Box>
+                      {taskListToRender}
                     </Box>
                   </Grid>
 //this is a test save
@@ -189,7 +244,9 @@ export default function Dashboard(props) {
 return (
   <div className="DashboardPage">
     <div className="dashboardView">
-        {renderPage}
+        {(username === undefined ? 
+          <Navigate to = "/login" />
+         : renderPage)}
     </div>
   </div>
 );

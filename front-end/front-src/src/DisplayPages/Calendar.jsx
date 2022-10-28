@@ -13,6 +13,21 @@ const BackendURL = "http://localhost:8000";
 
 const currentDate = new Date(); 
 
+const Appointment = ({
+    children, style, ...restProps
+  }) => (
+    <Appointments.Appointment
+      {...restProps}
+      style={{
+        ...style,
+        backgroundColor: '#CAD58D',
+        borderRadius: '8px',
+      }}
+    >
+      {children}
+    </Appointments.Appointment>
+  );
+
 
 function Calendar(props) {
     console.log("These are the props:::");
@@ -31,8 +46,8 @@ function Calendar(props) {
             
             calendarData.push( {
                 title: calendarTasks[i].name,
-                startDate: new Date(calendarTasks[i].startDate/1),
-                endDate: new Date(calendarTasks[i].endDate/1), 
+                startDate: calendarTasks[i].startDate,
+                endDate: calendarTasks[i].endDate, 
                 id: {i}
                 //startDate: calendarTasks[i].startDate,
                 //endDate: calendarTasks[i].endDate,
@@ -59,7 +74,9 @@ function Calendar(props) {
                     endDayHour={20}
                     cellDuration = {60}
                     />
-                <Appointments />
+                <Appointments 
+                appointmentComponent={Appointment}
+                />
 
             </Scheduler>
         </Paper>

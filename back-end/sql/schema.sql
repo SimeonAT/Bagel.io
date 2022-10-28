@@ -5,4 +5,4 @@ CREATE TABLE member(email VARCHAR(50), username VARCHAR(32) UNIQUE PRIMARY KEY, 
 
 CREATE TABLE taskpreset(taskname VARCHAR(32), presetid VARCHAR(36) UNIQUE PRIMARY KEY, tasktag VARCHAR(32), username VARCHAR(32), FOREIGN KEY(username) REFERENCES member(username));
 
-CREATE TABLE taskscheduled(starttime VARCHAR(27), endtime VARCHAR(27), complete BOOLEAN, presetid VARCHAR(36), FOREIGN KEY(presetid) REFERENCES taskpreset(presetid));
+CREATE TABLE taskscheduled(starttime VARCHAR(27), scheduledid VARCHAR(36) UNIQUE PRIMARY KEY, endtime VARCHAR(27), complete BOOLEAN, presetid VARCHAR(36), FOREIGN KEY(presetid) REFERENCES taskpreset(presetid));

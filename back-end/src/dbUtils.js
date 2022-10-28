@@ -21,7 +21,7 @@ exports.getMembers = async () => {
 };
 
 exports.getMemberScheduledTasks = async (username) => {
-    const select = `SELECT taskpreset.taskname, taskpreset.tasktag, taskscheduled.starttime, taskscheduled.endtime, taskscheduled.complete 
+    const select = `SELECT taskpreset.taskname, taskpreset.tasktag, taskscheduled.starttime, taskscheduled.endtime, taskscheduled.complete, taskscheduled.scheduledid 
                     FROM member, taskpreset, taskscheduled
                     WHERE member.username = $1
                         AND member.username = taskpreset.username
@@ -47,21 +47,21 @@ exports.insertUser = async (username, email, password) => {
     return rows;
 };
 
-exports.insertTask = async (username, taskName, startDate, endDate, tagName, presetid) => {
+exports.insertTask = async (username, taskName, startDate, endDate, tagName, presetid, scheduledid) => {
     let insert = `INSERT INTO taskpreset(taskname, presetid, tasktag, username) 
-                    VALUES ($1, $2, $3, $4)
-                    RETURNING *`;
+                  VALUES ($1, $2, $3, $4)
+                  RETURNING *`;
     let query = {
         text: insert,
         values: [taskName, presetid, tagName, username]
     };
     let preset = await pool.query(query);
-    insert = `INSERT INTO taskscheduled(starttime, endtime, complete, presetid) 
-              VALUES ($1, $2, $3, $4)
+    insert = `INSERT INTO taskscheduled(starttime, scheduledid, endtime, complete, presetid) 
+              VALUES ($1, $2, $3, $4, $5)
               RETURNING *`;
     query = {
         text: insert,
-        values: [startDate, endDate, 'false', presetid]
+        values: [startDate, scheduledid, endDate, 'false', presetid]
     };
     let scheduled = await pool.query(query);
     return [preset.rows[0], scheduled.rows[0]];
@@ -76,6 +76,45 @@ exports.selectAll = async () => {
     const {rows} = await pool.query(query);
     return rows[0].thetime;
 };
+
+exports.deleteTask = async (taskId) => {
+    const deleteSQL = `DELETE FROM taskscheduled
+                       WHERE tasksched.taskid = $1
+                       RETURNING taskscheduled.presetid`;
+    const query = {
+        text: deleteSQL,
+        values: [taskId]
+    }
+    const {rows} = await pool.query(query);
+    return rows;
+}
+
+exports.updateTask = async (taskId, startDate, endDate, tag, complete) => {
+    let update = `UPDATE taskscheduled
+                  SET taskscheduled.starttime = $1, taskscheduled.endtime = $2, taskscheduled.complete = $3
+                  WHERE taskscheduled.scheduledid = $4
+                  RETURNING taskscheduled.presetid`;
+    let query = {
+        text: update,
+        values: [startDate, endDate, complete, taskId],
+    }
+    const scheduled = await pool.query(query);
+    console.log("dbUtils.js:102 "+scheduled.rows[0].presetid);
+    update = `UPDATE taskpreset
+              SET taskpreset.tasktag = $1
+              WHERE taskpreset.presetid = $2`;
+    query = {
+        text: update,
+        values: [tag, scheduled.rows[0].presetid],
+    }
+    await pool.query(query);
+    return;
+}
+
+
+//New Request for function:
+//exports.updateTask(taskId, startDate, endDate, tag, complete)
+/*  please :)  */
 
 
 
