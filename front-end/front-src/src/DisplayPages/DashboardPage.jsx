@@ -118,6 +118,7 @@ const theme = createTheme( {
  */
 function getTaskDisplayList(tasksToDisplay) {
   return tasksToDisplay.map((task) => {
+    console.log(task);
     return (
       <Box key = {task.taskid} sx={{
         width: 450,
@@ -150,7 +151,7 @@ function getTaskDisplayList(tasksToDisplay) {
                 return task === taskToRemove;
               });
 
-              console.log(tasksToDisplay);
+              tasksToDisplay = getTaskDisplayList(tasksToDisplay);
               return;
             }}>
               I completed this task

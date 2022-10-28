@@ -84,7 +84,6 @@ export default function Home(props) {
   // for any given user.
   //
   const [userInfo, updateUserInfo] = React.useState(props.userInfo);
-  const giveMainUserInfo = props.setUserInfo;
 
   let tasksToDisplay = undefined;
   let taskDisplayList = [];
@@ -165,19 +164,21 @@ export default function Home(props) {
      * task.
      * 
      * NOTE AND FIXME:
-     *    There is a potential bug here. This code currently
-     *    has no way to track whether or not a task has been completed.
      *    We need the server to send, in its response, back the updated list,
      *    so the front-end can also update its list.
+     *
+     *    If we don't do this, then the front-end and back-end server may end up
+     *    having different versions of the user's lists of tasks.
      */
      const newUserInfo = userInfo;
      newUserInfo.tasks.push({
       username: username,
-      taskName: taskNameRef.current.value,
+      name: taskNameRef.current.value,
       startDate: taskStartISO,
       endDate: taskEndISO,
       tag: categoryRef.current.value,
       complete: false,
+      taskid: undefined,
      });
      updateUserInfo(newUserInfo);
 
