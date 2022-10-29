@@ -1,4 +1,8 @@
 DROP TABLE IF EXISTS foobar;
+DROP TABLE IF EXISTS taskscheduled;
+DROP TABLE IF EXISTS taskpreset;
+DROP TABLE IF EXISTS member;
+
 CREATE TABLE foobar(thetime TIMESTAMP WITH TIME ZONE);
 
 CREATE TABLE member(email VARCHAR(50), username VARCHAR(32) UNIQUE PRIMARY KEY, memberpassword VARCHAR(32));
