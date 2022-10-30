@@ -7,6 +7,7 @@
  * - https://developer.mozilla.org/en-US/docs/Web/API/Response
  * - https://reactjs.org/docs/hooks-state.html
  * - https://www.robinwieruch.de/react-event-handler/
+ * - https://reactjs.org/docs/context.html
 */
 
 import './styles.css';
@@ -15,6 +16,7 @@ import LoginPage from './DisplayPages/LoginPage';
 import RegisterPage from './DisplayPages/RegisterPage';
 import HomePage from './DisplayPages/HomePage';
 import DashboardPage from './DisplayPages/DashboardPage';
+import UserInfo from './UserContext';
 // import ReactDOM from "react-dom/client";
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import React from 'react';
@@ -33,39 +35,42 @@ function Main() {
   const [userInfo, setUserInfo] = React.useState(undefined);
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route exact path='/' element={< HeroView />}></Route>
-        <Route exact path='/login' element={
-          <LoginPage
-            setUsername = {setUsername}
-            setPassword = {setPassword}
-            setUserInfo = {setUserInfo}
-          />
-        }></Route>
-        <Route exact path='/register' element={
-          <RegisterPage
-            setUsername = {setUsername}
-            setPassword = {setPassword}
-            setUserInfo = {setUserInfo}
-          />
-        }></Route>
-        <Route exact path='/home' element={
-          <HomePage
-            username = {loginUsername}
-            password = {loginPassword}
-            userInfo = {userInfo}
-          />
-        }></Route>
-        <Route exact path='/dashboard' element={
-          <DashboardPage
-            username = {loginUsername}
-            password = {loginPassword}
-            userInfo = {userInfo}
-          />
-        }></Route>
-      </Routes>
-    </BrowserRouter>
+    <UserInfo.Provider value = {{
+      username: loginUsername,
+      password: loginPassword,
+      userInfo: userInfo,
+     }}>
+      <BrowserRouter>
+        <Routes>
+          <Route exact path='/' element={< HeroView />}></Route>
+          <Route exact path='/login' element={
+            <LoginPage
+              setUsername = {setUsername}
+              setPassword = {setPassword}
+              setUserInfo = {setUserInfo}
+            />
+          }></Route>
+          <Route exact path='/register' element={
+            <RegisterPage
+              setUsername = {setUsername}
+              setPassword = {setPassword}
+              setUserInfo = {setUserInfo}
+            />
+          }></Route>
+          <Route exact path='/home' element={
+            <HomePage
+              username = {loginUsername}
+              password = {loginPassword}
+              userInfo = {userInfo}
+              setUserInfo = {setUserInfo}
+            />
+          }></Route>
+          <Route exact path='/dashboard' element={
+            <DashboardPage />
+          }></Route>
+        </Routes>
+      </BrowserRouter>
+    </UserInfo.Provider>
   );
 }
 

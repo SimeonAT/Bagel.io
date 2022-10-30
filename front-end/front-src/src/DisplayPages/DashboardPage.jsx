@@ -10,6 +10,9 @@
    - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
    - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString
    - https://jsdoc.app/about-getting-started.html
+   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
+   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
+   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
 
    - https://stackabuse.com/get-http-post-body-in-express-js/
    - https://www.npmjs.com/package/body-parser
@@ -68,6 +71,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Grid from '@mui/material/Grid';
 
+import UserInfo from '../UserContext';
 import styled from "styled-components";
 
 const BackendURL = "http://localhost:8000";
@@ -114,8 +118,7 @@ const theme = createTheme( {
  */
 function getTaskDisplayList(tasksToDisplay) {
   return tasksToDisplay.map((task) => {
-    console.log(task.taskid);
-    console.log(new Date(task.startDate));
+    console.log(task);
     return (
       <Box key = {task.taskid} sx={{
         width: 450,
@@ -139,10 +142,17 @@ function getTaskDisplayList(tasksToDisplay) {
             <div>
               <b>End Time:</b> {new Date(task.endDate).toLocaleString()}
             </div>
-            <CompleteButton onClick = {(event) => {
+            <CompleteButton onClick = {() => {
               // Removes the task from the task display list,
               // and updates the state of the display list.
               //
+              const taskToRemove = task;
+              tasksToDisplay = tasksToDisplay.filter((task) => {
+                return task === taskToRemove;
+              });
+
+              tasksToDisplay = getTaskDisplayList(tasksToDisplay);
+              return;
             }}>
               I completed this task
             </CompleteButton>
@@ -153,26 +163,14 @@ function getTaskDisplayList(tasksToDisplay) {
 }
 
 export default function Dashboard(props) {
-  const username = props.username;
-  const password = props.password;
-  const userInfo = props.userInfo;
-
+  const [homeView, openHome] = useState(false);
   let tasksToDisplay = undefined;
   let taskDisplayList = [];
-
-  // Leaving this for now, since very similar logic will be used to
-  // pull tasks and create task box list to display
-  //
-  if (userInfo !== undefined) {
-    tasksToDisplay = props.userInfo.tasks;
-    taskDisplayList = getTaskDisplayList(tasksToDisplay);
-  }
-
-  const [taskListToRender, setTaskList] = React.useState(taskDisplayList);
+  const [taskListToRender, setTaskList] = React.useState([]);
 
   const updateTask = async function(event, taskId, startDate, endDate, tag, complete) {
     event.preventDefault();
-    //Send new task data to server
+    // Send new task data to server
     const httpResponse = await fetch(RegisterURL, {
       mode: "cors",
       method: "post",
@@ -181,23 +179,51 @@ export default function Dashboard(props) {
     });
   }
 
+  const navigateToHome = async function(event) {
+    event.preventDefault();
+    openHome(true);
+    return;
+  }
+
   const renderPage = (
     <ThemeProvider theme={theme}>
+
+      <Link href = '/home' style={{ textDecoration: 'none' }}>
+        <Box textAlign='left'>
+            <Button 
+              color="primary"
+              type="submit"
+              onClick = {navigateToHome}
+              sx={{ mt: 3, mb: 2, mr: 5, ml: 5,
+                pr: 7, pl: 7, 
+                border: 2,
+                fontWeight: 600,
+                fontSize: 16 }} >
+              Home
+            </Button>
+          </Box>
+      </Link>
+
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Container component="main">
           <CssBaseline />
               <Box
                 sx={{
-                  marginTop: 8,
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
                 }}
                 >
 
-                <Typography component="h1" variant="h5">
-                  {username}'s Dashboard!
-                </Typography>
+                <UserInfo.Consumer>
+                  {({username, password, userInfo}) => {
+                    return (
+                      <Typography component="h1" variant="h5">
+                          {username}'s Dashboard
+                      </Typography>
+                    );
+                  }}
+                </UserInfo.Consumer>
 
                 <Grid container spacing={2} >
                   <Grid item xs={6}>
@@ -213,7 +239,13 @@ export default function Dashboard(props) {
                         Check in your completed tasks!
                       </Typography>
 
-                      {taskListToRender}
+                      <UserInfo.Consumer>
+                        {({username, password, userInfo}) => {
+                          tasksToDisplay = userInfo.tasks;
+                          taskDisplayList = getTaskDisplayList(tasksToDisplay);
+                          return (taskDisplayList);
+                        }}
+                      </UserInfo.Consumer>
                     </Box>
                   </Grid>
 //this is a test save
@@ -244,9 +276,16 @@ export default function Dashboard(props) {
 return (
   <div className="DashboardPage">
     <div className="dashboardView">
-        {(username === undefined ? 
-          <Navigate to = "/login" />
-         : renderPage)}
+      <UserInfo.Consumer>
+        {({username, password, userInfo}) => {
+          return (
+            <div>
+              {homeView ? (<Navigate to = "/home" />) : 
+              (username === undefined ? <Navigate to = "/login" /> : renderPage)}
+            </div>
+          );
+        }}
+      </UserInfo.Consumer>
     </div>
   </div>
 );

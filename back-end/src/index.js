@@ -15,17 +15,17 @@
  * - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/push
  * */
 require('dotenv').config();
-const objects = require("./objects");
+// const objects = require("./objects");
 const express = require("express");
 const bodyParser = require("body-parser");
-const sendError = require("./sendError");
-const { response } = require('express');
-const { replicationStart } = require('pg-protocol/dist/messages.js');
+// const sendError = require("./sendError");
+// const { response } = require('express');
+// const { replicationStart } = require('pg-protocol/dist/messages.js');
 const tasks = require("./tasks");
-const verify = require("./verify");
+// const verify = require("./verify");
 
 const server = express();
-const PORT = 8000;
+// const PORT = 8000;
 
 /* FIXME: bodyParser.text() can return JSON as text,
           which the front-end can parse as JSON.
@@ -46,6 +46,8 @@ server.post("/updateTask", tasks.updateTask);
 // FORTESTING
 server.get("/testdb", tasks.testDBGet);
 
-server.listen(PORT, () => {
-  console.log("Server is working");
-});
+// server.listen(PORT, () => {
+//   console.log("Server is working");
+// });
+
+exports.server = server;

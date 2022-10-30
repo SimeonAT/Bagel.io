@@ -111,7 +111,6 @@ exports.updateTask = async (taskId, startDate, endDate, tag, complete) => {
     return;
 }
 
-
 //New Request for function:
 //exports.updateTask(taskId, startDate, endDate, tag, complete)
 /*  please :)  */

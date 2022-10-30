@@ -48,6 +48,12 @@ exports.register = async (request, response) => {
       console.log("Register succeeded");
       response.send({
         loginAllowed: true,
+        payload: {
+          "username": registerReqBody.username,
+          "password": registerReqBody.password,
+          "email": registerReqBody.email,
+          "tasks": [],
+        }
       });
     }
   }
@@ -178,15 +184,13 @@ exports.scheduletask = async (request, response) => {
       // console.log(payload.startDate);
       let result = await dbUtils.insertTask(schedReqBody.username, schedReqBody.taskName, schedReqBody.startDate, schedReqBody.endDate, schedReqBody.tag, presetid, scheduledid);
       // console.log(JSON.stringify(result));
-      response.status(200).send({taskid: result[1].scheduledid});
+      response.status(200).send({taskid: result[1].scheduledid, complete: result[1].complete, endDate: result[1].endtime, name: result[0].taskname, startDate: result[1].starttime, username: result[0].username, tag: result[0].tasktag});
     }
   }
   catch (error) {
     sendError.sendError(error);
   }
-  
 }
-
 
 // Updates task parameters using ID as primary key
 // <Inputs> request body: {taskId:"", taskName:"", startDate:"", endDate:"", tag:"", complete:"" }

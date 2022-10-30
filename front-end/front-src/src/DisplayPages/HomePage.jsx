@@ -77,10 +77,17 @@ const theme = createTheme( {
 
 export default function Home(props) {
   const [dashboardView, openDashboard] = useState(false);
-
   const username = props.username;
   const password = props.password;
-  const userInfo = props.userInfo;
+
+  // UserInfo is an object containing the variables:
+  //  - "email"
+  //  - "password"
+  //  - "list" (of tasks)
+  //  - "username"
+  // for any given user.
+  //
+  const [userInfo, updateUserInfo] = React.useState(props.userInfo);
 
   let tasksToDisplay = undefined;
   let taskDisplayList = [];
@@ -107,21 +114,12 @@ export default function Home(props) {
 
   const [taskListToRender, updateList] = React.useState(taskDisplayList);
 
-  const [startValue, setStartValue] = React.useState(
-    dayjs()
-  );
+  const [startDateWithNoInitialValue, setStartDateWithNoInitialValue] =
+    React.useState(null);
 
-  const handleStartChange = (newValue) => {
-    setStartValue(newValue);
-  };
+  const [endDateWithNoInitialValue, setEndDateWithNoInitialValue] =
+    React.useState(null);
 
-  const [endValue, setEndValue] = React.useState(
-    dayjs(dayjs()+1)
-  );
-
-  const handleEndChange = (newValue) => {
-    setEndValue(newValue);
-  };
   
   const taskNameRef = useRef('');
   const taskStartRef = useRef('');
@@ -137,7 +135,7 @@ export default function Home(props) {
     // FIXME: add check to make sure taskEndISO >= taskStartISO
 
     // console.log(`taskStartRef.current.value: ${new Date(taskStartRef.current.value).toISOString()}`);
-    //Set username and password to the backend server
+    // Set username and password to the backend server
     const httpResponse = await fetch(scheduleTaskURL, {
       mode: "cors",
       method: "post",
@@ -155,6 +153,30 @@ export default function Home(props) {
       return;
     }
     let responseBody = await httpResponse.json();
+    console.log(`responseBody: ${JSON.stringify(responseBody)}`);
+    /**
+     * Update the front end's userInfo task list with the new
+     * task.
+     * 
+     * NOTE AND FIXME:
+     *    We need the server to send, in its response, back the updated list,
+     *    so the front-end can also update its list.
+     *
+     *    If we don't do this, then the front-end and back-end server may end up
+     *    having different versions of the user's lists of tasks.
+     */
+     const newUserInfo = userInfo;
+     newUserInfo.tasks.push({
+      username: username,
+      name: taskNameRef.current.value,
+      startDate: taskStartISO,
+      endDate: taskEndISO,
+      tag: categoryRef.current.value,
+      complete: false,
+      taskid: undefined,
+     });
+     updateUserInfo(newUserInfo);
+
     /**
      * React will not re-render the task list if we add a new task.
      * We have to save the task list as a React state. Whenever
@@ -179,21 +201,49 @@ export default function Home(props) {
     );
     console.log(`newTask.taskid: ${JSON.stringify(responseBody.taskid)}`);
     updateList(newList);
+
+    taskNameRef.current.value = '';
+    categoryRef.current.value = '';
+    setEndDateWithNoInitialValue(null);
+    setStartDateWithNoInitialValue(null);
   };
 
   const navigateToDashboard = async function(event) {
     event.preventDefault();
     openDashboard(true);
+
+    // In the event the user adds new tasks,
+    // give <Main /> the new list of tasks,
+    // so it can be passed down to <Dashboard />
+    // through the use of Context.
+    //
+    return;
   }
 
   const renderPage = (
     <ThemeProvider theme={theme}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
+
+        <Link href = '/' style={{ textDecoration: 'none' }}>
+          <Box textAlign='left'>
+              <Button 
+                color="primary"
+                type="submit"
+                sx={{ mt: 3, mb: 2, mr: 5, ml: 5,
+                  pr: 7, pl: 7, 
+                  border: 2,
+                  fontWeight: 600,
+                  fontSize: 16 }} >
+                Logout
+              </Button>
+            </Box>
+        </Link>
+
         <Container component="main">
           <CssBaseline />
             <Box
               sx={{
-                marginTop: 8,
+                marginTop: 5,
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
@@ -278,8 +328,8 @@ export default function Home(props) {
                             name="startDate"
                             label="Start Date/Time"
                             id="startDate"
-                            value={startValue}
-                            onChange={handleStartChange}
+                            value={startDateWithNoInitialValue}
+                            onChange={(newValue) => setStartDateWithNoInitialValue(newValue)}
                           />
 
                           <DateTimePicker
@@ -292,8 +342,8 @@ export default function Home(props) {
                             name="endDate"
                             label="End Date/Time"
                             id="endDate"
-                            value={endValue}
-                            onChange={handleEndChange}
+                            value={endDateWithNoInitialValue}
+                            onChange={(newValue) => setEndDateWithNoInitialValue(newValue)}
                           />
                         </Stack>
 

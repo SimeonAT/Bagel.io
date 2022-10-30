@@ -104,85 +104,105 @@ export default function Register(props) {
 
   const renderForm = (
     <ThemeProvider theme={theme}>
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
 
-        <Typography component="h1" variant="h5">
-          Create Your Account!
-        </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="username"
-            label="Username"
-            name="u_name"
-            //autoComplete="email"
-            autoFocus
-          />
-          {renderErrorMessage("u_name_taken")}
-
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="email"
-            label="Email"
-            type="email"
-            id="email"
-            autoComplete="email"
-          />
-          {renderErrorMessage("invalid_email")}
-
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="pass"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-          />
-
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="pass2"
-            label="Confirm Password"
-            type="password"
-            id="confirm-password"
-            autoComplete="password2"
-          />
-          {renderErrorMessage("passwords_must_match")}
-
-          <Box textAlign='center'>
-            <Button
+      <Link href = '/' style={{ textDecoration: 'none' }}>
+        <Box textAlign='left'>
+            <Button 
               color="primary"
               type="submit"
-              variant="outlined"
-              sx={{ mt: 3, mb: 2,
+              onClick = {props.loginHandler}
+              sx={{ mt: 3, mb: 2, mr: 5, ml: 5,
                 pr: 7, pl: 7, 
-                border: 2 }} >
-              Register
+                border: 2,
+                fontWeight: 600,
+                fontSize: 16 }} >
+              Home
             </Button>
           </Box>
+      </Link>
 
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+          >
+
+          <Typography component="h1" variant="h5">
+            Create Your Account!
+          </Typography>
+
+          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="username"
+              label="Username"
+              name="u_name"
+              //autoComplete="email"
+              autoFocus
+            />
+            {renderErrorMessage("u_name_taken")}
+
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="email"
+              label="Email"
+              type="email"
+              id="email"
+              autoComplete="email"
+            />
+            {renderErrorMessage("invalid_email")}
+
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="pass"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+            />
+
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="pass2"
+              label="Confirm Password"
+              type="password"
+              id="confirm-password"
+              autoComplete="password2"
+            />
+            {renderErrorMessage("passwords_must_match")}
+
+            <Box textAlign='center'>
+              <Button
+                color="primary"
+                type="submit"
+                variant="outlined"
+                sx={{ mt: 3, mb: 2,
+                  pr: 7, pl: 7, 
+                  border: 2 }} >
+                Register
+              </Button>
+            </Box>
+
+          </Box>
         </Box>
-      </Box>
-      <Copyright sx={{ mt: 8, mb: 4 }} />
-    </Container>
-  </ThemeProvider>
+        
+        <Copyright sx={{ mt: 8, mb: 4 }} />
+      </Container>
+    </ThemeProvider>
 );
 return (
   <div className="Login">
