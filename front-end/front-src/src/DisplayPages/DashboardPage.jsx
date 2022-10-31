@@ -114,6 +114,7 @@ export default function Dashboard(props) {
 
   const [taskListToRender, setTaskListToRender] = useState(undefined);
 
+  // NOTE: All fields must be present, or the back-end will give an error.
   const updateTask = async function(event, taskId, startDate, endDate, tag, complete) {
     event.preventDefault();
     // Send new task data to server
