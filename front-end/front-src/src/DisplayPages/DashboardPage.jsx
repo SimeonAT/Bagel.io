@@ -116,7 +116,8 @@ const theme = createTheme( {
  *                                    render each task as a box in
  *                                    the webpage
  */
-function getTaskDisplayList(tasksToDisplay) {
+function getTaskDisplayList(tasksToDisplay,
+  getUserInfoFromServer) {
   return tasksToDisplay.map((task) => {
     console.log(task);
     return (
@@ -146,14 +147,16 @@ function getTaskDisplayList(tasksToDisplay) {
               /**
                 My idea so far:
                   1. When the user clicks <CompleteButton>, Main.jsx
-                     will run a function to get the new list of tasks
-                     from the HTTP server.
+                     will run a function that will tell the server to
+                     remove the desired task, and to get the new list
+                     of tasks from the HTTP server.
                   2. Main.jsx will save its new lists of task in its
                      "userInfo" context variable.
                   3. Since "userInfo" context variable is updated,
                      the Dashboard will update automatically, as it is
                      a context consumer of userInfo.
                */
+              getUserInfoFromServer();
               return;
             }}>
               I completed this task
@@ -241,9 +244,10 @@ export default function Dashboard(props) {
                       </Typography>
 
                       <UserInfo.Consumer>
-                        {({username, password, userInfo}) => {
+                        {({username, password, userInfo, getUserInfoFromServer}) => {
                           tasksToDisplay = userInfo.tasks;
-                          taskDisplayList = getTaskDisplayList(tasksToDisplay);
+                          taskDisplayList = getTaskDisplayList(tasksToDisplay,
+                            getUserInfoFromServer);
                           return (taskDisplayList);
                         }}
                       </UserInfo.Consumer>

@@ -21,6 +21,9 @@ import UserInfo from './UserContext';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import React from 'react';
 
+const BackendURL = "http://localhost:8000";
+const LoginURL = BackendURL + "/logindatabase";
+
 function Main() {
   /** Here's an idea we should try:
    *      Rather than sending an HTTP request right when we login,
@@ -34,11 +37,26 @@ function Main() {
   const [loginPassword, setPassword] = React.useState(undefined);
   const [userInfo, setUserInfo] = React.useState(undefined);
 
+  const getUserInfoFromServer = async function() {
+    const httpResponse = await fetch(LoginURL, {
+      mode: "cors",
+      method: "post",
+      "Content-Type": "application/json",
+      body: JSON.stringify({username: loginUsername, password: loginPassword})
+    });
+
+    const responseBody = await httpResponse.json();
+    if (responseBody.loginAllowed === true) {
+      setUserInfo(responseBody.payload);
+    }
+  }
+
   return (
     <UserInfo.Provider value = {{
       username: loginUsername,
       password: loginPassword,
       userInfo: userInfo,
+      getUserInfoFromServer: getUserInfoFromServer,
      }}>
       <BrowserRouter>
         <Routes>
