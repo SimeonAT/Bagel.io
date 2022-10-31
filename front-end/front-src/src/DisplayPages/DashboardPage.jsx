@@ -112,9 +112,9 @@ export default function Dashboard(props) {
   let tasksToDisplay = undefined;
   let taskDisplayList = [];
 
-  const [taskListToRender, setTaskListToRender] = useState([]);
+  const [taskListToRender, setTaskListToRender] = useState(undefined);
 
-  const getTaskDisplayList = function (tasksToDisplay) {
+  const getTaskDisplayList = function (tasksToDisplay, setTaskListToRender) {
     return tasksToDisplay.map((task) => {
       return (
         <Box key={task.taskid} sx={{
@@ -153,6 +153,7 @@ export default function Dashboard(props) {
                     });
 
                     setUserInfo(newUserInfo);
+                    setTaskListToRender(undefined);
                     console.log('Updated user info');
                     return;
                   }}>
@@ -231,9 +232,14 @@ export default function Dashboard(props) {
                         {({username, password, userInfo}) => {
                           console.log('Updating Task List to Render');
                           // setTaskListToRender(getTaskDisplayList(userInfo.tasks));
-                          return (<div>{getTaskDisplayList(userInfo.tasks)}</div>);
+                          if (taskListToRender === undefined) {
+                            setTaskListToRender(getTaskDisplayList(userInfo.tasks,
+                              setTaskListToRender));
+                          }
+                          return (null);
                         }}
                       </UserInfo.Consumer>
+                      {taskListToRender}
                     </Box>
                   </Grid>
 
