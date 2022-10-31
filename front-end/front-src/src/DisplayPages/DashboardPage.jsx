@@ -231,11 +231,11 @@ export default function Dashboard(props) {
                       <UserInfo.Consumer>
                         {({username, password, userInfo}) => {
                           console.log('Updating Task List to Render');
-                          // setTaskListToRender(getTaskDisplayList(userInfo.tasks));
                           if (taskListToRender === undefined) {
                             setTaskListToRender(getTaskDisplayList(userInfo.tasks,
                               setTaskListToRender));
                           }
+                          
                           return (null);
                         }}
                       </UserInfo.Consumer>
