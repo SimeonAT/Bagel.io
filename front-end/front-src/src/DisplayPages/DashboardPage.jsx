@@ -114,6 +114,17 @@ export default function Dashboard(props) {
 
   const [taskListToRender, setTaskListToRender] = useState(undefined);
 
+  const updateTask = async function(event, taskId, startDate, endDate, tag, complete) {
+    event.preventDefault();
+    // Send new task data to server
+    const httpResponse = await fetch(RegisterURL, {
+      mode: "cors",
+      method: "post",
+      "Content-Type": "application/json",
+      body: JSON.stringify({taskId: taskId, startDate: startDate, endDate: endDate, tag: tag, complete: complete})
+    });
+  }
+
   const getTaskDisplayList = function (tasksToDisplay, setTaskListToRender) {
     return tasksToDisplay.map((task) => {
       return (
