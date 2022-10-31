@@ -143,6 +143,17 @@ function getTaskDisplayList(tasksToDisplay) {
               <b>End Time:</b> {new Date(task.endDate).toLocaleString()}
             </div>
             <CompleteButton onClick = {() => {
+              /**
+                My idea so far:
+                  1. When the user clicks <CompleteButton>, Main.jsx
+                     will run a function to get the new list of tasks
+                     from the HTTP server.
+                  2. Main.jsx will save its new lists of task in its
+                     "userInfo" context variable.
+                  3. Since "userInfo" context variable is updated,
+                     the Dashboard will update automatically, as it is
+                     a context consumer of userInfo.
+               */
               return;
             }}>
               I completed this task
@@ -157,7 +168,6 @@ export default function Dashboard(props) {
   const [homeView, openHome] = useState(false);
   let tasksToDisplay = undefined;
   let taskDisplayList = [];
-  const [taskListToRender, setTaskList] = React.useState([]);
 
   const updateTask = async function(event, taskId, startDate, endDate, tag, complete) {
     event.preventDefault();
