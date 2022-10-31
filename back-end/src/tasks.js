@@ -40,8 +40,20 @@ exports.register = async (request, response) => {
     // if username/email in db: send failure, else: insert and send success
     if (alreadyInUse) {
       console.log("Register failed - Account already exists");
+      let emailUsed = "";
+      let usernameUsed = "";
+      //check if username already used
+      if (userObj.username === registerReqBody.username) {
+        usernameUsed = "This username has already been used.";
+      }
+      //check if email already used
+      if (userObj.email === registerReqBody.email) {
+        emailUsed = "This email has already been used.";
+      }
       response.send({
-        loginAllowed: false
+        loginAllowed: false,
+        emailUsed: emailUsed, //these two fields return error message of whether or not email/user has already been used.
+        usernameUsed: usernameUsed
       });
     } else {
       await dbUtils.insertUser(registerReqBody.username, registerReqBody.email, registerReqBody.password);
