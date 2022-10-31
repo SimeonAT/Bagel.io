@@ -112,6 +112,8 @@ export default function Dashboard(props) {
   let tasksToDisplay = undefined;
   let taskDisplayList = [];
 
+  const [taskListToRender, setTaskListToRender] = useState([]);
+
   const getTaskDisplayList = function (tasksToDisplay) {
     return tasksToDisplay.map((task) => {
       return (
@@ -151,6 +153,7 @@ export default function Dashboard(props) {
                     });
 
                     setUserInfo(newUserInfo);
+                    console.log('Updated user info');
                     return;
                   }}>
                     I completed this task
@@ -226,9 +229,11 @@ export default function Dashboard(props) {
 
                       <UserInfo.Consumer>
                         {({username, password, userInfo}) => {
-                          return (getTaskDisplayList(userInfo.tasks));
+                          setTaskListToRender(getTaskDisplayList(userInfo.tasks));
+                          return (null);
                         }}
                       </UserInfo.Consumer>
+                      {taskListToRender}
                     </Box>
                   </Grid>
 
