@@ -139,17 +139,22 @@ export default function Register(props) {
 
         props.setUsername(u_name.value);
         props.setPassword(pass.value);
-      }
-      else {
+      } else {
         //PRINT ERROR MESSAGE SENT FROM BACK END, needs double check?
         //Below two values are recieved from responseBody.loginAllowed === false
         //usernameUsed, emailUsed
-        if(responseBody.usernameUsed === "") { //send error message if username already in use
-          errors["u_name"] = responseBody.usernameUsed;
-        }
-        if(responseBody.emailUsed === "") { //send error message if email already in use
-          errors["u_email"] = responseBody.emailUsed;
-        }
+        console.log("Register failed");
+        errors["u_name"] = responseBody.usernameUsed;
+        errors["u_email"] = responseBody.emailUsed;
+        // if(responseBody.usernameUsed.length === 0) { //send error message if username already in use
+        //   console.log("Username already in use");
+        //   errors["u_name"] = responseBody.usernameUsed;
+        // }
+        // if(responseBody.emailUsed.length === 0) { //send error message if email already in use
+        //   console.log("Email already in use");
+        //   errors["u_email"] = responseBody.emailUsed;
+        // }
+        allInputsCorrect = false;
       }
     }
 
