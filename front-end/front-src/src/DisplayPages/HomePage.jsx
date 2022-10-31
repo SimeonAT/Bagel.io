@@ -152,13 +152,7 @@ export default function Home(props) {
     /**
      * Update the front end's userInfo task list with the new
      * task.
-     * 
-     * NOTE AND FIXME:
-     *    We need the server to send, in its response, back the updated list,
-     *    so the front-end can also update its list.
      *
-     *    If we don't do this, then the front-end and back-end server may end up
-     *    having different versions of the user's lists of tasks.
      */
      const newUserInfo = userInfo;
      newUserInfo.tasks.push(responseBody);

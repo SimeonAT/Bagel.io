@@ -143,15 +143,6 @@ function getTaskDisplayList(tasksToDisplay) {
               <b>End Time:</b> {new Date(task.endDate).toLocaleString()}
             </div>
             <CompleteButton onClick = {() => {
-              // Removes the task from the task display list,
-              // and updates the state of the display list.
-              //
-              const taskToRemove = task;
-              tasksToDisplay = tasksToDisplay.filter((task) => {
-                return task === taskToRemove;
-              });
-
-              tasksToDisplay = getTaskDisplayList(tasksToDisplay);
               return;
             }}>
               I completed this task
