@@ -4,6 +4,7 @@
 const sendError = require("./sendError");
 const dbUtils = require("./dbUtils");
 const { v4: uuidv4 } = require('uuid');
+const { user } = require("pg/lib/defaults");
 
 // //CHECK OBJECTS.JS FOR MOCKDATABASE + TASK OBJ IMPLEMENTATION.
 // const objects = require("./objects");
@@ -31,9 +32,13 @@ exports.register = async (request, response) => {
     // check if username/email in db
     const users = await dbUtils.getMembers();
     let alreadyInUse = false;
+    let checkUsername = ""; //if there is a match one or more of these will be filled.
+    let checkEmail = "";
     for (const userObj of users) {
       if (userObj.username === registerReqBody.username || userObj.email === registerReqBody.email) {
         alreadyInUse = true;
+        checkUsername = userObj.username;
+        checkEmail = userObj.email;
         break;
       }
     }
@@ -43,11 +48,11 @@ exports.register = async (request, response) => {
       let emailUsed = "";
       let usernameUsed = "";
       //check if username already used
-      if (userObj.username === registerReqBody.username) {
+      if (checkUsername === registerReqBody.username) {
         usernameUsed = "This username has already been used.";
       }
       //check if email already used
-      if (userObj.email === registerReqBody.email) {
+      if (checkEmail === registerReqBody.email) {
         emailUsed = "This email has already been used.";
       }
       response.send({
