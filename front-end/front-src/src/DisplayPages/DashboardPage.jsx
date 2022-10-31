@@ -229,11 +229,11 @@ export default function Dashboard(props) {
 
                       <UserInfo.Consumer>
                         {({username, password, userInfo}) => {
-                          setTaskListToRender(getTaskDisplayList(userInfo.tasks));
-                          return (null);
+                          console.log('Updating Task List to Render');
+                          // setTaskListToRender(getTaskDisplayList(userInfo.tasks));
+                          return (<div>{getTaskDisplayList(userInfo.tasks)}</div>);
                         }}
                       </UserInfo.Consumer>
-                      {taskListToRender}
                     </Box>
                   </Grid>
 

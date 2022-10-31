@@ -8,6 +8,7 @@
  * - https://reactjs.org/docs/hooks-state.html
  * - https://www.robinwieruch.de/react-event-handler/
  * - https://reactjs.org/docs/context.html
+ * - https://stackoverflow.com/questions/60697733/react-context-not-updating
 */
 
 import './styles.css';
@@ -42,7 +43,10 @@ function Main() {
       username: loginUsername,
       password: loginPassword,
       userInfo: userInfo,
-      setUserInfo: setUserInfo,
+      setUserInfo: (newUserInfo) => {
+        setUserInfo(newUserInfo);
+        console.log(userInfo);
+      },
      }}>
       <BrowserRouter>
         <Routes>
