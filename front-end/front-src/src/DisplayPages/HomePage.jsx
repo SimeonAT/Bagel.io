@@ -149,7 +149,6 @@ export default function Home(props) {
       return;
     }
     let responseBody = await httpResponse.json();
-    console.log(`responseBody: ${JSON.stringify(responseBody)}`);
     /**
      * Update the front end's userInfo task list with the new
      * task.
@@ -162,15 +161,7 @@ export default function Home(props) {
      *    having different versions of the user's lists of tasks.
      */
      const newUserInfo = userInfo;
-     newUserInfo.tasks.push({
-      username: username,
-      name: taskNameRef.current.value,
-      startDate: taskStartISO,
-      endDate: taskEndISO,
-      tag: categoryRef.current.value,
-      complete: false,
-      taskid: undefined,
-     });
+     newUserInfo.tasks.push(responseBody);
      updateUserInfo(newUserInfo);
 
     /**
