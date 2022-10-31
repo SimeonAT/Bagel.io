@@ -45,62 +45,126 @@ const theme = createTheme( {
   });
 
 export default function Register(props) {
-  const [errorMessage, setErrorMessages] = useState({});
-  const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const errors = {
-    u_name: "invalid username",
-    u_name_taken: "Sorry, that username is already taken!",
-    passwords_must_match: "Passwords must match!",
-    invalid_email: "Invalid Email Address!"
+  const errors = { //set errors, empty by default
+    u_name: "",       //"invalid username",
+    u_name_taken: "", //"Sorry, that username is already taken!",
+    u_password1: "",  //set password.
+    u_password2: "",  //"Passwords must match!",
+    u_email: ""       //"Invalid Email Address!"
   };
+  // const [errorMessage, setErrorMessages] = useState({});
+  const [errorMessage, setErrorMessages] = useState({errors});
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  //const [password, setPassword] = useState("")
 
   const handleSubmit = async function(event) {
     event.preventDefault();
     let { u_name, email, pass, pass2 } = document.forms[0];
-    console.log(u_name.value);
-    console.log(email.value);
-    console.log(pass.value);
-    console.log(pass2.value);
+    console.log("Username:", u_name.value);
+    console.log("Email:", email.value);
+    console.log("Password: ",pass.value);
+    console.log("Confirm Password:",pass2.value);
 
     // FIXME: veryfy pass === pass2
+    // FIXME: Snake case when it should be camel case?
     // these will be used to implement field verifications
-    const u_name_empty = (u_name.value === '') ? true : false;
-    const email_empty = (email.value === '') ? true : false;
-    const pass_empty = (pass.value === '') ? true : false;
-    const pass2_empty = (pass2.value === '') ? true : false;
+    const u_name_empty = (u_name.value === "") ? true : false;
+    const email_empty = (email.value === "") ? true : false;
+    const pass_empty = (pass.value === "") ? true : false;
+    const pass2_empty = (pass2.value === "") ? true : false;
 
-    //Set username and password to the backend server
-    const httpResponse = await fetch(RegisterURL, {
-      mode: "cors",
-      method: "post",
-      "Content-Type": "application/json",
-      body: JSON.stringify({username: u_name.value, password: pass.value, email: email.value, password: pass.value})
-    });
+    // console.log("u_name.value: ",u_name.value,":");
+    // console.log("u_name.value: ","Hello",":");
 
-    const responseBody = await httpResponse.json();
-    console.log(responseBody);
-
-    //This should be one of the validations we should implement at some point
-    // if (pass.value !== pass2.value) {
-    //   setErrorMessages({ name: "passwords_must_match", message: errors.passwords_must_match });
-    // } 
+    //Check basic verification
+    //User name limit 5~32 chars
+    //Password matches confirmed password.
     
-    if (responseBody.loginAllowed === true) {
-      setIsSubmitted(true);
 
-      props.setUsername(u_name.value);
-      props.setPassword(pass.value);
+    let allInputsCorrect = true; //FIXME: Might be a better way to do this?
+
+    //FIXME: Bunch of if statements to check each possible error, maybe better way to do this?
+    //USERNAME
+    if(u_name.value.length < 5 || u_name.value.length > 32) {
+      errors["u_name"] = "Keep usernames between 5~32 characters";
+      allInputsCorrect = false;
     }
-    else {
-      setErrorMessages({ name: "u_name_taken", message: errors.u_name_taken });
+    if(u_name_empty) { //if username empty
+      errors["u_name"] = "Username Empty";
+      allInputsCorrect = false;
     }
+
+    //EMAIL
+    if(email_empty) {
+      errors["u_email"] = "Email Empty";
+      allInputsCorrect = false;
+    }
+    
+    //PASSWORD
+    if(pass.value.length < 5 || pass.value.length > 32) {
+      errors["u_password1"] = "Keep passwords between 5~32 characters";
+      allInputsCorrect = false;
+    }
+    if(pass_empty) {
+      errors["u_password1"] = "Password Empty";
+      allInputsCorrect = false;
+    }
+
+    //PASSWORD CONFIRMATION
+    if(pass2_empty) {
+      errors["u_password2"] = "Please Re-confirm Password";
+      allInputsCorrect = false;
+    }
+    //FIXME: Wonky string comparison, there may be better way to do this?
+    if(pass.value.normalize() !== pass2.value.normalize()) {
+      errors["u_password2"] = "Does not match the entered password";
+      allInputsCorrect = false;
+    }
+
+    if(allInputsCorrect) { //if all inputs have been formatted correctly.
+      //Set username and password to the backend server
+      const httpResponse = await fetch(RegisterURL, {
+        mode: "cors",
+        method: "post",
+        "Content-Type": "application/json",
+        body: JSON.stringify({username: u_name.value, password: pass.value, email: email.value, password: pass.value})
+      });
+
+      const responseBody = await httpResponse.json();
+      console.log(responseBody);
+      
+      if (responseBody.loginAllowed === true) {
+        setIsSubmitted(true);
+
+        props.setUsername(u_name.value);
+        props.setPassword(pass.value);
+      }
+      else {
+        //PRINT ERROR MESSAGE SENT FROM BACK END, needs double check?
+        //Below two values are recieved from responseBody.loginAllowed === false
+        //usernameUsed, emailUsed
+        if(responseBody.usernameUsed === "") { //send error message if username already in use
+          errors["u_name"] = responseBody.usernameUsed;
+        }
+        if(responseBody.emailUsed === "") { //send error message if email already in use
+          errors["u_email"] = responseBody.emailUsed;
+        }
+      }
+    }
+
+    setErrorMessages(errors); //set the error messages after all checks.
   };
   
+  //Renders error messages below corresponding input
+  //Names must have correct corresponding value to "errors" in default func.
+  //FIXME: Color and positioning, also some weird streching??? Front end pls fix.
   const renderErrorMessage = (name) =>
-  name === errorMessage.name && (
-    <div className="error">{errorMessage.message}</div>
-  );
+    //console.log("Name: ", name)
+    // name === "" && 
+    (
+      <div className="error">{errorMessage[name]}</div>
+    );
 
   const renderForm = (
     <ThemeProvider theme={theme}>
@@ -138,17 +202,18 @@ export default function Register(props) {
           </Typography>
 
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-            <TextField
+            <TextField //for the username
               margin="normal"
               required
               fullWidth
               id="username"
               label="Username"
               name="u_name"
+              defaultValue="" //set empty default value.
               //autoComplete="email"
               autoFocus
             />
-            {renderErrorMessage("u_name_taken")}
+            {renderErrorMessage("u_name")}
 
             <TextField
               margin="normal"
@@ -160,7 +225,7 @@ export default function Register(props) {
               id="email"
               autoComplete="email"
             />
-            {renderErrorMessage("invalid_email")}
+            {renderErrorMessage("u_email")}
 
             <TextField
               margin="normal"
@@ -171,7 +236,15 @@ export default function Register(props) {
               type="password"
               id="password"
               autoComplete="current-password"
+              // onChange={event => {
+              //   console.log(event.target.value);
+              // }}
+              // onChange={event => {
+              //   setPassword(event.target.value)
+              // }}
+              // value={password}
             />
+            {renderErrorMessage("u_password1")}
 
             <TextField
               margin="normal"
@@ -183,7 +256,7 @@ export default function Register(props) {
               id="confirm-password"
               autoComplete="password2"
             />
-            {renderErrorMessage("passwords_must_match")}
+            {renderErrorMessage("u_password2")}
 
             <Box textAlign='center'>
               <Button
