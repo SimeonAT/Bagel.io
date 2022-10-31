@@ -37,26 +37,12 @@ function Main() {
   const [loginPassword, setPassword] = React.useState(undefined);
   const [userInfo, setUserInfo] = React.useState(undefined);
 
-  const getUserInfoFromServer = async function() {
-    const httpResponse = await fetch(LoginURL, {
-      mode: "cors",
-      method: "post",
-      "Content-Type": "application/json",
-      body: JSON.stringify({username: loginUsername, password: loginPassword})
-    });
-
-    const responseBody = await httpResponse.json();
-    if (responseBody.loginAllowed === true) {
-      setUserInfo(responseBody.payload);
-    }
-  }
-
   return (
     <UserInfo.Provider value = {{
       username: loginUsername,
       password: loginPassword,
       userInfo: userInfo,
-      getUserInfoFromServer: getUserInfoFromServer,
+      setUserInfo: setUserInfo,
      }}>
       <BrowserRouter>
         <Routes>

@@ -107,35 +107,30 @@ const theme = createTheme( {
   },
   });
 
-/** Given the lists of task objects, returns the
- *  JSX that will render a list of boxes, which each box
- *  representing each task.
- *
- * @param {array} tasksToDisplay - the list of tasks to display 
- * @returns {array} taskDisplayList - the JSX array that will
- *                                    render each task as a box in
- *                                    the webpage
- */
-function getTaskDisplayList(tasksToDisplay,
-  getUserInfoFromServer) {
-  return tasksToDisplay.map((task) => {
-    console.log(task);
-    return (
-      <Box key = {task.taskid} sx={{
-        width: 450,
-        border: '2px dashed grey',
-        margin: 'auto',
-        mb: 2,
-        '&:hover': {
-          backgroundColor: 'blue',
-          opacity: [0.5, 0.5, 0.5],},
+export default function Dashboard(props) {
+  const [homeView, openHome] = useState(false);
+  let tasksToDisplay = undefined;
+  let taskDisplayList = [];
+
+  const getTaskDisplayList = function (tasksToDisplay) {
+    return tasksToDisplay.map((task) => {
+      return (
+        <Box key={task.taskid} sx={{
+          width: 450,
+          border: '2px dashed grey',
+          margin: 'auto',
+          mb: 2,
+          '&:hover': {
+            backgroundColor: 'blue',
+            opacity: [0.5, 0.5, 0.5],
+          },
         }}>
           <TaskDisplay>
             <div>
               <b>Task Name:</b> {task.name}
             </div>
             <div>
-            <b>Category:</b> {task.tag}
+              <b>Category:</b> {task.tag}
             </div>
             <div>
               <b>Start Time:</b> {new Date(task.startDate).toLocaleString()}
@@ -143,43 +138,29 @@ function getTaskDisplayList(tasksToDisplay,
             <div>
               <b>End Time:</b> {new Date(task.endDate).toLocaleString()}
             </div>
-            <CompleteButton onClick = {() => {
-              /**
-                My idea so far:
-                  1. When the user clicks <CompleteButton>, Main.jsx
-                     will run a function that will tell the server to
-                     remove the desired task, and to get the new list
-                     of tasks from the HTTP server.
-                  2. Main.jsx will save its new lists of task in its
-                     "userInfo" context variable.
-                  3. Since "userInfo" context variable is updated,
-                     the Dashboard will update automatically, as it is
-                     a context consumer of userInfo.
-               */
-              getUserInfoFromServer();
-              return;
-            }}>
-              I completed this task
-            </CompleteButton>
+            <UserInfo.Consumer>
+              {({username, password, userInfo, setUserInfo}) => {
+                return (
+                  <CompleteButton onClick={() => {
+                    const taskToRemove = task;
+                    taskToRemove.complete = true;
+                    
+                    const newUserInfo = userInfo;
+                    newUserInfo.tasks = newUserInfo.tasks.filter((task) => {
+                      return task.complete === false;
+                    });
+
+                    setUserInfo(newUserInfo);
+                    return;
+                  }}>
+                    I completed this task
+                  </CompleteButton>
+                );
+              }}
+            </UserInfo.Consumer>
           </TaskDisplay>
-      </Box>
-    );
-  });
-}
-
-export default function Dashboard(props) {
-  const [homeView, openHome] = useState(false);
-  let tasksToDisplay = undefined;
-  let taskDisplayList = [];
-
-  const updateTask = async function(event, taskId, startDate, endDate, tag, complete) {
-    event.preventDefault();
-    // Send new task data to server
-    const httpResponse = await fetch(RegisterURL, {
-      mode: "cors",
-      method: "post",
-      "Content-Type": "application/json",
-      body: JSON.stringify({taskId: taskId, startDate: startDate, endDate: endDate, tag: tag, complete: complete})
+        </Box>
+      );
     });
   }
 
@@ -244,11 +225,8 @@ export default function Dashboard(props) {
                       </Typography>
 
                       <UserInfo.Consumer>
-                        {({username, password, userInfo, getUserInfoFromServer}) => {
-                          tasksToDisplay = userInfo.tasks;
-                          taskDisplayList = getTaskDisplayList(tasksToDisplay,
-                            getUserInfoFromServer);
-                          return (taskDisplayList);
+                        {({username, password, userInfo}) => {
+                          return (getTaskDisplayList(userInfo.tasks));
                         }}
                       </UserInfo.Consumer>
                     </Box>
