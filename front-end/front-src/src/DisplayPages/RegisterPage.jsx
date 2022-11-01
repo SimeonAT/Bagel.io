@@ -133,14 +133,13 @@ export default function Register(props) {
       });
 
       const responseBody = await httpResponse.json();
-      console.log(responseBody);
       
       if (responseBody.loginAllowed === true) {
         setIsSubmitted(true);
 
-        console.log(setUsername);
         setUsername(u_name.value);
         setPassword(pass.value);
+        setUserInfo(responseBody.payload);
       } else {
         //PRINT ERROR MESSAGE SENT FROM BACK END, needs double check?
         //Below two values are recieved from responseBody.loginAllowed === false
