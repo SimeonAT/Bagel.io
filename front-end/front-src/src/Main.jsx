@@ -43,20 +43,15 @@ function Main() {
       username: loginUsername,
       password: loginPassword,
       userInfo: userInfo,
-      setUserInfo: (newUserInfo) => {
-        setUserInfo(newUserInfo);
-        console.log(userInfo);
-      },
+      setUsername: setUsername,
+      setPassword: setPassword,
+      setUserInfo: setUserInfo,
      }}>
       <BrowserRouter>
         <Routes>
           <Route exact path='/' element={< HeroView />}></Route>
           <Route exact path='/login' element={
-            <LoginPage
-              setUsername = {setUsername}
-              setPassword = {setPassword}
-              setUserInfo = {setUserInfo}
-            />
+            <LoginPage />
           }></Route>
           <Route exact path='/register' element={
             <RegisterPage
