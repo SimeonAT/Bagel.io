@@ -74,7 +74,6 @@ const theme = createTheme( {
 export default function Home(props) {
   const [dashboardView, openDashboard] = useState(false);
   const username = props.username;
-  const password = props.password;
 
   // UserInfo is an object containing the variables:
   //  - "email"

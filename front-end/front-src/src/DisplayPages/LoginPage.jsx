@@ -17,7 +17,7 @@
    - https://reactrouter.com/en/main/components/navigate
    - https://reactjs.org/docs/components-and-props.html
 */
-import {useState} from "react";
+import { useState } from "react";
 import * as React from 'react';
 //import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -33,13 +33,15 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Copyright from "./Copyright";
 import Home from './HomePage';
-import {Navigate} from "react-router-dom";
+import { Navigate } from "react-router-dom";
+
+import UserInfo from '../UserContext';
 
 const BackendURL = "http://localhost:8000";
 const LoginURL = BackendURL + "/logindatabase";
 const RegisterURL = BackendURL + "/register";
 
-const theme = createTheme( {
+const theme = createTheme({
   palette: {
     primary: {
       light: '#d1ccdc',
@@ -48,7 +50,7 @@ const theme = createTheme( {
       contrastText: '#fff',
     },
   },
-  });
+});
 
 export default function SignIn(props) {
   const [errorMessage, setErrorMessages] = useState({});
@@ -59,7 +61,8 @@ export default function SignIn(props) {
     pass: "invalid password"
   };
 
-  const handleSubmit = async function(event) {
+  const handleSubmit = async function (event, setUsername,
+    setPassword, setUserInfo) {
     event.preventDefault();
     let { userName, pass } = document.forms[0];
 
@@ -68,7 +71,7 @@ export default function SignIn(props) {
       mode: "cors",
       method: "post",
       "Content-Type": "application/json",
-      body: JSON.stringify({username: userName.value, password: pass.value})
+      body: JSON.stringify({ username: userName.value, password: pass.value })
     });
 
     const responseBody = await httpResponse.json();
@@ -79,38 +82,38 @@ export default function SignIn(props) {
 
     if (responseBody.loginAllowed === true) {
       setLoginAllowed(true);
-      props.setUsername(userName.value);
-      props.setPassword(pass.value);
-      props.setUserInfo(responseBody.payload);
+      setUsername(userName.value);
+      setPassword(pass.value);
+      setUserInfo(responseBody.payload);
       console.log(`requestbody.payload: ${JSON.stringify(responseBody.payload)}`);
     }
     else {
       setErrorMessages({ name: "pass", message: errors.pass });
     }
   };
-  
+
   const renderErrorMessage = (name) =>
-  name === errorMessage.name && (
-    <div className="error">{errorMessage.message}</div>
-  );
-  
+    name === errorMessage.name && (
+      <div className="error">{errorMessage.message}</div>
+    );
+
   const renderForm = (
     <ThemeProvider theme={theme}>
-
-      <Link href = '/' style={{ textDecoration: 'none' }}>
+      <Link href='/' style={{ textDecoration: 'none' }}>
         <Box textAlign='left'>
-            <Button 
-              color="primary"
-              type="submit"
-              onClick = {props.loginHandler}
-              sx={{ mt: 3, mb: 2, mr: 5, ml: 5,
-                pr: 7, pl: 7, 
-                border: 2,
-                fontWeight: 600,
-                fontSize: 16 }} >
-              Home
-            </Button>
-          </Box>
+          <Button
+            color="primary"
+            type="submit"
+            sx={{
+              mt: 3, mb: 2, mr: 5, ml: 5,
+              pr: 7, pl: 7,
+              border: 2,
+              fontWeight: 600,
+              fontSize: 16
+            }} >
+            Home
+          </Button>
+        </Box>
       </Link>
 
       <Container component="main" maxWidth="xs">
@@ -128,55 +131,66 @@ export default function SignIn(props) {
             Sign in
           </Typography>
 
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="username"
-              label="Username"
-              name="userName"
-              autoFocus
-            />
-            {renderErrorMessage("userName")}
-            
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="pass"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            {renderErrorMessage("pass")}
+          <UserInfo.Consumer>
+            {(userInfo) => {
+              return (
+                <Box component="form" onSubmit={(event) => {
+                  handleSubmit(event, userInfo.setUsername,
+                    userInfo.setPassword, userInfo.setUserInfo);
+                }} noValidate sx={{ mt: 1 }}>
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="username"
+                    label="Username"
+                    name="userName"
+                    autoFocus
+                  />
+                  {renderErrorMessage("userName")}
 
-            <Box textAlign='center'>
-              <Button
-                color="primary"
-                type="submit"
-                variant="outlined"
-                sx={{ mt: 3, mb: 2,
-                  pr: 7, pl: 7,
-                  border: 2, }}>
-                Sign In
-              </Button>
-            </Box>
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="pass"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    autoComplete="current-password"
+                  />
+                  {renderErrorMessage("pass")}
 
-          </Box>
+                  <Box textAlign='center'>
+                    <Button
+                      color="primary"
+                      type="submit"
+                      variant="outlined"
+                      sx={{
+                        mt: 3, mb: 2,
+                        pr: 7, pl: 7,
+                        border: 2,
+                      }}>
+                      Sign In
+                    </Button>
+                  </Box>
+
+                </Box>
+              );
+            }}
+          </UserInfo.Consumer>
         </Box>
 
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
     </ThemeProvider>
-);
+  );
 
-return (
-  <div className="Login">
-    <div className="login-form">
-        {loginAllowed ? (<Navigate to = "/home" />) : renderForm}
+  return (
+    <div className="Login">
+      <div className="login-form">
+        {loginAllowed ? (<Navigate to="/home" />) : renderForm}
+      </div>
     </div>
-  </div>
-);
+  );
 }
