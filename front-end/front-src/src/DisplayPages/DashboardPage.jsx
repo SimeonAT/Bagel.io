@@ -51,22 +51,22 @@ import * as React from 'react';
 //import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
-//import TextField from '@mui/material/TextField';
+import TextField from '@mui/material/TextField';
 // import FormControlLabel from '@mui/material/FormControlLabel';
-//import Checkbox from '@mui/material/Checkbox';
-//import FormGroup from '@mui/material/FormGroup';
-//import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import Link from '@mui/material/Link';
 //import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-//import TableRow from '@mui/material/TableRow';
+import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Copyright from "./Copyright";
 import {Navigate} from "react-router-dom";
-//import dayjs, { Dayjs } from 'dayjs';
-//import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import dayjs, { Dayjs } from 'dayjs';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Grid from '@mui/material/Grid';
@@ -75,12 +75,12 @@ import UserInfo from '../UserContext';
 import styled from "styled-components";
 
 const BackendURL = "http://localhost:8000";
-//const LoginURL = BackendURL + "/logindatabase";
+const LoginURL = BackendURL + "/logindatabase";
 const RegisterURL = BackendURL + "/register";
-//const HomeURL = BackendURL + "/home";
-//const scheduleTaskURL = BackendURL + "/scheduleTask";
-//const GetTasks = BackendURL + "/getTasks";
-//const checkInTask = BackendURL + "/checkInTask";
+const HomeURL = BackendURL + "/home";
+const scheduleTaskURL = BackendURL + "/scheduleTask";
+const GetTasks = BackendURL + "/getTasks";
+const updateTaskURL = BackendURL + "/updateTask";
 
 const CompleteButton = styled.button`
   font-size: 18px;
@@ -115,15 +115,17 @@ export default function Dashboard(props) {
   const [taskListToRender, setTaskListToRender] = useState(undefined);
 
   // NOTE: All fields must be present, or the back-end will give an error.
-  const updateTask = async function(event, taskId, startDate, endDate, tag, complete) {
-    event.preventDefault();
+  const updateTask = async function(taskId, startDate, endDate, tag, complete) {
+    console.log('updateTask() called: params. taskid: ' + taskId + ', startDate: ' + startDate + ', endDate: ' + endDate + ', tag: ' + tag + ', complete: ' + complete);
     // Send new task data to server
-    const httpResponse = await fetch(RegisterURL, {
+    const httpResponse = await fetch(updateTaskURL, {
       mode: "cors",
       method: "post",
       "Content-Type": "application/json",
       body: JSON.stringify({taskId: taskId, startDate: startDate, endDate: endDate, tag: tag, complete: complete})
     });
+    console.log(httpResponse);
+
   }
 
   const getTaskDisplayList = function (tasksToDisplay, setTaskListToRender) {
@@ -156,6 +158,7 @@ export default function Dashboard(props) {
               {({username, password, userInfo, setUserInfo}) => {
                 return (
                   <CompleteButton onClick={() => {
+                    console.log('Before click. task.complete = ' + task.complete);
                     const taskToRemove = task;
                     taskToRemove.complete = true;
                     
@@ -166,6 +169,7 @@ export default function Dashboard(props) {
 
                     setUserInfo(newUserInfo);
                     setTaskListToRender(undefined);
+                    updateTask( task.taskid, task.startDate, task.endDate, task.tag, task.complete);
                     console.log('Updated user info');
                     return;
                   }}>
@@ -254,7 +258,7 @@ export default function Dashboard(props) {
                       {taskListToRender}
                     </Box>
                   </Grid>
-//this is a test save
+
                   <Grid item xs={6}>
                     <Box
                       sx={{
