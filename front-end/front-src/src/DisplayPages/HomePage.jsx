@@ -40,25 +40,29 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Link from '@mui/material/Link';
 //import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import TableRow from '@mui/material/TableRow';
+//import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Copyright from "./Copyright";
+
 import {Navigate} from "react-router-dom";
-import dayjs, { Dayjs } from 'dayjs';
+//import dayjs, { Dayjs } from 'dayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Grid';
 
+import Copyright from "./Copyright";
+import Calendar from "./Calendar";
+
+
 const BackendURL = "http://localhost:8000";
-const LoginURL = BackendURL + "/logindatabase";
-const RegisterURL = BackendURL + "/register";
-const HomeURL = BackendURL + "/home";
+//const LoginURL = BackendURL + "/logindatabase";
+//const RegisterURL = BackendURL + "/register";
+//const HomeURL = BackendURL + "/home";
 const scheduleTaskURL = BackendURL + "/scheduleTask";
-const GetTasks = BackendURL + "/getTasks";
+//const GetTasks = BackendURL + "/getTasks";
 
 const theme = createTheme( {
   palette: {
@@ -237,7 +241,32 @@ export default function Home(props) {
 
                 <Grid container spacing={2}>
                   <Grid item xs={6}>
-                    <Box label="create-task-column"
+                    <Box label="calendar-column"
+                        sx={{
+                          width: 1,
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                        }}
+                        >
+                          <Typography component="h1" variant="h5">
+                            Today's Tasks
+                          </Typography>
+
+                          <Calendar
+                            userInfo = {props.userInfo}
+                          />
+
+
+
+
+                    </Box>
+                    
+                  </Grid>
+
+                  <Grid item xs={6}>
+
+                  <Box label="create-task-column"
                       sx={{
                         width: 1,
                         display: 'flex',
@@ -318,9 +347,10 @@ export default function Home(props) {
                         </Box>
                       </Box>
                     </Box>
-                  </Grid>
 
-                  <Grid item xs={6}>
+
+
+
                     <Box label="see-task-list-column"
                       sx={{
                         width: 1,
