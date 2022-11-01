@@ -4,6 +4,7 @@
 const sendError = require("./sendError");
 const dbUtils = require("./dbUtils");
 const { v4: uuidv4 } = require('uuid');
+const { user } = require("pg/lib/defaults");
 
 // //CHECK OBJECTS.JS FOR MOCKDATABASE + TASK OBJ IMPLEMENTATION.
 // const objects = require("./objects");
@@ -31,17 +32,33 @@ exports.register = async (request, response) => {
     // check if username/email in db
     const users = await dbUtils.getMembers();
     let alreadyInUse = false;
+    let checkUsername = ""; //if there is a match one or more of these will be filled.
+    let checkEmail = "";
     for (const userObj of users) {
       if (userObj.username === registerReqBody.username || userObj.email === registerReqBody.email) {
         alreadyInUse = true;
+        checkUsername = userObj.username;
+        checkEmail = userObj.email;
         break;
       }
     }
     // if username/email in db: send failure, else: insert and send success
     if (alreadyInUse) {
       console.log("Register failed - Account already exists");
+      let emailUsed = "";
+      let usernameUsed = "";
+      //check if username already used
+      if (checkUsername === registerReqBody.username) {
+        usernameUsed = "This username has already been used.";
+      }
+      //check if email already used
+      if (checkEmail === registerReqBody.email) {
+        emailUsed = "This email has already been used.";
+      }
       response.send({
-        loginAllowed: false
+        loginAllowed: false,
+        emailUsed: emailUsed, //these two fields return error message of whether or not email/user has already been used.
+        usernameUsed: usernameUsed
       });
     } else {
       await dbUtils.insertUser(registerReqBody.username, registerReqBody.email, registerReqBody.password);

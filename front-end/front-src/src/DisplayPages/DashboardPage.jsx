@@ -107,67 +107,14 @@ const theme = createTheme( {
   },
   });
 
-/** Given the lists of task objects, returns the
- *  JSX that will render a list of boxes, which each box
- *  representing each task.
- *
- * @param {array} tasksToDisplay - the list of tasks to display 
- * @returns {array} taskDisplayList - the JSX array that will
- *                                    render each task as a box in
- *                                    the webpage
- */
-function getTaskDisplayList(tasksToDisplay) {
-  return tasksToDisplay.map((task) => {
-    console.log(task);
-    return (
-      <Box key = {task.taskid} sx={{
-        width: 450,
-        border: '2px dashed grey',
-        margin: 'auto',
-        mb: 2,
-        '&:hover': {
-          backgroundColor: 'blue',
-          opacity: [0.5, 0.5, 0.5],},
-        }}>
-          <TaskDisplay>
-            <div>
-              <b>Task Name:</b> {task.name}
-            </div>
-            <div>
-            <b>Category:</b> {task.tag}
-            </div>
-            <div>
-              <b>Start Time:</b> {new Date(task.startDate).toLocaleString()}
-            </div>
-            <div>
-              <b>End Time:</b> {new Date(task.endDate).toLocaleString()}
-            </div>
-            <CompleteButton onClick = {() => {
-              // Removes the task from the task display list,
-              // and updates the state of the display list.
-              //
-              const taskToRemove = task;
-              tasksToDisplay = tasksToDisplay.filter((task) => {
-                return task === taskToRemove;
-              });
-
-              tasksToDisplay = getTaskDisplayList(tasksToDisplay);
-              return;
-            }}>
-              I completed this task
-            </CompleteButton>
-          </TaskDisplay>
-      </Box>
-    );
-  });
-}
-
 export default function Dashboard(props) {
   const [homeView, openHome] = useState(false);
   let tasksToDisplay = undefined;
   let taskDisplayList = [];
-  const [taskListToRender, setTaskList] = React.useState([]);
 
+  const [taskListToRender, setTaskListToRender] = useState(undefined);
+
+  // NOTE: All fields must be present, or the back-end will give an error.
   const updateTask = async function(event, taskId, startDate, endDate, tag, complete) {
     event.preventDefault();
     // Send new task data to server
@@ -176,6 +123,60 @@ export default function Dashboard(props) {
       method: "post",
       "Content-Type": "application/json",
       body: JSON.stringify({taskId: taskId, startDate: startDate, endDate: endDate, tag: tag, complete: complete})
+    });
+  }
+
+  const getTaskDisplayList = function (tasksToDisplay, setTaskListToRender) {
+    return tasksToDisplay.map((task) => {
+      return (
+        <Box key={task.taskid} sx={{
+          width: 450,
+          border: '2px dashed grey',
+          margin: 'auto',
+          mb: 2,
+          '&:hover': {
+            backgroundColor: 'blue',
+            opacity: [0.5, 0.5, 0.5],
+          },
+        }}>
+          <TaskDisplay>
+            <div>
+              <b>Task Name:</b> {task.name}
+            </div>
+            <div>
+              <b>Category:</b> {task.tag}
+            </div>
+            <div>
+              <b>Start Time:</b> {new Date(task.startDate).toLocaleString()}
+            </div>
+            <div>
+              <b>End Time:</b> {new Date(task.endDate).toLocaleString()}
+            </div>
+            <UserInfo.Consumer>
+              {({username, password, userInfo, setUserInfo}) => {
+                return (
+                  <CompleteButton onClick={() => {
+                    const taskToRemove = task;
+                    taskToRemove.complete = true;
+                    
+                    const newUserInfo = userInfo;
+                    newUserInfo.tasks = newUserInfo.tasks.filter((task) => {
+                      return task.complete === false;
+                    });
+
+                    setUserInfo(newUserInfo);
+                    setTaskListToRender(undefined);
+                    console.log('Updated user info');
+                    return;
+                  }}>
+                    I completed this task
+                  </CompleteButton>
+                );
+              }}
+            </UserInfo.Consumer>
+          </TaskDisplay>
+        </Box>
+      );
     });
   }
 
@@ -241,11 +242,16 @@ export default function Dashboard(props) {
 
                       <UserInfo.Consumer>
                         {({username, password, userInfo}) => {
-                          tasksToDisplay = userInfo.tasks;
-                          taskDisplayList = getTaskDisplayList(tasksToDisplay);
-                          return (taskDisplayList);
+                          console.log('Updating Task List to Render');
+                          if (taskListToRender === undefined) {
+                            setTaskListToRender(getTaskDisplayList(userInfo.tasks,
+                              setTaskListToRender));
+                          }
+                          
+                          return (null);
                         }}
                       </UserInfo.Consumer>
+                      {taskListToRender}
                     </Box>
                   </Grid>
 //this is a test save

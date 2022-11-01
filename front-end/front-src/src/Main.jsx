@@ -8,6 +8,7 @@
  * - https://reactjs.org/docs/hooks-state.html
  * - https://www.robinwieruch.de/react-event-handler/
  * - https://reactjs.org/docs/context.html
+ * - https://stackoverflow.com/questions/60697733/react-context-not-updating
 */
 
 import './styles.css';
@@ -20,6 +21,9 @@ import UserInfo from './UserContext';
 // import ReactDOM from "react-dom/client";
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import React from 'react';
+
+const BackendURL = "http://localhost:8000";
+const LoginURL = BackendURL + "/logindatabase";
 
 function Main() {
   /** Here's an idea we should try:
@@ -39,6 +43,10 @@ function Main() {
       username: loginUsername,
       password: loginPassword,
       userInfo: userInfo,
+      setUserInfo: (newUserInfo) => {
+        setUserInfo(newUserInfo);
+        console.log(userInfo);
+      },
      }}>
       <BrowserRouter>
         <Routes>
