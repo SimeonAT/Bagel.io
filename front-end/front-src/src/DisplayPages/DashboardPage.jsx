@@ -80,7 +80,7 @@ const RegisterURL = BackendURL + "/register";
 const HomeURL = BackendURL + "/home";
 const scheduleTaskURL = BackendURL + "/scheduleTask";
 const GetTasks = BackendURL + "/getTasks";
-const checkInTask = BackendURL + "/checkInTask";
+const updateTaskURL = BackendURL + "/updateTask";
 
 const CompleteButton = styled.button`
   font-size: 18px;
@@ -115,15 +115,17 @@ export default function Dashboard(props) {
   const [taskListToRender, setTaskListToRender] = useState(undefined);
 
   // NOTE: All fields must be present, or the back-end will give an error.
-  const updateTask = async function(event, taskId, startDate, endDate, tag, complete) {
-    event.preventDefault();
+  const updateTask = async function(taskId, startDate, endDate, tag, complete) {
+    console.log('updateTask() called: params. taskid: ' + taskId + ', startDate: ' + startDate + ', endDate: ' + endDate + ', tag: ' + tag + ', complete: ' + complete);
     // Send new task data to server
-    const httpResponse = await fetch(RegisterURL, {
+    const httpResponse = await fetch(updateTaskURL, {
       mode: "cors",
       method: "post",
       "Content-Type": "application/json",
       body: JSON.stringify({taskId: taskId, startDate: startDate, endDate: endDate, tag: tag, complete: complete})
     });
+    console.log(httpResponse);
+
   }
 
   const getTaskDisplayList = function (tasksToDisplay, setTaskListToRender) {
@@ -156,6 +158,7 @@ export default function Dashboard(props) {
               {({username, password, userInfo, setUserInfo}) => {
                 return (
                   <CompleteButton onClick={() => {
+                    console.log('Before click. task.complete = ' + task.complete);
                     const taskToRemove = task;
                     taskToRemove.complete = true;
                     
@@ -166,6 +169,7 @@ export default function Dashboard(props) {
 
                     setUserInfo(newUserInfo);
                     setTaskListToRender(undefined);
+                    updateTask( task.taskid, task.startDate, task.endDate, task.tag, task.complete);
                     console.log('Updated user info');
                     return;
                   }}>
