@@ -11,6 +11,8 @@
    - https://dmitripavlutin.com/fetch-with-json/
    - http://expressjs.com/en/resources/middleware/body-parser.html#bodyparserjsonoptions
    - https://reactrouter.com/en/main/components/navigate
+
+   - https://reactjs.org/docs/context.html
 */
 import {useState} from "react";
 import * as React from 'react';
@@ -28,6 +30,8 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Copyright from "./Copyright";
 import {Navigate} from "react-router-dom"
+
+import UserInfo from '../UserContext';
 
 const BackendURL = "http://localhost:8000";
 const LoginURL = BackendURL + "/logindatabase";
@@ -58,13 +62,10 @@ export default function Register(props) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   //const [password, setPassword] = useState("")
 
-  const handleSubmit = async function(event) {
+  const handleSubmit = async function(event, setUsername, setPassword,
+    setUserInfo) {
     event.preventDefault();
     let { u_name, email, pass, pass2 } = document.forms[0];
-    console.log("Username:", u_name.value);
-    console.log("Email:", email.value);
-    console.log("Password: ",pass.value);
-    console.log("Confirm Password:",pass2.value);
 
     // FIXME: veryfy pass === pass2
     // FIXME: Snake case when it should be camel case?
@@ -137,8 +138,9 @@ export default function Register(props) {
       if (responseBody.loginAllowed === true) {
         setIsSubmitted(true);
 
-        props.setUsername(u_name.value);
-        props.setPassword(pass.value);
+        console.log(setUsername);
+        setUsername(u_name.value);
+        setPassword(pass.value);
       } else {
         //PRINT ERROR MESSAGE SENT FROM BACK END, needs double check?
         //Below two values are recieved from responseBody.loginAllowed === false
@@ -206,76 +208,87 @@ export default function Register(props) {
             Create Your Account!
           </Typography>
 
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-            <TextField //for the username
-              margin="normal"
-              required
-              fullWidth
-              id="username"
-              label="Username"
-              name="u_name"
-              defaultValue="" //set empty default value.
-              //autoComplete="email"
-              autoFocus
-            />
-            {renderErrorMessage("u_name")}
+          <UserInfo.Consumer>
+            {(userInfo) => {
+              return (
+                <Box component="form" onSubmit={(event) => {
+                  handleSubmit(event, userInfo.setUsername,
+                    userInfo.setPassword, userInfo.setUserInfo);
+                }} noValidate sx={{ mt: 1 }}>
+                  <TextField //for the username
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="username"
+                    label="Username"
+                    name="u_name"
+                    defaultValue="" //set empty default value.
+                    //autoComplete="email"
+                    autoFocus
+                  />
+                  {renderErrorMessage("u_name")}
 
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="email"
-              label="Email"
-              type="email"
-              id="email"
-              autoComplete="email"
-            />
-            {renderErrorMessage("u_email")}
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="email"
+                    label="Email"
+                    type="email"
+                    id="email"
+                    autoComplete="email"
+                  />
+                  {renderErrorMessage("u_email")}
 
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="pass"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              // onChange={event => {
-              //   console.log(event.target.value);
-              // }}
-              // onChange={event => {
-              //   setPassword(event.target.value)
-              // }}
-              // value={password}
-            />
-            {renderErrorMessage("u_password1")}
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="pass"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    autoComplete="current-password"
+                  // onChange={event => {
+                  //   console.log(event.target.value);
+                  // }}
+                  // onChange={event => {
+                  //   setPassword(event.target.value)
+                  // }}
+                  // value={password}
+                  />
+                  {renderErrorMessage("u_password1")}
 
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="pass2"
-              label="Confirm Password"
-              type="password"
-              id="confirm-password"
-              autoComplete="password2"
-            />
-            {renderErrorMessage("u_password2")}
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="pass2"
+                    label="Confirm Password"
+                    type="password"
+                    id="confirm-password"
+                    autoComplete="password2"
+                  />
+                  {renderErrorMessage("u_password2")}
 
-            <Box textAlign='center'>
-              <Button
-                color="primary"
-                type="submit"
-                variant="outlined"
-                sx={{ mt: 3, mb: 2,
-                  pr: 7, pl: 7, 
-                  border: 2 }} >
-                Register
-              </Button>
-            </Box>
+                  <Box textAlign='center'>
+                    <Button
+                      color="primary"
+                      type="submit"
+                      variant="outlined"
+                      sx={{
+                        mt: 3, mb: 2,
+                        pr: 7, pl: 7,
+                        border: 2
+                      }} >
+                      Register
+                    </Button>
+                  </Box>
 
-          </Box>
+                </Box>
+              );
+            }}
+          </UserInfo.Consumer>
         </Box>
         
         <Copyright sx={{ mt: 8, mb: 4 }} />
