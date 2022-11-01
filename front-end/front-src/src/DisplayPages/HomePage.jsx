@@ -128,6 +128,7 @@ export default function Home(props) {
     // NOTE: must convert dates to ISO strings on front end to make this happend on the users local machine
     let taskStartISO = new Date(taskStartRef.current.value).toISOString();
     let taskEndISO = new Date(taskEndRef.current.value).toISOString();
+    console.log('taskEndISO:' + taskEndISO);
     // FIXME: add check to make sure taskEndISO >= taskStartISO
 
     // console.log(`taskStartRef.current.value: ${new Date(taskStartRef.current.value).toISOString()}`);
