@@ -91,9 +91,9 @@ exports.deleteTask = async (taskId) => {
 
 exports.updateTask = async (taskId, startDate, endDate, tag, complete) => {
     let update = `UPDATE taskscheduled
-                  SET taskscheduled.starttime = $1, taskscheduled.endtime = $2, taskscheduled.complete = $3
-                  WHERE taskscheduled.scheduledid = $4
-                  RETURNING taskscheduled.presetid`;
+                  SET starttime = $1, endtime = $2, complete = $3
+                  WHERE scheduledid = $4
+                  RETURNING presetid`;
     let query = {
         text: update,
         values: [startDate, endDate, complete, taskId],
@@ -101,8 +101,8 @@ exports.updateTask = async (taskId, startDate, endDate, tag, complete) => {
     const scheduled = await pool.query(query);
     console.log("dbUtils.js:102 "+scheduled.rows[0].presetid);
     update = `UPDATE taskpreset
-              SET taskpreset.tasktag = $1
-              WHERE taskpreset.presetid = $2`;
+              SET tasktag = $1
+              WHERE presetid = $2`;
     query = {
         text: update,
         values: [tag, scheduled.rows[0].presetid],
