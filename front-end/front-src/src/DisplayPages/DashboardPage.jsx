@@ -125,7 +125,6 @@ export default function Dashboard(props) {
       body: JSON.stringify({taskId: taskId, startDate: startDate, endDate: endDate, tag: tag, complete: complete})
     });
     console.log(httpResponse);
-
   }
 
   const getTaskDisplayList = function (tasksToDisplay, setTaskListToRender) {
