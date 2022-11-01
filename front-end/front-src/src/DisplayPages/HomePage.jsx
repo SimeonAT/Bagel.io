@@ -40,13 +40,13 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Link from '@mui/material/Link';
 //import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import TableRow from '@mui/material/TableRow';
+//import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import {Navigate} from "react-router-dom";
-import dayjs, { Dayjs } from 'dayjs';
+//import dayjs, { Dayjs } from 'dayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -58,11 +58,11 @@ import Calendar from "./Calendar";
 
 
 const BackendURL = "http://localhost:8000";
-const LoginURL = BackendURL + "/logindatabase";
-const RegisterURL = BackendURL + "/register";
-const HomeURL = BackendURL + "/home";
+//const LoginURL = BackendURL + "/logindatabase";
+//const RegisterURL = BackendURL + "/register";
+//const HomeURL = BackendURL + "/home";
 const scheduleTaskURL = BackendURL + "/scheduleTask";
-const GetTasks = BackendURL + "/getTasks";
+//const GetTasks = BackendURL + "/getTasks";
 
 const theme = createTheme( {
   palette: {

@@ -30,9 +30,11 @@ const Appointment = ({
 
 
 function Calendar(props) {
+    const [userInfo, updateUserInfo] = React.useState(props.userInfo);
+
     console.log("These are the props:::");
     console.log(props.userInfo)
-    const userInfo = props.userInfo;
+    //const userInfo = props.userInfo;
     // let tasksToDisplay = undefined;
     // let taskDisplayList = [];
     let calendarTasks = undefined;
@@ -84,3 +86,4 @@ function Calendar(props) {
 }
 
 export default Calendar
+
