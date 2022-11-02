@@ -79,17 +79,6 @@ const theme = createTheme( {
 
 export default function Home(props) {
   const [dashboardView, openDashboard] = useState(false);
-  const username = props.username;
-
-  // UserInfo is an object containing the variables:
-  //  - "email"
-  //  - "password"
-  //  - "list" (of tasks)
-  //  - "username"
-  // for any given user.
-  //
-  const [userInfo, setUserInfo] = React.useState(props.userInfo);
-
   let taskDisplayList = [];
   const [taskListToRender, updateList] = React.useState(undefined);
 
@@ -141,7 +130,7 @@ export default function Home(props) {
       method: "post",
       "Content-Type": "application/json",
       body: JSON.stringify({
-        username: username,
+        username: userInfo.username,
         taskName: taskNameRef.current.value,
         startDate: taskStartISO,
         endDate: taskEndISO,
