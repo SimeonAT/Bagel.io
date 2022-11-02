@@ -56,6 +56,8 @@ import Grid from '@mui/material/Grid';
 import Copyright from "./Copyright";
 import Calendar from "./Calendar";
 
+import UserInfo from '../UserContext';
+
 
 const BackendURL = "http://localhost:8000";
 //const LoginURL = BackendURL + "/logindatabase";
@@ -218,7 +220,7 @@ export default function Home(props) {
                   pr: 7, pl: 7, 
                   border: 2,
                   fontWeight: 600,
-                  fontSize: 16 }} >
+                  fontSize: 16 }}>
                 Logout
               </Button>
             </Box>
@@ -234,10 +236,15 @@ export default function Home(props) {
                 alignItems: 'center',
               }}
               >
-
-              <Typography component="h1" variant="h4" align="center" sx={{ mb: 10 }}>
-                Welcome {username}! 
-              </Typography>
+              <UserInfo.Consumer>
+                {(userInfo) => {
+                  return (
+                    <Typography component="h1" variant="h4" align="center" sx={{ mb: 10 }}>
+                      Welcome {userInfo.username}
+                    </Typography>
+                  );
+                }}
+              </UserInfo.Consumer>
 
                 <Grid container spacing={2}>
                   <Grid item xs={6}>
@@ -256,16 +263,10 @@ export default function Home(props) {
                           <Calendar
                             userInfo = {props.userInfo}
                           />
-
-
-
-
                     </Box>
-                    
                   </Grid>
 
                   <Grid item xs={6}>
-
                   <Box label="create-task-column"
                       sx={{
                         width: 1,
@@ -398,8 +399,16 @@ export default function Home(props) {
 return (
   <div className="HomePage">
     <div className="taskView">
-    {dashboardView ? (<Navigate to = "/dashboard" />) : 
-    (username === undefined ? <Navigate to = "/login" /> : renderPage)}
+    <UserInfo.Consumer>
+      {(userInfo) => {
+        if (userInfo.username === undefined) {
+          return (<Navigate to = "/login" />);
+        } else if (dashboardView) {
+          return (<Navigate to = "/dashboard" />);
+        }
+        return renderPage;
+      }}
+    </UserInfo.Consumer>
     </div>
   </div>
 );
