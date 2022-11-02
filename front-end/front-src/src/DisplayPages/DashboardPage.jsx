@@ -13,6 +13,7 @@
    - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
    - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
    - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
+   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
 
    - https://stackabuse.com/get-http-post-body-in-express-js/
    - https://www.npmjs.com/package/body-parser
@@ -128,7 +129,11 @@ export default function Dashboard(props) {
   }
 
   const getTaskDisplayList = function (tasksToDisplay, setTaskListToRender) {
-    return tasksToDisplay.map((task) => {
+    const incompleteTasks = tasksToDisplay.filter((task) => {
+      return task.complete === false;
+    });
+
+    return incompleteTasks.map((task) => {
       return (
         <Box key={task.taskid} sx={{
           width: 450,
@@ -161,12 +166,15 @@ export default function Dashboard(props) {
                     const taskToRemove = task;
                     taskToRemove.complete = true;
                     
-                    const newUserInfo = userInfo;
+                    const newUserInfo = {};
+                    Object.assign(newUserInfo, userInfo);
+                    console.log(newUserInfo);
+                    console.log(userInfo);
                     newUserInfo.tasks = newUserInfo.tasks.filter((task) => {
                       return task.complete === false;
                     });
 
-                    setUserInfo(newUserInfo);
+                    // setUserInfo(newUserInfo);
                     setTaskListToRender(undefined);
                     updateTask( task.taskid, task.startDate, task.endDate, task.tag, task.complete);
                     console.log('Updated user info');
