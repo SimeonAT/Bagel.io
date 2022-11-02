@@ -88,22 +88,20 @@ export default function Home(props) {
   //  - "username"
   // for any given user.
   //
-  const [userInfo, updateUserInfo] = React.useState(props.userInfo);
+  const [userInfo, setUserInfo] = React.useState(props.userInfo);
 
-  let tasksToDisplay = undefined;
   let taskDisplayList = [];
+  const [taskListToRender, updateList] = React.useState(undefined);
 
-  if (userInfo !== undefined) {
-    tasksToDisplay = props.userInfo.tasks;
-  
+  const createTaskDisplayList = function (userInfo, tasksToDisplay) {
     for (let i = 0; i < tasksToDisplay.length; i++) {
       const label = tasksToDisplay[i].name;
       const complete = tasksToDisplay[i].complete;
       const taskid = tasksToDisplay[i].taskid;
       taskDisplayList.push(
-        <FormControlLabel 
+        <FormControlLabel
           sx={{ ml: 7, mr: 7 }}
-          control={complete ? <Checkbox defaultChecked /> : <Checkbox />} 
+          control={complete ? <Checkbox defaultChecked /> : <Checkbox />}
           label={label}
           key={i}
           taskid={taskid}
@@ -111,9 +109,9 @@ export default function Home(props) {
       );
       // console.log(`tasksToDisplay[${i}]: ${JSON.stringify(tasksToDisplay[i])}`);
     }
-  }
 
-  const [taskListToRender, updateList] = React.useState(taskDisplayList);
+    return taskDisplayList;
+  };
 
   const [startDateWithNoInitialValue, setStartDateWithNoInitialValue] =
     React.useState(null);
@@ -127,7 +125,7 @@ export default function Home(props) {
   const taskEndRef = useRef('');
   const categoryRef = useRef('');
 
-  const createTask = async function(event) {
+  const createTask = async function(event, userInfo, setUserInfo) {
     event.preventDefault();
 
     // NOTE: must convert dates to ISO strings on front end to make this happend on the users local machine
@@ -162,7 +160,7 @@ export default function Home(props) {
      */
      const newUserInfo = userInfo;
      newUserInfo.tasks.push(responseBody);
-     updateUserInfo(newUserInfo);
+     setUserInfo(newUserInfo);
 
     /**
      * React will not re-render the task list if we add a new task.
@@ -260,97 +258,107 @@ export default function Home(props) {
                             Today's Tasks
                           </Typography>
 
-                          <Calendar
-                            userInfo = {props.userInfo}
-                          />
+                          <UserInfo.Consumer>
+                          {(userInfo) => {
+                            return (<Calendar userInfo = {userInfo.userInfo} />);
+                          }}
+                          </UserInfo.Consumer>
                     </Box>
                   </Grid>
 
                   <Grid item xs={6}>
-                  <Box label="create-task-column"
-                      sx={{
-                        width: 1,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                      }}
+                <UserInfo.Consumer>
+                  {(userInfo) => {
+                    return (
+                      <Box label="create-task-column"
+                        sx={{
+                          width: 1,
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                        }}
                       >
-              
-                      <Typography component="h1" variant="h5">
-                        Add New Task
-                      </Typography>
-              
-                      <Box noValidate sx={{ mt: 1 }}>
-                        <TextField
-                          inputRef={taskNameRef}
-                          margin="normal"
-                          required
-                          fullWidth
-                          id="taskName"
-                          label="Task Name"
-                          name="taskName"
-                          autoFocus
-                        />
 
-                        <TextField
-                          inputRef={categoryRef}
-                          margin="normal"
-                          required
-                          fullWidth
-                          name="category"
-                          label="Category"
-                          id="category"
-                          sx={{ mb: 3 }}
-                        />
-                        
-                        <Stack spacing={3}>
-                          <DateTimePicker
-                            renderInput={(params) => <TextField {...params} 
-                            inputRef={taskStartRef}
-                            />}
+                        <Typography component="h1" variant="h5">
+                          Add New Task
+                        </Typography>
+
+                        <Box noValidate sx={{ mt: 1 }}>
+                          <TextField
+                            inputRef={taskNameRef}
                             margin="normal"
                             required
                             fullWidth
-                            name="startDate"
-                            label="Start Date/Time"
-                            id="startDate"
-                            value={startDateWithNoInitialValue}
-                            onChange={(newValue) => setStartDateWithNoInitialValue(newValue)}
+                            id="taskName"
+                            label="Task Name"
+                            name="taskName"
+                            autoFocus
                           />
 
-                          <DateTimePicker
-                            renderInput={(params) => <TextField {...params} 
-                            inputRef={taskEndRef}
-                            />}
+                          <TextField
+                            inputRef={categoryRef}
                             margin="normal"
                             required
                             fullWidth
-                            name="endDate"
-                            label="End Date/Time"
-                            id="endDate"
-                            value={endDateWithNoInitialValue}
-                            onChange={(newValue) => setEndDateWithNoInitialValue(newValue)}
+                            name="category"
+                            label="Category"
+                            id="category"
+                            sx={{ mb: 3 }}
                           />
-                        </Stack>
 
-                        <Box textAlign='center'>
-                          <Button
-                            color="primary"
-                            type="submit"
-                            variant="outlined"
-                            onClick={createTask}
-                            sx={{ mt: 3, mb: 2, 
-                                  pr: 7, pl: 7, 
-                                  border: 2 }}
+                          <Stack spacing={3}>
+                            <DateTimePicker
+                              renderInput={(params) => <TextField {...params}
+                                inputRef={taskStartRef}
+                              />}
+                              margin="normal"
+                              required
+                              fullWidth
+                              name="startDate"
+                              label="Start Date/Time"
+                              id="startDate"
+                              value={startDateWithNoInitialValue}
+                              onChange={(newValue) => setStartDateWithNoInitialValue(newValue)}
+                            />
+
+                            <DateTimePicker
+                              renderInput={(params) => <TextField {...params}
+                                inputRef={taskEndRef}
+                              />}
+                              margin="normal"
+                              required
+                              fullWidth
+                              name="endDate"
+                              label="End Date/Time"
+                              id="endDate"
+                              value={endDateWithNoInitialValue}
+                              onChange={(newValue) => setEndDateWithNoInitialValue(newValue)}
+                            />
+                          </Stack>
+
+                          <Box textAlign='center'>
+                            <Button
+                              color="primary"
+                              type="submit"
+                              variant="outlined"
+                              onClick={(event) => {
+                                createTask(event, userInfo.userInfo,
+                                  userInfo.setUserInfo);
+                              }}
+                              sx={{
+                                mt: 3, mb: 2,
+                                pr: 7, pl: 7,
+                                border: 2
+                              }}
                             >
-                            Add Task
-                          </Button>
+                              Add Task
+                            </Button>
+                          </Box>
                         </Box>
                       </Box>
-                    </Box>
-
-
-
+                    );
+                  }}
+                </UserInfo.Consumer>
 
                     <Box label="see-task-list-column"
                       sx={{
@@ -365,6 +373,15 @@ export default function Home(props) {
                       </Typography>
 
                       <FormGroup sx={{ width:1 }}>
+                        <UserInfo.Consumer>
+                          {(userInfo) => {
+                            if (taskListToRender === undefined) {
+                              const tasksToDisplay = createTaskDisplayList(userInfo.userInfo,
+                                userInfo.userInfo.tasks);
+                              updateList(tasksToDisplay);
+                            }
+                          }}
+                        </UserInfo.Consumer>
                         {taskListToRender}
                       </FormGroup>
 
