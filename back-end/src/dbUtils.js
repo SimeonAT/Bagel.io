@@ -112,7 +112,7 @@ exports.updateTask = async (taskId, startDate, endDate, tag, complete) => {
 }
 
 //New Request for function:
-//exports.updateTask(taskId, startDate, endDate, tag, complete)
+//exports.dbUtils.getUserTags(fetchTagsReqBody.username)
 /*  please :)  */
 
 
