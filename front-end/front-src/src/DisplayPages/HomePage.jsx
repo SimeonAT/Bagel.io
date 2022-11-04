@@ -30,28 +30,16 @@ import {useState} from "react";
 import {useRef} from 'react';
 import * as React from 'react';
 //import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
+import { Button, TextField, Link, Box, Container, Typography} from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-// import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Link from '@mui/material/Link';
-//import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-//import TableRow from '@mui/material/TableRow';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
+import { Checkbox, FormGroup, FormControlLabel} from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
-import {Navigate} from "react-router-dom";
-//import dayjs, { Dayjs } from 'dayjs';
+import { Navigate } from "react-router-dom";
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import Stack from '@mui/material/Stack';
-import Grid from '@mui/material/Grid';
+import { Stack, Grid } from '@mui/material';
+import { Select, FormControl, MenuItem, InputLabel } from '@mui/material';
 
 import Copyright from "./Copyright";
 import Calendar from "./Calendar";
@@ -60,11 +48,9 @@ import UserInfo from '../UserContext';
 
 
 const BackendURL = "http://localhost:8000";
-//const LoginURL = BackendURL + "/logindatabase";
-//const RegisterURL = BackendURL + "/register";
-//const HomeURL = BackendURL + "/home";
 const scheduleTaskURL = BackendURL + "/scheduleTask";
-//const GetTasks = BackendURL + "/getTasks";
+const fetchTagsURL = BackendURL + "/fetchTags";
+
 
 const theme = createTheme( {
   palette: {
@@ -82,6 +68,12 @@ export default function Home(props) {
   let taskDisplayList = [];
   const [taskListToRender, updateList] = React.useState(undefined);
 
+  const [tag, setTag] = React.useState('');
+
+  const handleTagDropdownChange = (event) => {
+    setTag(event.target.value);
+  };
+
   const createTaskDisplayList = function (userInfo, tasksToDisplay) {
     for (let i = 0; i < tasksToDisplay.length; i++) {
       const label = tasksToDisplay[i].name;
@@ -96,7 +88,6 @@ export default function Home(props) {
           taskid={taskid}
         />
       );
-      // console.log(`tasksToDisplay[${i}]: ${JSON.stringify(tasksToDisplay[i])}`);
     }
 
     return taskDisplayList;
@@ -107,12 +98,34 @@ export default function Home(props) {
 
   const [endDateWithNoInitialValue, setEndDateWithNoInitialValue] =
     React.useState(null);
-
   
   const taskNameRef = useRef('');
   const taskStartRef = useRef('');
   const taskEndRef = useRef('');
-  const categoryRef = useRef('');
+  const categoryManualInputRef = useRef('');
+  const categoryDropdownInputRef = useRef('');
+
+  let dropDownCategoryOptions = [];
+
+  const setUpCategoriesForDropdown = async function() {
+    var username = "temp";
+    const httpResponse = await fetch(fetchTagsURL, {
+      mode: "cors",
+      method: "post",
+      "Content-Type": "application/json",
+      body: JSON.stringify({username: username})
+    });
+    let responseBody = await httpResponse.json();
+    let tagList = responseBody.tagList;
+    // console.log(responseBody.tagList);
+
+    for (let i = 0; i < tagList.length; i++) {
+      dropDownCategoryOptions.push(<MenuItem value={tagList[i]}>{tagList[i]}</MenuItem>)
+    }
+  }
+
+  setUpCategoriesForDropdown();
+  
 
   const createTask = async function(event, userInfo, setUserInfo) {
     event.preventDefault();
@@ -123,7 +136,8 @@ export default function Home(props) {
     console.log('taskEndISO:' + taskEndISO);
     // FIXME: add check to make sure taskEndISO >= taskStartISO
 
-    // console.log(`taskStartRef.current.value: ${new Date(taskStartRef.current.value).toISOString()}`);
+    const taskCategoryToRecord = categoryManualInputRef.current.value != '' ? categoryManualInputRef.current.value : categoryDropdownInputRef.current.value;
+
     // Set username and password to the backend server
     const httpResponse = await fetch(scheduleTaskURL, {
       mode: "cors",
@@ -134,7 +148,7 @@ export default function Home(props) {
         taskName: taskNameRef.current.value,
         startDate: taskStartISO,
         endDate: taskEndISO,
-        tag: categoryRef.current.value
+        tag: taskCategoryToRecord
       })
     });
     if (!httpResponse.ok) {
@@ -177,7 +191,8 @@ export default function Home(props) {
     updateList(newList);
 
     taskNameRef.current.value = '';
-    categoryRef.current.value = '';
+    categoryManualInputRef.current.value = '';
+    categoryDropdownInputRef.current.value = '';
     setEndDateWithNoInitialValue(null);
     setStartDateWithNoInitialValue(null);
   };
@@ -282,20 +297,10 @@ export default function Home(props) {
                             label="Task Name"
                             name="taskName"
                             autoFocus
-                          />
-
-                          <TextField
-                            inputRef={categoryRef}
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="category"
-                            label="Category"
-                            id="category"
                             sx={{ mb: 3 }}
                           />
 
-                          <Stack spacing={3}>
+                          <Stack width={500} margin="normal" spacing={3} sx={{ mb: 3 }}>
                             <DateTimePicker
                               renderInput={(params) => <TextField {...params}
                                 inputRef={taskStartRef}
@@ -324,6 +329,31 @@ export default function Home(props) {
                               onChange={(newValue) => setEndDateWithNoInitialValue(newValue)}
                             />
                           </Stack>
+
+                          <FormControl fullWidth >
+                            <InputLabel id="demo-simple-select-label">Select a Category</InputLabel>
+                            <Select
+                              inputRef={categoryDropdownInputRef}
+                              id="select-a-category"
+                              value={tag}
+                              label="Select a Category"
+                              onChange={handleTagDropdownChange}
+                            >
+                              {dropDownCategoryOptions}
+                            </Select>
+                          </FormControl>
+
+                          <Typography align="center">-or-</Typography>
+
+                          <TextField 
+                            inputRef={categoryManualInputRef}
+                            margin="normal"
+                            fullWidth
+                            name="category"
+                            label="Create your own Category"
+                            id="category"
+                            sx={{ mt: 0, mb: 3 }}
+                          />
 
                           <Box textAlign='center'>
                             <Button

@@ -228,6 +228,29 @@ exports.updateTask = async (request, response) => {
 }
 
 
+// Returns a list of all tags a user should have in their dropdown menu
+// <Inputs> request body: {username:"" }
+// <Functionality> queries DB with username that is sent passed in
+// <Returns> sends response with body: {tagList: []}
+exports.fetchTags = async (request, response) => {
+  try {
+    response.set("Access-Control-Allow-Origin", "*");
+    response.setHeader("Content-Type", "application/json");
+
+    const fetchTagsReqBody = JSON.parse(request.body);
+
+    // let userTags = await dbUtils.getUserTags(fetchTagsReqBody.username);
+    // const tagArray = userTags;
+    const tagArray = ['Work', 'Study', 'Exercise','Chores','Socialization', 'Hobbies', 'Rest', 'Nourishment', 'Relaxation'];
+    response.send({tagList: tagArray});
+  }
+
+  catch (error) {
+    sendError.sendError(error, response);
+  }
+}
+
+
 // FORTESTING
 exports.testDBGet = async (request, response) => {
   response.set("Access-Control-Allow-Origin", "*");

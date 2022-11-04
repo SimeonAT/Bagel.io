@@ -32,8 +32,8 @@ const Appointment = ({
 function Calendar(props) {
     const [userInfo, updateUserInfo] = React.useState(props.userInfo);
 
-    console.log("These are the props:::");
-    console.log(props.userInfo)
+    // console.log("These are the props:::");
+    // console.log(props.userInfo)
     //const userInfo = props.userInfo;
     // let tasksToDisplay = undefined;
     // let taskDisplayList = [];
@@ -56,9 +56,9 @@ function Calendar(props) {
                 //id: calendarTasks[i].id
             });
         }
-        console.log("finished!!");
-        console.log(calendarData);
-        console.log("yeet");
+        // console.log("finished!!");
+        // console.log(calendarData);
+        // console.log("yeet");
     }
    //let tasksToDisplay =[];
     return (
