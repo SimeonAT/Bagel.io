@@ -112,8 +112,18 @@ exports.updateTask = async (taskId, startDate, endDate, tag, complete) => {
 }
 
 //New Request for function:
-//exports.dbUtils.getUserTags(fetchTagsReqBody.username)
-/*  please :)  */
+exports.getUserTags = async (username) => {
+    let select = `SELECT taskpreset.tasktag
+                  FROM member, taskpreset
+                  WHERE member.username = $1
+                        AND member.username = taskpreset.username`;
+    let query = {
+        text: select,
+        values: [username],
+    }
+    const {rows} = await pool.query(query);
+    return rows[0];
+};
 
 
 

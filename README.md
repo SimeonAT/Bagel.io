@@ -47,6 +47,7 @@ npm start; <--might take a while
 * ~~search codebas for "taskid={taskid}": can you add whatever ~~prop you want to react components??
 * ~~when adding a new task: HomePage.jsx:76 runs twice~~
 * in update task shouldnt we be able to update name of a task too?
+* backend testing: unable to send request body when calling endpoint
 
 
 

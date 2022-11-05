@@ -239,12 +239,26 @@ exports.fetchTags = async (request, response) => {
 
     const fetchTagsReqBody = JSON.parse(request.body);
 
-    // let userTags = await dbUtils.getUserTags(fetchTagsReqBody.username);
+    let userTags = await dbUtils.getUserTags(fetchTagsReqBody.username);
+    console.log(userTags);
     // const tagArray = userTags;
     const tagArray = ['Work', 'Study', 'Exercise','Chores','Socialization', 'Hobbies', 'Rest', 'Nourishment', 'Relaxation'];
     response.send({tagList: tagArray});
   }
 
+  catch (error) {
+    sendError.sendError(error, response);
+  }
+}
+
+exports.setuptesting = async (request, response) => {
+  try {
+    response.set("Access-Control-Allow-Origin", "*");
+    response.setHeader("Content-Type", "application/json");
+    console.log(`typeof(request.body): ${typeof(request.body)}`);
+    console.log(`JSON.stringify(request.body): ${JSON.stringify(request.body)}`);
+    response.status(201).send({hi2: 'hello2'});
+  }
   catch (error) {
     sendError.sendError(error, response);
   }
