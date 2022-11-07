@@ -60,7 +60,7 @@ function Main() {
             <HomePage userInfo = {userInfo} />
           }></Route>
           <Route exact path='/dashboard' element={
-            <DashboardPage />
+            <DashboardPage userInfo = {userInfo} />
           }></Route>
         </Routes>
       </BrowserRouter>

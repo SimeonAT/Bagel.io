@@ -135,9 +135,6 @@ export default function Home(props) {
     }
   }
 
-  setUpCategoriesForDropdown();
-  
-
   const createTask = async function(event, userInfo, setUserInfo) {
     event.preventDefault();
 
