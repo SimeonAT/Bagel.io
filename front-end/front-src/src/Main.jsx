@@ -57,7 +57,7 @@ function Main() {
             <RegisterPage />
           }></Route>
           <Route exact path='/home' element={
-            <HomePage />
+            <HomePage userInfo = {userInfo} />
           }></Route>
           <Route exact path='/dashboard' element={
             <DashboardPage />

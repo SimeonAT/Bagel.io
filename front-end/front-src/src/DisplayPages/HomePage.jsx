@@ -64,6 +64,8 @@ const theme = createTheme( {
   });
 
 export default function Home(props) {
+  const userInfoProp = props.userInfo;
+
   const [dashboardView, openDashboard] = useState(false);
   let taskDisplayList = [];
   const [taskListToRender, updateList] = React.useState(undefined);
@@ -108,7 +110,16 @@ export default function Home(props) {
   let dropDownCategoryOptions = [];
 
   const setUpCategoriesForDropdown = async function() {
-    var username = "temp";
+    /**
+     * Hey Vlad,
+     * 
+     * The "userInfoProps" variable is the object
+     * containing the username, password, and every
+     * attribute you need for the given user.
+     */
+    console.log(userInfoProp);
+
+    const username = userInfoProp.username;
     const httpResponse = await fetch(fetchTagsURL, {
       mode: "cors",
       method: "post",
