@@ -14,7 +14,9 @@
    - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
    - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
    - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
+  - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Default_parameters
 
+   - https://masteringjs.io/tutorials/fundamentals/parameters
    - https://stackabuse.com/get-http-post-body-in-express-js/
    - https://www.npmjs.com/package/body-parser
    - https://dmitripavlutin.com/fetch-with-json/
@@ -32,6 +34,8 @@
    - https://www.robinwieruch.de/react-update-item-in-list/
    - https://reactjs.org/docs/lists-and-keys.html
    - https://www.freecodecamp.org/news/how-to-clone-an-array-in-javascript-1d3183468f6a/
+   - https://www.robinwieruch.de/react-event-handler/
+   - https://reactjs.org/docs/handling-events.html
 
    - https://styled-components.com/docs/api#primary
    - https://styled-components.com/
@@ -150,11 +154,11 @@ export default function Dashboard(props) {
   }
 
   const getTaskDisplayList = function (tasksToDisplay, setTaskListToRender) {
-    const incompleteTasks = tasksToDisplay.filter((task) => {
-      return task.complete === false;
+    const uncheckedTasks = tasksToDisplay.filter((task) => {
+      return task.checkedIn === false;
     });
 
-    return incompleteTasks.map((task) => {
+    return uncheckedTasks.map((task) => {
       return (
         <Box key={task.taskid} sx={{
           width: 450,
@@ -181,32 +185,37 @@ export default function Dashboard(props) {
             </div>
             <UserInfo.Consumer>
               {({username, password, userInfo, setUserInfo}) => {
+                const buttonHandler = function ({complete}) {
+                  console.log('Before click. task.complete = ' + task.complete);
+                  const taskToRemove = task;
+                  taskToRemove.checkedIn = true;
+                  taskToRemove.complete = complete;
+
+                  const newUserInfo = {};
+                  Object.assign(newUserInfo, userInfo);
+                  newUserInfo.tasks = newUserInfo.tasks.filter((task) => {
+                    return task.checkedIn === false;
+                  });
+
+                  // setUserInfo(newUserInfo);
+                  setTaskListToRender(undefined);
+                  updateTask(task.taskid, task.startDate, task.endDate, task.tag, task.complete, task.checkedIn);
+                  console.log('Updated user info');
+                  return;
+                };
+
                 return (
                   <ButtonSection>
                     <CompleteButton onClick={() => {
-                      console.log('Before click. task.complete = ' + task.complete);
-                      const taskToRemove = task;
-                      taskToRemove.complete = true;
-
-                      const newUserInfo = {};
-                      Object.assign(newUserInfo, userInfo);
-                      console.log(newUserInfo);
-                      console.log(userInfo);
-                      newUserInfo.tasks = newUserInfo.tasks.filter((task) => {
-                        return task.complete === false;
-                      });
-
-                      // setUserInfo(newUserInfo);
-                      setTaskListToRender(undefined);
-                      updateTask(task.taskid, task.startDate, task.endDate, task.tag, task.complete, task.checkedIn);
-                      console.log('Updated user info');
-                      return;
+                      buttonHandler({complete: true});
                     }}>
-                      Task Finished
+                      Finished
                     </CompleteButton>
                     
-                    <CompleteButton>
-                      Task Not Done
+                    <CompleteButton onClick = {() => {
+                      buttonHandler({complete: false});
+                    }}>
+                      Incomplete
                     </CompleteButton>
                   </ButtonSection>
                 );
