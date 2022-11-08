@@ -76,7 +76,10 @@ export default function Home(props) {
     setTag(event.target.value);
   };
 
-  const createTaskDisplayList = function (userInfo, tasksToDisplay) {
+  const createTaskDisplayList = function (userInfoObject) {
+    const userInfo = userInfoObject.userInfo;
+    const tasksToDisplay = userInfo.tasks;
+  
     for (let i = 0; i < tasksToDisplay.length; i++) {
       const label = tasksToDisplay[i].name;
       const complete = tasksToDisplay[i].complete;
@@ -409,10 +412,9 @@ export default function Home(props) {
 
                       <FormGroup sx={{ width:1 }}>
                         <UserInfo.Consumer>
-                          {(userInfo) => {
+                          {(userInfoObject) => {
                             if (taskListToRender === undefined) {
-                              const tasksToDisplay = createTaskDisplayList(userInfo.userInfo,
-                                userInfo.userInfo.tasks); //FIXME: userInfo.userInfo?, also couldnt we just pass in userInfo(1 argument)?
+                              const tasksToDisplay = createTaskDisplayList(userInfoObject);
                               updateList(tasksToDisplay);
                             }
                           }}
