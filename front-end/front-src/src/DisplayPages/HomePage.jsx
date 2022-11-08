@@ -121,7 +121,11 @@ export default function Home(props) {
      */
     console.log(userInfoProp);
 
-    const username = userInfoProp.username;
+    let username = undefined;
+    if (userInfoProp !== undefined) {
+      username = userInfoProp.username;
+    }
+
     const httpResponse = await fetch(fetchTagsURL, {
       mode: "cors",
       method: "post",

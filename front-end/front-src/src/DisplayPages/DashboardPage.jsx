@@ -110,16 +110,18 @@ const theme = createTheme( {
 
 export default function Dashboard(props) {
   /**
-   * NOTE: The userInfoProps object may be stale,
+   * NOTE: The userInfoProp object may be stale,
    *       as the server may update the user information
-   *       after giving the front-end the "userInfoProps".
+   *       after giving the front-end the "userInfoProp".
    *
    *       For the most up to date version of userInfo,
    *       user the "userInfo" context.
    */
-  const userInfoProps = props.userInfo;
-  const username = userInfoProps.username;
-  console.log(username);
+  const userInfoProp = props.userInfo;
+  let username = undefined;
+  if (userInfoProp !== undefined) {
+    username = userInfoProp.username;
+  }
 
   const [homeView, openHome] = useState(false);
   let tasksToDisplay = undefined;
@@ -260,7 +262,7 @@ export default function Dashboard(props) {
                       }}
                       >
                       <Typography component="h1" variant="h5" sx={{ mb: 1 }}>
-                        Check in your completed tasks!
+                        Check in your tasks!
                       </Typography>
 
                       <UserInfo.Consumer>
