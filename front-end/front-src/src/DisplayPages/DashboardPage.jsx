@@ -45,6 +45,8 @@
    - https://www.w3schools.com/css/css_margin.asp
    - https://www.w3schools.com/css/css_padding.asp
    - https://www.w3schools.com/css/css_boxmodel.as
+
+   - https://css-tricks.com/snippets/css/a-guide-to-flexbox/
 */
 import {useState} from "react";
 import {useRef} from 'react';
@@ -87,8 +89,12 @@ const CompleteButton = styled.button`
   font-size: 18px;
   width: 200px;
   height: 40px;
-  margin-left: 15%;
   background-color: Lavender;
+`;
+
+const ButtonSection = styled.div`
+  display: flex;
+  flex-direction: row;
 `;
 
 const TaskDisplay = styled.div`
@@ -118,6 +124,7 @@ export default function Dashboard(props) {
    *       user the "userInfo" context.
    */
   const userInfoProp = props.userInfo;
+
   let username = undefined;
   if (userInfoProp !== undefined) {
     username = userInfoProp.username;
@@ -175,27 +182,33 @@ export default function Dashboard(props) {
             <UserInfo.Consumer>
               {({username, password, userInfo, setUserInfo}) => {
                 return (
-                  <CompleteButton onClick={() => {
-                    console.log('Before click. task.complete = ' + task.complete);
-                    const taskToRemove = task;
-                    taskToRemove.complete = true;
-                    
-                    const newUserInfo = {};
-                    Object.assign(newUserInfo, userInfo);
-                    console.log(newUserInfo);
-                    console.log(userInfo);
-                    newUserInfo.tasks = newUserInfo.tasks.filter((task) => {
-                      return task.complete === false;
-                    });
+                  <ButtonSection>
+                    <CompleteButton onClick={() => {
+                      console.log('Before click. task.complete = ' + task.complete);
+                      const taskToRemove = task;
+                      taskToRemove.complete = true;
 
-                    // setUserInfo(newUserInfo);
-                    setTaskListToRender(undefined);
-                    updateTask(task.taskid, task.startDate, task.endDate, task.tag, task.complete, task.checkedIn);
-                    console.log('Updated user info');
-                    return;
-                  }}>
-                    I completed this task
-                  </CompleteButton>
+                      const newUserInfo = {};
+                      Object.assign(newUserInfo, userInfo);
+                      console.log(newUserInfo);
+                      console.log(userInfo);
+                      newUserInfo.tasks = newUserInfo.tasks.filter((task) => {
+                        return task.complete === false;
+                      });
+
+                      // setUserInfo(newUserInfo);
+                      setTaskListToRender(undefined);
+                      updateTask(task.taskid, task.startDate, task.endDate, task.tag, task.complete, task.checkedIn);
+                      console.log('Updated user info');
+                      return;
+                    }}>
+                      Task Finished
+                    </CompleteButton>
+                    
+                    <CompleteButton>
+                      Task Not Done
+                    </CompleteButton>
+                  </ButtonSection>
                 );
               }}
             </UserInfo.Consumer>
