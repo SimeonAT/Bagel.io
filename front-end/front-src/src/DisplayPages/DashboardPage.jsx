@@ -188,7 +188,7 @@ export default function Dashboard(props) {
 
                     // setUserInfo(newUserInfo);
                     setTaskListToRender(undefined);
-                    updateTask( task.taskid, task.startDate, task.endDate, task.tag, task.complete);
+                    updateTask(task.taskid, task.startDate, task.endDate, task.tag, task.complete, task.checkedIn);
                     console.log('Updated user info');
                     return;
                   }}>

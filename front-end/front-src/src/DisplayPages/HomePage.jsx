@@ -81,6 +81,7 @@ export default function Home(props) {
       const label = tasksToDisplay[i].name;
       const complete = tasksToDisplay[i].complete;
       const taskid = tasksToDisplay[i].taskid;
+      const checkedIn = tasksToDisplay[i].checkedIn;
       taskDisplayList.push(
         <FormControlLabel
           sx={{ ml: 7, mr: 7 }}
@@ -88,6 +89,7 @@ export default function Home(props) {
           label={label}
           key={i}
           taskid={taskid}
+          checkedin={checkedIn ? "true" : "false"}
         />
       );
     }
@@ -186,6 +188,7 @@ export default function Home(props) {
     const newTaskLabel = taskNameRef.current.value;
     const newTaskComplete = false;
     const newTaskid = responseBody.taskid;
+    const newTaskCheckedIn = responseBody.checkedIn
     newList.push(
       <FormControlLabel 
         sx={{ ml: 7, mr: 7 }}
@@ -193,6 +196,7 @@ export default function Home(props) {
         label={newTaskLabel}
         key={newTaskIndex}
         taskid={newTaskid}
+        checkedin={newTaskCheckedIn ? "true" : "false"}
       />
     );
     console.log(`newTask.taskid: ${JSON.stringify(responseBody.taskid)}`);
@@ -404,7 +408,7 @@ export default function Home(props) {
                           {(userInfo) => {
                             if (taskListToRender === undefined) {
                               const tasksToDisplay = createTaskDisplayList(userInfo.userInfo,
-                                userInfo.userInfo.tasks);
+                                userInfo.userInfo.tasks); //FIXME: userInfo.userInfo?, also couldnt we just pass in userInfo(1 argument)?
                               updateList(tasksToDisplay);
                             }
                           }}

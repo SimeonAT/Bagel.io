@@ -122,6 +122,7 @@ exports.loginDatabase = async (request, response) => {
           "endDate": task.endtime,
           "tag": task.tasktag,
           "complete": task.complete,
+          "checkedIn": task.checkedin,
           "taskid": task.scheduledid,
         })
       }
@@ -167,6 +168,7 @@ exports.getTasks = async (request, response) => {
           "endDate": task.endtime,
           "tag": task.tasktag,
           "complete": task.complete,
+          "checkedIn": task.checkedin,
           "taskid": task.scheduledid,
         })
       }
@@ -201,7 +203,7 @@ exports.scheduletask = async (request, response) => {
       // console.log(payload.startDate);
       let result = await dbUtils.insertTask(schedReqBody.username, schedReqBody.taskName, schedReqBody.startDate, schedReqBody.endDate, schedReqBody.tag, presetid, scheduledid);
       // console.log(JSON.stringify(result));
-      response.status(200).send({taskid: result[1].scheduledid, complete: result[1].complete, endDate: result[1].endtime, name: result[0].taskname, startDate: result[1].starttime, username: result[0].username, tag: result[0].tasktag});
+      response.status(200).send({taskid: result[1].scheduledid, complete: result[1].complete, checkedIn: result[1].checkedin, endDate: result[1].endtime, name: result[0].taskname, startDate: result[1].starttime, username: result[0].username, tag: result[0].tasktag});
     }
   }
   catch (error) {
@@ -219,7 +221,7 @@ exports.updateTask = async (request, response) => {
     response.setHeader("Content-Type", "application/json");
     const updateTaskReqBody = JSON.parse(request.body);
     dbUtils.updateTask(updateTaskReqBody.taskId, updateTaskReqBody.startDate, updateTaskReqBody.endDate, 
-      updateTaskReqBody.tag, updateTaskReqBody.complete);
+      updateTaskReqBody.tag, updateTaskReqBody.complete, updateTaskReqBody.checkedIn);
     response.send({success: true});
   }
   catch (error) {
@@ -238,11 +240,12 @@ exports.fetchTags = async (request, response) => {
     response.setHeader("Content-Type", "application/json");
 
     const fetchTagsReqBody = JSON.parse(request.body);
+    // const fetchTagsReqBody = request.body; //FORTESTING
 
     let userTags = await dbUtils.getUserTags(fetchTagsReqBody.username);
     console.log(userTags);
     // const tagArray = userTags;
-    const tagArray = ['Work', 'Study', 'Exercise','Chores','Socialization', 'Hobbies', 'Rest', 'Nourishment', 'Relaxation'];
+    const tagArray = ['Work', 'Study', 'Exercise', 'Chores', 'Socialization', 'Hobbies', 'Rest', 'Nourishment', 'Relaxation'];
     response.send({tagList: tagArray});
   }
 

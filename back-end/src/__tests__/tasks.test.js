@@ -51,10 +51,19 @@ test('GET request invalid endpoint', async () => {
         .expect(404);
 });
 
-test('GET setuptesting', async () => {
-    await request.get('/setuptesting')
+test('POST setuptesting', async () => {
+    await request.post('/setuptesting')
         .set({ 'mode': 'cors', 'Content-Type': 'application/json' })
         .send({hi1: 'hello1'})
+        .then((response) => {
+            console.log(response.body);
+        });
+});
+
+test('POST fetchTags', async () => {
+    await request.post('/fetchTags')
+        .set({ 'mode': 'cors', 'Content-Type': 'application/json' })
+        .send({username: 'collin'})
         .then((response) => {
             console.log(response.body);
         });
