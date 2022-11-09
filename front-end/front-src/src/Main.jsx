@@ -46,10 +46,12 @@ function Main() {
       setUsername: setUsername,
       setPassword: setPassword,
       setUserInfo: setUserInfo,
-     }}>
+    }}>
       <BrowserRouter>
         <Routes>
-          <Route exact path='/' element={< HeroView />}></Route>
+          <Route exact path='/' element={
+            <HeroView />
+          }></Route>
           <Route exact path='/login' element={
             <LoginPage />
           }></Route>

@@ -48,6 +48,9 @@ npm start; <--might take a while
 * ~~when adding a new task: HomePage.jsx:76 runs twice~~
 * in update task shouldnt we be able to update name of a task too?
 * backend testing: unable to send request body when calling endpoint
+* naming stuff: 
+    * react component file name == name of component when its used, 
+    * fetch endpoint directly instead of const variable
 
 
 
