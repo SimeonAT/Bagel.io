@@ -81,6 +81,10 @@ import Grid from '@mui/material/Grid';
 import UserInfo from '../UserContext';
 import styled from "styled-components";
 
+const MILLISECONDS_IN_SECOND = 1000;
+const SECONDS_IN_MINUTE = 60;
+const MILLISECONDS_IN_MINUTE = MILLISECONDS_IN_SECOND*SECONDS_IN_MINUTE;
+
 const BackendURL = "http://localhost:8000";
 const LoginURL = BackendURL + "/logindatabase";
 const RegisterURL = BackendURL + "/register";
@@ -141,14 +145,14 @@ export default function Dashboard(props) {
   const [taskListToRender, setTaskListToRender] = useState(undefined);
 
   // NOTE: All fields must be present, or the back-end will give an error.
-  const updateTask = async function(taskId, startDate, endDate, tag, complete) {
-    console.log('updateTask() called: params. taskid: ' + taskId + ', startDate: ' + startDate + ', endDate: ' + endDate + ', tag: ' + tag + ', complete: ' + complete);
+  const updateTask = async function(taskId, startDate, endDate, tag, complete, checkedIn) {
+    console.log('updateTask() called: params. taskid: ' + taskId + ', startDate: ' + startDate + ', endDate: ' + endDate + ', tag: ' + tag + ', complete: ' + complete + ', checkedIn: ' + checkedIn );
     // Send new task data to server
     const httpResponse = await fetch(updateTaskURL, {
       mode: "cors",
       method: "post",
       "Content-Type": "application/json",
-      body: JSON.stringify({taskId: taskId, startDate: startDate, endDate: endDate, tag: tag, complete: complete})
+      body: JSON.stringify({taskId: taskId, startDate: startDate, endDate: endDate, tag: tag, complete: complete, checkedIn: checkedIn})
     });
     console.log(httpResponse);
   }
@@ -227,6 +231,91 @@ export default function Dashboard(props) {
     });
   }
 
+  const getTasksFromServer = async function() {
+    const httpResponse = await fetch(GetTasks, {
+      mode: "cors",
+      method: "post",
+      "Content-Type": "application/json",
+      body: JSON.stringify({username: username})
+    });
+    let responseBody = await httpResponse.json();
+    let taskList = responseBody.taskList;
+    return taskList;
+  }
+
+  const calculateTotalCompletedByCategory = async function(calculatingOnlyToday) {
+    let taskList = await getTasksFromServer();
+
+    if (calculatingOnlyToday) {
+      //fliter for only today's tasks
+      taskList = getTodayTasksFromList(taskList);
+    }
+
+    console.log(taskList);
+    const totalsList = []
+    for (let i = 0; i < taskList.length; i++){
+      const needToAddTaskTime = (taskList[i].complete === true && taskList[i].checkedIn === true);
+
+      if (needToAddTaskTime) {
+        const category = taskList[i].tag;
+        const categoryAlreadyPresent = isCategoryInTotalList(totalsList, category);
+        if (categoryAlreadyPresent) {
+          //add sum
+          const taskTime = calculateTaskTime(taskList[i]);
+          let tagIndex = 0;
+          for (let j = 0; j < totalsList.length; j++) {
+            if (totalsList[j][0] === category) {
+              tagIndex = j;
+            }
+          }
+          const oldTotal = totalsList[tagIndex][1];
+          const newTotal = oldTotal + taskTime;
+          totalsList[tagIndex][1] = newTotal;
+        } else {
+          //instantiate and add sum
+          const taskTime = calculateTaskTime(taskList[i]);
+          console.log(taskTime);
+          console.log(totalsList);
+          totalsList.push([category, taskTime]);
+          console.log(totalsList);
+        }
+      }
+    }
+    console.log(totalsList);
+    return totalsList;
+  }
+
+  const isCategoryInTotalList = function(totalsList, tag){
+    if(totalsList.length === 0) {
+      return false;
+    }
+    for (let i = 0; i < totalsList.length; i++){
+      if (totalsList[i][0] === tag) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  const calculateTaskTime = function(task){
+    const startTime = new Date(task.startDate);
+    const endTime = new Date(task.endDate);
+    const taskLengthInHours = (endTime.getTime() - startTime.getTime()) / MILLISECONDS_IN_MINUTE;
+    return taskLengthInHours;
+  }
+
+  const getTodayTasksFromList = function(fullTaskList) {
+    const now = new Date();
+    const todayTaskList = [];
+    for (let i = 0; i < fullTaskList.length; i++){
+      const taskDate = new Date(fullTaskList[i].startDate);
+      if (now.getDay() === taskDate.getDay()) { 
+        todayTaskList.push(fullTaskList[i]);
+      }
+    }
+    return todayTaskList;
+  }
+
   const navigateToHome = async function(event) {
     event.preventDefault();
     openHome(true);
@@ -266,7 +355,7 @@ export default function Dashboard(props) {
                 <UserInfo.Consumer>
                   {({username, password, userInfo}) => {
                     return (
-                      <Typography component="h1" variant="h5">
+                      <Typography component="h1" variant="h5" onClick={() => calculateTotalCompletedByCategory(true)}>
                           {username}'s Dashboard
                       </Typography>
                     );

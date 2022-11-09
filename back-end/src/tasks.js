@@ -243,8 +243,8 @@ exports.fetchTags = async (request, response) => {
     // const fetchTagsReqBody = request.body; //FORTESTING
 
     let userTags = await dbUtils.getUserTags(fetchTagsReqBody.username);
-    console.log(userTags);
-    // const tagArray = userTags;
+    //console.log('userTags:' + userTags.tasktag);
+    //const tagArray = userTags;
     const tagArray = ['Work', 'Study', 'Exercise', 'Chores', 'Socialization', 'Hobbies', 'Rest', 'Nourishment', 'Relaxation'];
     response.send({tagList: tagArray});
   }

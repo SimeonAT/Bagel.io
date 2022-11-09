@@ -137,12 +137,14 @@ export default function Home(props) {
     });
     let responseBody = await httpResponse.json();
     let tagList = responseBody.tagList;
-    // console.log(responseBody.tagList);
+    console.log('tagListL: ' + responseBody.tagList);
 
     for (let i = 0; i < tagList.length; i++) {
       dropDownCategoryOptions.push(<MenuItem value={tagList[i]}>{tagList[i]}</MenuItem>)
     }
   }
+
+  setUpCategoriesForDropdown();
 
   const createTask = async function(event, userInfo, setUserInfo) {
     event.preventDefault();
