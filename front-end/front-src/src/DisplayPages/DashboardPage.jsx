@@ -58,6 +58,7 @@
    - https://www.w3schools.com/css/css_margin.asp
    - https://www.w3schools.com/css/css_padding.asp
    - https://www.w3schools.com/css/css_boxmodel.as
+   - https://www.w3schools.com/CSSREF/css3_pr_opacity.php
 
    - https://css-tricks.com/snippets/css/a-guide-to-flexbox/
 */
@@ -177,16 +178,21 @@ export default function Dashboard(props) {
     });
 
     return uncheckedTasks.map((task) => {
+      /**
+       * Ask Team:
+       *   Is it a good idea to remove the hover
+       *   effect where the opacity changes?
+       */
       return (
         <Box key={task.taskid} sx={{
           width: 450,
           border: '2px dashed grey',
           margin: 'auto',
           mb: 2,
-          '&:hover': {
+          /* '&:hover': {
             backgroundColor: 'blue',
             opacity: [0.5, 0.5, 0.5],
-          },
+          }, */
         }}>
           <TaskDisplay>
               <TextField
