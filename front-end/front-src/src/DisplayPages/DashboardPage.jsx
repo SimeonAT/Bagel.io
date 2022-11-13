@@ -115,9 +115,14 @@ const ButtonSection = styled.div`
 `;
 
 const TaskDisplay = styled.div`
-  padding-top: 3%;
-  padding-left: 10%;
-  padding-right: 10%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding-top: 5%;
+  padding-bottom: 3%;
+  padding-left: 5%;
+  padding-right: 5%;
 `;
 
 const theme = createTheme( {
@@ -184,42 +189,36 @@ export default function Dashboard(props) {
           },
         }}>
           <TaskDisplay>
-            <div>
               <TextField
-                id = 'outlined-basic'
+                id = 'task-name'
                 label = 'Task Name'
                 variant = 'outlined'
                 defaultValue = {task.name}
                 sx = {{mb: 3}}
+                helperText = {'Press ENTER to change any field.'}
               />
-            </div>
-            <div>
               <TextField 
-                id = 'outlined-basic'
+                id = 'category'
                 label = 'Category'
                 variant = 'outlined'
                 defaultValue = {task.tag}
                 sx = {{mb: 3}}
               />
-            </div>
-            <div>
               <TextField 
-                id = 'outlined-basic'
+                id = 'start-time'
                 label = 'Start Time'
                 variant = 'outlined'
                 defaultValue = {new Date(task.startDate).toLocaleString()}
                 sx = {{mb: 3}}
+
               />
-            </div>
-            <div>
               <TextField 
-                id = 'outlined-basic'
+                id = 'end-time'
                 label = 'End Time'
                 variant = 'outlined'
                 defaultValue = {new Date(task.endDate).toLocaleString()}
                 sx = {{mb: 3}}
               />
-            </div>
             <UserInfo.Consumer>
               {({username, password, userInfo, setUserInfo}) => {
                 const buttonHandler = function ({complete}) {
