@@ -16,6 +16,10 @@
    - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Default_parameters
 
+  - https://mui.com/material-ui/react-text-field/#form-props
+  - https://mui.com/material-ui/react-text-field/#basic-textfield
+  - https://mui.com/material-ui/react-text-field/
+
    - https://masteringjs.io/tutorials/fundamentals/parameters
    - https://stackabuse.com/get-http-post-body-in-express-js/
    - https://www.npmjs.com/package/body-parser
@@ -176,16 +180,36 @@ export default function Dashboard(props) {
         }}>
           <TaskDisplay>
             <div>
-              <b>Task Name:</b> {task.name}
+              <TextField 
+                id = 'outlined-basic'
+                label = 'Task Name'
+                variant = 'outlined'
+                defaultValue = {task.name}
+              />
             </div>
             <div>
-              <b>Category:</b> {task.tag}
+              <TextField 
+                id = 'outlined-basic'
+                label = 'Category'
+                variant = 'outlined'
+                defaultValue = {task.tag}
+              />
             </div>
             <div>
-              <b>Start Time:</b> {new Date(task.startDate).toLocaleString()}
+              <TextField 
+                id = 'outlined-basic'
+                label = 'Start Time'
+                variant = 'outlined'
+                defaultValue = {new Date(task.startDate).toLocaleString()}
+              />
             </div>
             <div>
-              <b>End Time:</b> {new Date(task.endDate).toLocaleString()}
+              <TextField 
+                id = 'outlined-basic'
+                label = 'End Time'
+                variant = 'outlined'
+                defaultValue = {new Date(task.endDate).toLocaleString()}
+              />
             </div>
             <UserInfo.Consumer>
               {({username, password, userInfo, setUserInfo}) => {
