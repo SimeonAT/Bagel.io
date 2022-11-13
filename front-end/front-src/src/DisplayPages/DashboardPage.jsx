@@ -16,6 +16,11 @@
    - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Default_parameters
 
+  - https://mui.com/system/spacing/#horizontal-centering
+  - https://mui.com/system/spacing/#transformation
+  - https://mui.com/system/spacing/
+  - https://mui.com/system/getting-started/the-sx-prop/#basic-example
+  - https://mui.com/system/getting-started/the-sx-prop/
   - https://mui.com/material-ui/react-text-field/#form-props
   - https://mui.com/material-ui/react-text-field/#basic-textfield
   - https://mui.com/material-ui/react-text-field/
@@ -180,11 +185,12 @@ export default function Dashboard(props) {
         }}>
           <TaskDisplay>
             <div>
-              <TextField 
+              <TextField
                 id = 'outlined-basic'
                 label = 'Task Name'
                 variant = 'outlined'
                 defaultValue = {task.name}
+                sx = {{mb: 3}}
               />
             </div>
             <div>
@@ -193,6 +199,7 @@ export default function Dashboard(props) {
                 label = 'Category'
                 variant = 'outlined'
                 defaultValue = {task.tag}
+                sx = {{mb: 3}}
               />
             </div>
             <div>
@@ -201,6 +208,7 @@ export default function Dashboard(props) {
                 label = 'Start Time'
                 variant = 'outlined'
                 defaultValue = {new Date(task.startDate).toLocaleString()}
+                sx = {{mb: 3}}
               />
             </div>
             <div>
@@ -209,6 +217,7 @@ export default function Dashboard(props) {
                 label = 'End Time'
                 variant = 'outlined'
                 defaultValue = {new Date(task.endDate).toLocaleString()}
+                sx = {{mb: 3}}
               />
             </div>
             <UserInfo.Consumer>
