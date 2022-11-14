@@ -243,12 +243,17 @@ exports.fetchTags = async (request, response) => {
     // const fetchTagsReqBody = request.body; //FORTESTING
 
     let userTags = await dbUtils.getUserTags(fetchTagsReqBody.username);
-    //console.log('userTags:' + userTags.tasktag);
-    //const tagArray = userTags;
+    // remove duplicates from userTags
+    if (userTags) {
+      userTags = [...new Set(Object.values(userTags))];
+    } else {
+      userTags = [];
+    }
     const tagArray = ['Work', 'Study', 'Exercise', 'Chores', 'Socialization', 'Hobbies', 'Rest', 'Nourishment', 'Relaxation'];
-    response.send({tagList: tagArray});
+    userTags.push(...tagArray);
+    console.log('here3: '+userTags);
+    response.send({tagList: userTags});
   }
-
   catch (error) {
     sendError.sendError(error, response);
   }
