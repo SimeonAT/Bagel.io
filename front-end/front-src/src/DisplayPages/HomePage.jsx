@@ -43,8 +43,8 @@ import { Select, FormControl, MenuItem, InputLabel } from '@mui/material';
 
 import Copyright from "./Copyright";
 import Calendar from "./Calendar";
-
 import UserInfo from '../UserContext';
+import {getTasksFromServer, getTodayTasksFromList} from './DashboardPage';
 
 
 const BackendURL = "http://localhost:8000";
@@ -71,6 +71,8 @@ export default function Home(props) {
   const [taskListToRender, updateList] = React.useState(undefined);
 
   const [tag, setTag] = React.useState('');
+  const [overlapingTimeErrorMessage, setOverlapingTimeErrorMessage] = React.useState("");
+  const [overlapingTimeSuggestion, setOverlapingTimeSuggestion] = React.useState("");
 
   const handleTagDropdownChange = (event) => {
     setTag(event.target.value);
@@ -155,9 +157,21 @@ export default function Home(props) {
     console.log('taskEndISO:' + taskEndISO);
     // FIXME: add check to make sure taskEndISO >= taskStartISO
 
+    const isInvalidTask = await newTaskOverlapsExistingTask(taskStartISO, userInfo);
+
+    if (isInvalidTask) {
+      setOverlapingTimeErrorMessage("The task time you entered overlaps with an existing task!");
+      setOverlapingTimeSuggestion("Please enter a unique task time!");
+      setEndDateWithNoInitialValue(null);
+      setStartDateWithNoInitialValue(null);
+      taskStartRef.current.value = '';
+      taskEndRef.current.value = '';
+      return;
+    }
+
     const taskCategoryToRecord = categoryManualInputRef.current.value != '' ? categoryManualInputRef.current.value : categoryDropdownInputRef.current.value;
 
-    // Set username and password to the backend server
+    // Send task to backend for creation
     const httpResponse = await fetch(scheduleTaskURL, {
       mode: "cors",
       method: "post",
@@ -211,12 +225,43 @@ export default function Home(props) {
     console.log(`newTask.taskid: ${JSON.stringify(responseBody.taskid)}`);
     updateList(newList);
 
+    resetFormValues(taskNameRef, categoryManualInputRef, categoryDropdownInputRef);
+    setOverlapingTimeErrorMessage('');
+    setOverlapingTimeSuggestion('');
+
+  };
+
+  const newTaskOverlapsExistingTask = async function(taskStartISO, userInfo) {
+    const currentTaskStartTime = new Date(taskStartISO).getTime();
+    const existingTaskList = await getTasksFromServer(userInfo.username);
+    const existingTodayTasks = getTodayTasksFromList(existingTaskList);
+    for (let i = 0; i < existingTodayTasks.length; i++){
+      const existingTaskStartTime = new Date(existingTodayTasks[i].startDate).getTime();
+      const existingTaskEndTime = new Date(existingTodayTasks[i].endDate).getTime();
+      if (startTimeOverlapsExisting(currentTaskStartTime, existingTaskStartTime, existingTaskEndTime)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  const startTimeOverlapsExisting = function(currentTaskStartTime, existingTaskStartTime, existingTaskEndTime){
+    if (currentTaskStartTime >= existingTaskStartTime && currentTaskStartTime <= existingTaskEndTime) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  const resetFormValues = async function(taskNameRef, categoryManualInputRef, categoryDropdownInputRef){
     taskNameRef.current.value = '';
     categoryManualInputRef.current.value = '';
     categoryDropdownInputRef.current.value = '';
     setEndDateWithNoInitialValue(null);
     setStartDateWithNoInitialValue(null);
-  };
+    taskStartRef.current.value = '';
+    taskEndRef.current.value = '';
+  }
 
   const navigateToDashboard = async function(event) {
     event.preventDefault();
@@ -393,12 +438,17 @@ export default function Home(props) {
                             >
                               Add Task
                             </Button>
+                            {overlapingTimeErrorMessage && <Typography style={{color: 'red'}} className="error"> {overlapingTimeErrorMessage} </Typography>}
+                            {overlapingTimeSuggestion && <Typography style={{color: 'red'}} className="error"> {overlapingTimeSuggestion} </Typography>}
                           </Box>
                         </Box>
                       </Box>
                     );
                   }}
                 </UserInfo.Consumer>
+
+{/* We have agreed to remove this from this page, just seems sad to just delete it. Maybe we move it to another class when we do some cleanup?  */}
+{/* This actually needs to be unwired properly. Just commenting it out crashes createTask()  */}
 
                     <Box label="see-task-list-column"
                       sx={{
