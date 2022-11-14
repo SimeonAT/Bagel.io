@@ -7,7 +7,7 @@ import {
 } from '@devexpress/dx-react-chart-material-ui';
 import { Animation } from '@devexpress/dx-react-chart';
 
-const data = [
+const chartData = [
   { country: 'Russia', area: 12 },
   { country: 'Canada', area: 7 },
   { country: 'USA', area: 7 },
@@ -17,18 +17,8 @@ const data = [
   { country: 'India', area: 2 },
   { country: 'Others', area: 55 },
 ];
-export default class Demo extends React.PureComponent {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      data,
-    };
-  }
-
-  render() {
-    const { data: chartData } = this.state;
-
+//export default class Bagel extends React.PureComponent {
+function Bagel(){
     return (
       <Paper>
         <Chart
@@ -48,5 +38,6 @@ export default class Demo extends React.PureComponent {
       </Paper>
     );
   }
-}
+  export default Bagel
+
   

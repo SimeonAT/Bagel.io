@@ -74,7 +74,7 @@ import Grid from '@mui/material/Grid';
 
 import UserInfo from '../UserContext';
 import styled from "styled-components";
-import Demo from "./Bagel";
+import Bagel from "./Bagel";
 
 
 const BackendURL = "http://localhost:8000";
@@ -282,9 +282,7 @@ export default function Dashboard(props) {
                       <Typography component="h1" variant="h5">
                         Your Productivity Bagel
                       </Typography>
-                        <Demo />
-
-                      {/* <Bagel /> */}
+                      <Bagel />
                     </Box>
                   </Grid>
                 </Grid>

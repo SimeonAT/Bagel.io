@@ -8,10 +8,21 @@ import {
   Scheduler,
   DayView,
   Appointments,
+  Toolbar,
+  DateNavigator,
+  TodayButton
 } from '@devexpress/dx-react-scheduler-material-ui';
 const BackendURL = "http://localhost:8000";
 
-const currentDate = new Date(); 
+const currentDate = new Date()
+
+function getNextDay(currentDate) {
+  const tomorrow = new Date(currentDate)
+  tomorrow.setDate(tomorrow.getDate() + 1)
+  return tomorrow
+}
+
+
 
 const Appointment = ({
     children, style, ...restProps
@@ -30,6 +41,8 @@ const Appointment = ({
 
 
 function Calendar(props) {
+  console.log(currentDate);
+  console.log(getNextDay(currentDate))
   const [userInfo, updateUserInfo] = React.useState(props.userInfo);
   let calendarTasks = undefined;
   let calendarData = []
@@ -49,19 +62,23 @@ function Calendar(props) {
     <Paper>
       <Scheduler
         data={calendarData}
+        height={600}
       >
         <ViewState
           currentDate={currentDate}
         />
     
         <DayView
-          startDayHour={8}
-          endDayHour={20}
+          startDayHour={0}
+          endDayHour={24}
           cellDuration = {60}
         />
         <Appointments 
           appointmentComponent={Appointment}
         />
+        <Toolbar />
+        <DateNavigator />
+        <TodayButton />
 
       </Scheduler>
     </Paper>
