@@ -122,6 +122,30 @@ const theme = createTheme( {
   },
   });
 
+export const getTasksFromServer = async function(username) {
+  const httpResponse = await fetch(GetTasks, {
+    mode: "cors",
+    method: "post",
+    "Content-Type": "application/json",
+    body: JSON.stringify({username: username})
+  });
+  let responseBody = await httpResponse.json();
+  let taskList = responseBody.taskList;
+  return taskList;
+}
+
+export const getTodayTasksFromList = function(fullTaskList) {
+  const now = new Date();
+  const todayTaskList = [];
+  for (let i = 0; i < fullTaskList.length; i++){
+    const taskDate = new Date(fullTaskList[i].startDate);
+    if (now.getDay() === taskDate.getDay()) { 
+      todayTaskList.push(fullTaskList[i]);
+    }
+  }
+  return todayTaskList;
+}
+
 export default function Dashboard(props) {
   /**
    * NOTE: The userInfoProp object may be stale,
@@ -231,20 +255,9 @@ export default function Dashboard(props) {
     });
   }
 
-  const getTasksFromServer = async function() {
-    const httpResponse = await fetch(GetTasks, {
-      mode: "cors",
-      method: "post",
-      "Content-Type": "application/json",
-      body: JSON.stringify({username: username})
-    });
-    let responseBody = await httpResponse.json();
-    let taskList = responseBody.taskList;
-    return taskList;
-  }
 
   const calculateTotalCompletedByCategory = async function(calculatingOnlyToday) {
-    let taskList = await getTasksFromServer();
+    let taskList = await getTasksFromServer(username);
 
     if (calculatingOnlyToday) {
       //fliter for only today's tasks
@@ -302,18 +315,6 @@ export default function Dashboard(props) {
     const endTime = new Date(task.endDate);
     const taskLengthInHours = (endTime.getTime() - startTime.getTime()) / MILLISECONDS_IN_MINUTE;
     return taskLengthInHours;
-  }
-
-  const getTodayTasksFromList = function(fullTaskList) {
-    const now = new Date();
-    const todayTaskList = [];
-    for (let i = 0; i < fullTaskList.length; i++){
-      const taskDate = new Date(fullTaskList[i].startDate);
-      if (now.getDay() === taskDate.getDay()) { 
-        todayTaskList.push(fullTaskList[i]);
-      }
-    }
-    return todayTaskList;
   }
 
   const navigateToHome = async function(event) {
