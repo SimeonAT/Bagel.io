@@ -74,6 +74,8 @@ import Grid from '@mui/material/Grid';
 
 import UserInfo from '../UserContext';
 import styled from "styled-components";
+import Demo from "./Bagel";
+
 
 const BackendURL = "http://localhost:8000";
 const LoginURL = BackendURL + "/logindatabase";
@@ -82,6 +84,7 @@ const HomeURL = BackendURL + "/home";
 const scheduleTaskURL = BackendURL + "/scheduleTask";
 const GetTasks = BackendURL + "/getTasks";
 const updateTaskURL = BackendURL + "/updateTask";
+
 
 const CompleteButton = styled.button`
   font-size: 18px;
@@ -279,6 +282,9 @@ export default function Dashboard(props) {
                       <Typography component="h1" variant="h5">
                         Your Productivity Bagel
                       </Typography>
+                        <Demo />
+
+                      {/* <Bagel /> */}
                     </Box>
                   </Grid>
                 </Grid>
