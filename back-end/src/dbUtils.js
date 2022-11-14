@@ -21,7 +21,7 @@ exports.getMembers = async () => {
 };
 
 exports.getMemberScheduledTasks = async (username) => {
-    const select = `SELECT taskpreset.taskname, taskpreset.tasktag, taskscheduled.starttime, taskscheduled.endtime, taskscheduled.complete, taskscheduled.scheduledid 
+    const select = `SELECT taskpreset.taskname, taskpreset.tasktag, taskscheduled.starttime, taskscheduled.endtime, taskscheduled.complete, taskscheduled.scheduledid, taskscheduled.checkedin
                     FROM member, taskpreset, taskscheduled
                     WHERE member.username = $1
                         AND member.username = taskpreset.username
@@ -56,12 +56,12 @@ exports.insertTask = async (username, taskName, startDate, endDate, tagName, pre
         values: [taskName, presetid, tagName, username]
     };
     let preset = await pool.query(query);
-    insert = `INSERT INTO taskscheduled(starttime, scheduledid, endtime, complete, presetid) 
-              VALUES ($1, $2, $3, $4, $5)
+    insert = `INSERT INTO taskscheduled(starttime, scheduledid, endtime, complete, checkedin, presetid) 
+              VALUES ($1, $2, $3, $4, $5, $6)
               RETURNING *`;
     query = {
         text: insert,
-        values: [startDate, scheduledid, endDate, 'false', presetid]
+        values: [startDate, scheduledid, endDate, 'false', 'false', presetid]
     };
     let scheduled = await pool.query(query);
     return [preset.rows[0], scheduled.rows[0]];
@@ -89,14 +89,14 @@ exports.deleteTask = async (taskId) => {
     return rows;
 }
 
-exports.updateTask = async (taskId, startDate, endDate, tag, complete) => {
+exports.updateTask = async (taskId, startDate, endDate, tag, complete, checkedin) => {
     let update = `UPDATE taskscheduled
-                  SET starttime = $1, endtime = $2, complete = $3
-                  WHERE scheduledid = $4
+                  SET starttime = $1, endtime = $2, complete = $3, checkedin = $4
+                  WHERE scheduledid = $5
                   RETURNING presetid`;
     let query = {
         text: update,
-        values: [startDate, endDate, complete, taskId],
+        values: [startDate, endDate, complete, checkedin, taskId],
     }
     const scheduled = await pool.query(query);
     console.log("dbUtils.js:102 "+scheduled.rows[0].presetid);

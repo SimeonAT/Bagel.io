@@ -14,7 +14,9 @@
    - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
    - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
    - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
+  - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Default_parameters
 
+   - https://masteringjs.io/tutorials/fundamentals/parameters
    - https://stackabuse.com/get-http-post-body-in-express-js/
    - https://www.npmjs.com/package/body-parser
    - https://dmitripavlutin.com/fetch-with-json/
@@ -32,6 +34,8 @@
    - https://www.robinwieruch.de/react-update-item-in-list/
    - https://reactjs.org/docs/lists-and-keys.html
    - https://www.freecodecamp.org/news/how-to-clone-an-array-in-javascript-1d3183468f6a/
+   - https://www.robinwieruch.de/react-event-handler/
+   - https://reactjs.org/docs/handling-events.html
 
    - https://styled-components.com/docs/api#primary
    - https://styled-components.com/
@@ -45,6 +49,8 @@
    - https://www.w3schools.com/css/css_margin.asp
    - https://www.w3schools.com/css/css_padding.asp
    - https://www.w3schools.com/css/css_boxmodel.as
+
+   - https://css-tricks.com/snippets/css/a-guide-to-flexbox/
 */
 import {useState} from "react";
 import {useRef} from 'react';
@@ -77,6 +83,10 @@ import styled from "styled-components";
 import Bagel from "./Bagel";
 
 
+const MILLISECONDS_IN_SECOND = 1000;
+const SECONDS_IN_MINUTE = 60;
+const MILLISECONDS_IN_MINUTE = MILLISECONDS_IN_SECOND*SECONDS_IN_MINUTE;
+
 const BackendURL = "http://localhost:8000";
 const LoginURL = BackendURL + "/logindatabase";
 const RegisterURL = BackendURL + "/register";
@@ -90,8 +100,12 @@ const CompleteButton = styled.button`
   font-size: 18px;
   width: 200px;
   height: 40px;
-  margin-left: 15%;
   background-color: Lavender;
+`;
+
+const ButtonSection = styled.div`
+  display: flex;
+  flex-direction: row;
 `;
 
 const TaskDisplay = styled.div`
@@ -111,7 +125,46 @@ const theme = createTheme( {
   },
   });
 
+export const getTasksFromServer = async function(username) {
+  const httpResponse = await fetch(GetTasks, {
+    mode: "cors",
+    method: "post",
+    "Content-Type": "application/json",
+    body: JSON.stringify({username: username})
+  });
+  let responseBody = await httpResponse.json();
+  let taskList = responseBody.taskList;
+  return taskList;
+}
+
+export const getTodayTasksFromList = function(fullTaskList) {
+  const now = new Date();
+  const todayTaskList = [];
+  for (let i = 0; i < fullTaskList.length; i++){
+    const taskDate = new Date(fullTaskList[i].startDate);
+    if (now.getDay() === taskDate.getDay()) { 
+      todayTaskList.push(fullTaskList[i]);
+    }
+  }
+  return todayTaskList;
+}
+
 export default function Dashboard(props) {
+  /**
+   * NOTE: The userInfoProp object may be stale,
+   *       as the server may update the user information
+   *       after giving the front-end the "userInfoProp".
+   *
+   *       For the most up to date version of userInfo,
+   *       user the "userInfo" context.
+   */
+  const userInfoProp = props.userInfo;
+
+  let username = undefined;
+  if (userInfoProp !== undefined) {
+    username = userInfoProp.username;
+  }
+
   const [homeView, openHome] = useState(false);
   let tasksToDisplay = undefined;
   let taskDisplayList = [];
@@ -119,24 +172,24 @@ export default function Dashboard(props) {
   const [taskListToRender, setTaskListToRender] = useState(undefined);
 
   // NOTE: All fields must be present, or the back-end will give an error.
-  const updateTask = async function(taskId, startDate, endDate, tag, complete) {
-    console.log('updateTask() called: params. taskid: ' + taskId + ', startDate: ' + startDate + ', endDate: ' + endDate + ', tag: ' + tag + ', complete: ' + complete);
+  const updateTask = async function(taskId, startDate, endDate, tag, complete, checkedIn) {
+    console.log('updateTask() called: params. taskid: ' + taskId + ', startDate: ' + startDate + ', endDate: ' + endDate + ', tag: ' + tag + ', complete: ' + complete + ', checkedIn: ' + checkedIn );
     // Send new task data to server
     const httpResponse = await fetch(updateTaskURL, {
       mode: "cors",
       method: "post",
       "Content-Type": "application/json",
-      body: JSON.stringify({taskId: taskId, startDate: startDate, endDate: endDate, tag: tag, complete: complete})
+      body: JSON.stringify({taskId: taskId, startDate: startDate, endDate: endDate, tag: tag, complete: complete, checkedIn: checkedIn})
     });
     console.log(httpResponse);
   }
 
   const getTaskDisplayList = function (tasksToDisplay, setTaskListToRender) {
-    const incompleteTasks = tasksToDisplay.filter((task) => {
-      return task.complete === false;
+    const uncheckedTasks = tasksToDisplay.filter((task) => {
+      return task.checkedIn === false;
     });
 
-    return incompleteTasks.map((task) => {
+    return uncheckedTasks.map((task) => {
       return (
         <Box key={task.taskid} sx={{
           width: 450,
@@ -163,28 +216,39 @@ export default function Dashboard(props) {
             </div>
             <UserInfo.Consumer>
               {({username, password, userInfo, setUserInfo}) => {
-                return (
-                  <CompleteButton onClick={() => {
-                    console.log('Before click. task.complete = ' + task.complete);
-                    const taskToRemove = task;
-                    taskToRemove.complete = true;
-                    
-                    const newUserInfo = {};
-                    Object.assign(newUserInfo, userInfo);
-                    console.log(newUserInfo);
-                    console.log(userInfo);
-                    newUserInfo.tasks = newUserInfo.tasks.filter((task) => {
-                      return task.complete === false;
-                    });
+                const buttonHandler = function ({complete}) {
+                  console.log('Before click. task.complete = ' + task.complete);
+                  const taskToRemove = task;
+                  taskToRemove.checkedIn = true;
+                  taskToRemove.complete = complete;
 
-                    // setUserInfo(newUserInfo);
-                    setTaskListToRender(undefined);
-                    updateTask( task.taskid, task.startDate, task.endDate, task.tag, task.complete);
-                    console.log('Updated user info');
-                    return;
-                  }}>
-                    I completed this task
-                  </CompleteButton>
+                  const newUserInfo = {};
+                  Object.assign(newUserInfo, userInfo);
+                  newUserInfo.tasks = newUserInfo.tasks.filter((task) => {
+                    return task.checkedIn === false;
+                  });
+
+                  // setUserInfo(newUserInfo);
+                  setTaskListToRender(undefined);
+                  updateTask(task.taskid, task.startDate, task.endDate, task.tag, task.complete, task.checkedIn);
+                  console.log('Updated user info');
+                  return;
+                };
+
+                return (
+                  <ButtonSection>
+                    <CompleteButton onClick={() => {
+                      buttonHandler({complete: true});
+                    }}>
+                      Finished
+                    </CompleteButton>
+                    
+                    <CompleteButton onClick = {() => {
+                      buttonHandler({complete: false});
+                    }}>
+                      Incomplete
+                    </CompleteButton>
+                  </ButtonSection>
                 );
               }}
             </UserInfo.Consumer>
@@ -192,6 +256,68 @@ export default function Dashboard(props) {
         </Box>
       );
     });
+  }
+
+
+  const calculateTotalCompletedByCategory = async function(calculatingOnlyToday) {
+    let taskList = await getTasksFromServer(username);
+
+    if (calculatingOnlyToday) {
+      //fliter for only today's tasks
+      taskList = getTodayTasksFromList(taskList);
+    }
+
+    console.log(taskList);
+    const totalsList = []
+    for (let i = 0; i < taskList.length; i++){
+      const needToAddTaskTime = (taskList[i].complete === true && taskList[i].checkedIn === true);
+
+      if (needToAddTaskTime) {
+        const category = taskList[i].tag;
+        const categoryAlreadyPresent = isCategoryInTotalList(totalsList, category);
+        if (categoryAlreadyPresent) {
+          //add sum
+          const taskTime = calculateTaskTime(taskList[i]);
+          let tagIndex = 0;
+          for (let j = 0; j < totalsList.length; j++) {
+            if (totalsList[j][0] === category) {
+              tagIndex = j;
+            }
+          }
+          const oldTotal = totalsList[tagIndex][1];
+          const newTotal = oldTotal + taskTime;
+          totalsList[tagIndex][1] = newTotal;
+        } else {
+          //instantiate and add sum
+          const taskTime = calculateTaskTime(taskList[i]);
+          console.log(taskTime);
+          console.log(totalsList);
+          totalsList.push([category, taskTime]);
+          console.log(totalsList);
+        }
+      }
+    }
+    console.log(totalsList);
+    return totalsList;
+  }
+
+  const isCategoryInTotalList = function(totalsList, tag){
+    if(totalsList.length === 0) {
+      return false;
+    }
+    for (let i = 0; i < totalsList.length; i++){
+      if (totalsList[i][0] === tag) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  const calculateTaskTime = function(task){
+    const startTime = new Date(task.startDate);
+    const endTime = new Date(task.endDate);
+    const taskLengthInHours = (endTime.getTime() - startTime.getTime()) / MILLISECONDS_IN_MINUTE;
+    return taskLengthInHours;
   }
 
   const navigateToHome = async function(event) {
@@ -233,7 +359,7 @@ export default function Dashboard(props) {
                 <UserInfo.Consumer>
                   {({username, password, userInfo}) => {
                     return (
-                      <Typography component="h1" variant="h5">
+                      <Typography component="h1" variant="h5" onClick={() => calculateTotalCompletedByCategory(true)}>
                           {username}'s Dashboard
                       </Typography>
                     );
@@ -251,7 +377,7 @@ export default function Dashboard(props) {
                       }}
                       >
                       <Typography component="h1" variant="h5" sx={{ mb: 1 }}>
-                        Check in your completed tasks!
+                        Check in your tasks!
                       </Typography>
 
                       <UserInfo.Consumer>

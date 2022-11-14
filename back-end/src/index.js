@@ -34,8 +34,10 @@ const server = express();
           Request's body will give an empty JSON object: "{}".
 
           Any help to fix this would be greatly appreciated.
+
+          .json() works for testing the api endpoints
 */
-server.use(bodyParser.text());
+server.use(bodyParser.text()); // FORTESTING
 
 server.post("/register", tasks.register);
 server.post("/logindatabase", tasks.loginDatabase);
@@ -43,7 +45,7 @@ server.post("/getTasks", tasks.getTasks);
 server.post("/scheduletask", tasks.scheduletask);
 server.post("/updateTask", tasks.updateTask);
 server.post("/fetchTags", tasks.fetchTags);
-server.get("/setuptesting", tasks.setuptesting);
+server.post("/setuptesting", tasks.setuptesting);
 
 // FORTESTING
 server.get("/testdb", tasks.testDBGet);
