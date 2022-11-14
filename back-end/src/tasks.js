@@ -249,9 +249,9 @@ exports.fetchTags = async (request, response) => {
     } else {
       userTags = [];
     }
+
     const tagArray = ['Work', 'Study', 'Exercise', 'Chores', 'Socialization', 'Hobbies', 'Rest', 'Nourishment', 'Relaxation'];
     userTags.push(...tagArray);
-    console.log('here3: '+userTags);
     response.send({tagList: userTags});
   }
   catch (error) {
