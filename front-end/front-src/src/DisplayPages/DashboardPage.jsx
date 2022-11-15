@@ -59,6 +59,7 @@
    - https://www.w3schools.com/css/css_padding.asp
    - https://www.w3schools.com/css/css_boxmodel.as
    - https://www.w3schools.com/CSSREF/css3_pr_opacity.php
+   - https://www.w3schools.com/cssref/pr_class_display.php
 
    - https://css-tricks.com/snippets/css/a-guide-to-flexbox/
 */
@@ -108,6 +109,10 @@ const CompleteButton = styled.button`
   width: 200px;
   height: 40px;
   background-color: Lavender;
+`;
+
+const ChangeButton = styled(CompleteButton)`
+  display: inline;
 `;
 
 const ButtonSection = styled.div`
@@ -210,14 +215,18 @@ export default function Dashboard(props) {
           mb: 2,
         }}>
           <TaskDisplay>
+            <ButtonSection>
               <TextField
                 id = 'task-name'
                 label = 'Task Name'
                 variant = 'outlined'
                 defaultValue = {task.name}
                 sx = {{mb: 3}}
-                helperText = {'Press ENTER to change any field.'}
               />
+              <ChangeButton>
+                Change
+              </ChangeButton>
+            </ButtonSection>
               <TextField 
                 id = 'category'
                 label = 'Category'
