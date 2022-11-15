@@ -60,6 +60,7 @@
    - https://www.w3schools.com/css/css_boxmodel.as
    - https://www.w3schools.com/CSSREF/css3_pr_opacity.php
    - https://www.w3schools.com/cssref/pr_class_display.php
+   - https://www.w3schools.com/html/html_forms.asp
 
    - https://css-tricks.com/snippets/css/a-guide-to-flexbox/
 */
@@ -208,12 +209,18 @@ export default function Dashboard(props) {
 
     return uncheckedTasks.map((task) => {
       return (
-        <Box key={task.taskid} sx={{
+        <Box key={task.taskid} 
+         component = "form"
+         sx={{
           width: 450,
           border: '2px dashed grey',
           margin: 'auto',
           mb: 2,
-        }}>
+         }}
+         onSubmit = {(event) => {
+          event.preventDefault();
+          console.log('Changing Fields...');
+         }}>
           <TaskDisplay>
               <TextField
                 id = 'task-name'
@@ -248,7 +255,7 @@ export default function Dashboard(props) {
                   sx = {{mb: 3}}
               />
 
-            <ChangeButton>
+            <ChangeButton type = "submit">
               Change Fields
             </ChangeButton>
             <UserInfo.Consumer>
