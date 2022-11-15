@@ -115,11 +115,6 @@ const ChangeButton = styled(CompleteButton)`
   display: inline;
 `;
 
-const ChangeButtonSection = styled.div`
-  display: flex;
-  justify-content: center;
-`;
-
 const ButtonSection = styled.div`
   display: flex;
   flex-direction: row;
@@ -252,6 +247,10 @@ export default function Dashboard(props) {
                   defaultValue = {new Date(task.endDate).toLocaleString()}
                   sx = {{mb: 3}}
               />
+
+            <ChangeButton>
+              Change Fields
+            </ChangeButton>
             <UserInfo.Consumer>
               {({username, password, userInfo, setUserInfo}) => {
                 const buttonHandler = function ({complete}) {
@@ -275,11 +274,6 @@ export default function Dashboard(props) {
 
                 return (
                   <div>
-                    <ChangeButtonSection>
-                      <ChangeButton>
-                        Change Fields
-                      </ChangeButton>
-                    </ChangeButtonSection>
                     <ButtonSection>
                       <CompleteButton onClick={() => {
                         buttonHandler({ complete: true });
