@@ -202,21 +202,12 @@ export default function Dashboard(props) {
     });
 
     return uncheckedTasks.map((task) => {
-      /**
-       * Ask Team:
-       *   Is it a good idea to remove the hover
-       *   effect where the opacity changes?
-       */
       return (
         <Box key={task.taskid} sx={{
           width: 450,
           border: '2px dashed grey',
           margin: 'auto',
           mb: 2,
-          /* '&:hover': {
-            backgroundColor: 'blue',
-            opacity: [0.5, 0.5, 0.5],
-          }, */
         }}>
           <TaskDisplay>
               <TextField
