@@ -115,6 +115,11 @@ const ChangeButton = styled(CompleteButton)`
   display: inline;
 `;
 
+const ChangeButtonSection = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
 const ButtonSection = styled.div`
   display: flex;
   flex-direction: row;
@@ -215,7 +220,6 @@ export default function Dashboard(props) {
           mb: 2,
         }}>
           <TaskDisplay>
-            <ButtonSection>
               <TextField
                 id = 'task-name'
                 label = 'Task Name'
@@ -223,12 +227,7 @@ export default function Dashboard(props) {
                 defaultValue = {task.name}
                 sx = {{mb: 3}}
               />
-              <ChangeButton>
-                Change
-              </ChangeButton>
-            </ButtonSection>
 
-            <ButtonSection>
               <TextField 
                   id = 'category'
                   label = 'Category'
@@ -236,12 +235,7 @@ export default function Dashboard(props) {
                   defaultValue = {task.tag}
                   sx = {{mb: 3}}
                 />
-              <ChangeButton>
-                Change
-              </ChangeButton>
-            </ButtonSection>
 
-            <ButtonSection>
               <TextField 
                   id = 'start-time'
                   label = 'Start Time'
@@ -250,23 +244,14 @@ export default function Dashboard(props) {
                   sx = {{mb: 3}}
 
                 />
-              <ChangeButton>
-                Change
-              </ChangeButton>
-            </ButtonSection>
 
-            <ButtonSection>
-              <TextField 
+              <TextField
                   id = 'end-time'
                   label = 'End Time'
                   variant = 'outlined'
                   defaultValue = {new Date(task.endDate).toLocaleString()}
                   sx = {{mb: 3}}
               />
-              <ChangeButton>
-                Change
-              </ChangeButton>
-            </ButtonSection>
             <UserInfo.Consumer>
               {({username, password, userInfo, setUserInfo}) => {
                 const buttonHandler = function ({complete}) {
@@ -289,19 +274,26 @@ export default function Dashboard(props) {
                 };
 
                 return (
-                  <ButtonSection>
-                    <CompleteButton onClick={() => {
-                      buttonHandler({complete: true});
-                    }}>
-                      Finished
-                    </CompleteButton>
-                    
-                    <CompleteButton onClick = {() => {
-                      buttonHandler({complete: false});
-                    }}>
-                      Incomplete
-                    </CompleteButton>
-                  </ButtonSection>
+                  <div>
+                    <ChangeButtonSection>
+                      <ChangeButton>
+                        Change Fields
+                      </ChangeButton>
+                    </ChangeButtonSection>
+                    <ButtonSection>
+                      <CompleteButton onClick={() => {
+                        buttonHandler({ complete: true });
+                      }}>
+                        Finished
+                      </CompleteButton>
+
+                      <CompleteButton onClick={() => {
+                        buttonHandler({ complete: false });
+                      }}>
+                        Incomplete
+                      </CompleteButton>
+                    </ButtonSection>
+                  </div>
                 );
               }}
             </UserInfo.Consumer>
