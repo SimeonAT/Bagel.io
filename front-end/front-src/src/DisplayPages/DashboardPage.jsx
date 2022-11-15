@@ -227,28 +227,46 @@ export default function Dashboard(props) {
                 Change
               </ChangeButton>
             </ButtonSection>
-              <TextField 
-                id = 'category'
-                label = 'Category'
-                variant = 'outlined'
-                defaultValue = {task.tag}
-                sx = {{mb: 3}}
-              />
-              <TextField 
-                id = 'start-time'
-                label = 'Start Time'
-                variant = 'outlined'
-                defaultValue = {new Date(task.startDate).toLocaleString()}
-                sx = {{mb: 3}}
 
-              />
+            <ButtonSection>
               <TextField 
-                id = 'end-time'
-                label = 'End Time'
-                variant = 'outlined'
-                defaultValue = {new Date(task.endDate).toLocaleString()}
-                sx = {{mb: 3}}
+                  id = 'category'
+                  label = 'Category'
+                  variant = 'outlined'
+                  defaultValue = {task.tag}
+                  sx = {{mb: 3}}
+                />
+              <ChangeButton>
+                Change
+              </ChangeButton>
+            </ButtonSection>
+
+            <ButtonSection>
+              <TextField 
+                  id = 'start-time'
+                  label = 'Start Time'
+                  variant = 'outlined'
+                  defaultValue = {new Date(task.startDate).toLocaleString()}
+                  sx = {{mb: 3}}
+
+                />
+              <ChangeButton>
+                Change
+              </ChangeButton>
+            </ButtonSection>
+
+            <ButtonSection>
+              <TextField 
+                  id = 'end-time'
+                  label = 'End Time'
+                  variant = 'outlined'
+                  defaultValue = {new Date(task.endDate).toLocaleString()}
+                  sx = {{mb: 3}}
               />
+              <ChangeButton>
+                Change
+              </ChangeButton>
+            </ButtonSection>
             <UserInfo.Consumer>
               {({username, password, userInfo, setUserInfo}) => {
                 const buttonHandler = function ({complete}) {
