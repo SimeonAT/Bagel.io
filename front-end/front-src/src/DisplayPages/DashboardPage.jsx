@@ -45,6 +45,7 @@
    - https://www.freecodecamp.org/news/how-to-clone-an-array-in-javascript-1d3183468f6a/
    - https://www.robinwieruch.de/react-event-handler/
    - https://reactjs.org/docs/handling-events.html
+   - https://reactjs.org/docs/refs-and-the-dom.html
 
    - https://styled-components.com/docs/api#primary
    - https://styled-components.com/
@@ -219,6 +220,7 @@ export default function Dashboard(props) {
          }}
          onSubmit = {(event) => {
           event.preventDefault();
+          console.log(event);
           console.log('Changing Fields...');
          }}>
           <TaskDisplay>
