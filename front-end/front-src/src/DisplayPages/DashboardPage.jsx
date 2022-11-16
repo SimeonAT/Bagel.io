@@ -14,16 +14,17 @@
    - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
    - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
    - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
-  - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Default_parameters
+   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Default_parameters=
+   - https://developer.mozilla.org/en-US/docs/Web/API/Document/forms
 
-  - https://mui.com/system/spacing/#horizontal-centering
-  - https://mui.com/system/spacing/#transformation
-  - https://mui.com/system/spacing/
-  - https://mui.com/system/getting-started/the-sx-prop/#basic-example
-  - https://mui.com/system/getting-started/the-sx-prop/
-  - https://mui.com/material-ui/react-text-field/#form-props
-  - https://mui.com/material-ui/react-text-field/#basic-textfield
-  - https://mui.com/material-ui/react-text-field/
+   - https://mui.com/system/spacing/#horizontal-centering
+   - https://mui.com/system/spacing/#transformation
+   - https://mui.com/system/spacing/
+   - https://mui.com/system/getting-started/the-sx-prop/#basic-example
+   - https://mui.com/system/getting-started/the-sx-prop/
+   - https://mui.com/material-ui/react-text-field/#form-props
+   - https://mui.com/material-ui/react-text-field/#basic-textfield
+   - https://mui.com/material-ui/react-text-field/
 
    - https://masteringjs.io/tutorials/fundamentals/parameters
    - https://stackabuse.com/get-http-post-body-in-express-js/
@@ -46,6 +47,7 @@
    - https://www.robinwieruch.de/react-event-handler/
    - https://reactjs.org/docs/handling-events.html
    - https://reactjs.org/docs/refs-and-the-dom.html
+   - https://reactjs.org/docs/forms.html
 
    - https://styled-components.com/docs/api#primary
    - https://styled-components.com/
@@ -61,7 +63,10 @@
    - https://www.w3schools.com/css/css_boxmodel.as
    - https://www.w3schools.com/CSSREF/css3_pr_opacity.php
    - https://www.w3schools.com/cssref/pr_class_display.php
+   - https://www.w3schools.com/jsref/event_oninput.asp
+
    - https://www.w3schools.com/html/html_forms.asp
+   - https://www.w3schools.com/jsref/event_onchange.asp
 
    - https://css-tricks.com/snippets/css/a-guide-to-flexbox/
 */
@@ -210,54 +215,51 @@ export default function Dashboard(props) {
 
     return uncheckedTasks.map((task) => {
       return (
-        <Box key={task.taskid} 
-         component = "form"
+        <Box key={task.taskid}
          sx={{
           width: 450,
           border: '2px dashed grey',
           margin: 'auto',
           mb: 2,
-         }}
-         onSubmit = {(event) => {
-          event.preventDefault();
-          console.log(event);
-          console.log('Changing Fields...');
          }}>
           <TaskDisplay>
-              <TextField
-                id = 'task-name'
-                label = 'Task Name'
-                variant = 'outlined'
-                defaultValue = {task.name}
-                sx = {{mb: 3}}
-              />
+            <TextField
+              id='task-name'
+              label='Task Name'
+              name='Task Name'
+              variant='outlined'
+              defaultValue={task.name}
+              sx={{ mb: 3 }}
+            />
+            <TextField
+              id='category'
+              label='Category'
+              variant='outlined'
+              defaultValue={task.tag}
+              sx={{ mb: 3 }}
+              onChange = {(event) => {
+                task.tag = event.target.value;
 
-              <TextField 
-                  id = 'category'
-                  label = 'Category'
-                  variant = 'outlined'
-                  defaultValue = {task.tag}
-                  sx = {{mb: 3}}
-                />
-
-              <TextField 
-                  id = 'start-time'
-                  label = 'Start Time'
-                  variant = 'outlined'
-                  defaultValue = {new Date(task.startDate).toLocaleString()}
-                  sx = {{mb: 3}}
-
-                />
-
-              <TextField
-                  id = 'end-time'
-                  label = 'End Time'
-                  variant = 'outlined'
-                  defaultValue = {new Date(task.endDate).toLocaleString()}
-                  sx = {{mb: 3}}
-              />
-
-            <ChangeButton type = "submit">
+                updateTask(task.taskid, task.startDate,
+                  task.endDate, task.tag, task.complete,
+                  task.checkedIn);
+              }}
+            />
+            <TextField
+              id='start-time'
+              label='Start Time'
+              variant='outlined'
+              defaultValue={new Date(task.startDate).toLocaleString()}
+              sx={{ mb: 3 }}
+            />
+            <TextField
+              id='end-time'
+              label='End Time'
+              variant='outlined'
+              defaultValue={new Date(task.endDate).toLocaleString()}
+              sx={{ mb: 3 }}
+            />
+            <ChangeButton type="submit">
               Change Fields
             </ChangeButton>
             <UserInfo.Consumer>
