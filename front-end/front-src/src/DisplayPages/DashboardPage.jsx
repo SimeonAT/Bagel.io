@@ -210,6 +210,10 @@ export default function Dashboard(props) {
       body: JSON.stringify({taskId: taskId, startDate: startDate, endDate: endDate, tag: tag, complete: complete, checkedIn: checkedIn})
     });
     console.log(httpResponse);
+
+    // This state change forces the DashboardPage to re-render
+    // with the new info sent from the back-end.
+    setTaskListToRender(undefined);
   }
 
   const getTaskDisplayList = function (tasksToDisplay, setTaskListToRender) {
@@ -252,8 +256,10 @@ export default function Dashboard(props) {
                 updateTask(task.taskid, task.startDate,
                   task.endDate, task.tag, task.complete,
                   task.checkedIn);
+                return;
               }}
             />
+            {/**
             <TextField
               id='start-time'
               label='Start Time'
@@ -262,6 +268,26 @@ export default function Dashboard(props) {
               sx={{ mb: 3 }}
               onChange = {(event) => {}}
             />
+            */}
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DateTimePicker
+                label="Start Time Date Picker"
+                value={new Date(task.startDate).toLocaleString()}
+                onChange={(newDate) => {
+                  task.startDate = newDate;
+
+                  updateTask(task.taskid, task.startDate,
+                    task.endDate, task.tag, task.complete,
+                    task.checkedIn);
+                  return;
+                }}
+                renderInput={(params) => {
+                  console.log(params.inputProps.value);
+                  return (<TextField {...params} />);
+                }}
+              />
+            </LocalizationProvider>
+
             <TextField
               id='end-time'
               label='End Time'
