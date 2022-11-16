@@ -12,9 +12,9 @@ import { Animation } from '@devexpress/dx-react-chart';
 function Bagel(props){
     const [chartData, setChartData] = useState([]);
 
-    React.useEffect(() => {
-      console.log("initial usertasks: ", props.todayTask);
-    }, []);
+    // React.useEffect(() => {
+    //   console.log("initial usertasks: ", props.todayTask);
+    // }, []);
 
     React.useEffect(() => {
       console.log("chartData: ", chartData);

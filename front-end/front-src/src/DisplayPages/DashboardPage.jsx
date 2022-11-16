@@ -440,7 +440,8 @@ export default function Dashboard(props) {
     openHome(true);
     return;
   }
-  //getting elements of the task list (fetching await)
+
+  //getting elements of the time task list (waiting on await so that an empty promise is not sent))
   const [todaysTasks, setTodaysTask] = useState([]);
   React.useEffect(() => {
     const fetchTasks = async () => {
@@ -450,9 +451,9 @@ export default function Dashboard(props) {
     fetchTasks();
   }, []);
 
-  React.useEffect(() => {
-    console.log("passing", todaysTasks);
-  }, [todaysTasks]);
+  // React.useEffect(() => {
+  //   console.log("passing", todaysTasks);
+  // }, [todaysTasks]);
 
 
   const renderPage = (
