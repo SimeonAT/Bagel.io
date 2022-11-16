@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "@date-io/dayjs": "^2.16.0",
+    "@devexpress/dx-react-chart": "^3.0.6",
+    "@devexpress/dx-react-chart-material-ui": "^3.0.6",
     "@devexpress/dx-react-core": "^3.0.6",
     "@devexpress/dx-react-scheduler": "^3.0.6",
     "@devexpress/dx-react-scheduler-material-ui": "^3.0.6",

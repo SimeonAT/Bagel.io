@@ -1,6 +1,5 @@
 // sources user:
 // https://devexpress.github.io/devextreme-reactive/react/scheduler/docs/guides/getting-started/
-
 import * as React from 'react';
 import Paper from '@mui/material/Paper';
 import { ViewState } from '@devexpress/dx-react-scheduler';
@@ -8,11 +7,17 @@ import {
   Scheduler,
   DayView,
   Appointments,
+  Toolbar,
+  DateNavigator,
+  TodayButton
 } from '@devexpress/dx-react-scheduler-material-ui';
 const BackendURL = "http://localhost:8000";
 
-const currentDate = new Date(); 
 
+const currentDate = new Date()
+
+
+//sets the color for the appointments (the scheduled tasks)
 const Appointment = ({
     children, style, ...restProps
   }) => (
@@ -26,63 +31,48 @@ const Appointment = ({
     >
       {children}
     </Appointments.Appointment>
-  );
+);
 
-
+//Sends data to Calendar and populates 
 function Calendar(props) {
-    const [userInfo, updateUserInfo] = React.useState(props.userInfo);
+  const [userInfo, updateUserInfo] = React.useState(props.userInfo);
+  let calendarTasks = undefined;
+  let calendarData = []
 
-    // console.log("These are the props:::");
-    // console.log(props.userInfo)
-    //const userInfo = props.userInfo;
-    // let tasksToDisplay = undefined;
-    // let taskDisplayList = [];
-    let calendarTasks = undefined;
-    let calendarData = []
-
-    if(userInfo !== undefined) {
-        calendarTasks = props.userInfo.tasks;
-        for(let i = 0; i < calendarTasks.length; i++) {
-            //let epcochToStart = 
-            //let epcochToEnd = new Date(calendarTasks[i].startDate/1);
-            
-            calendarData.push( {
-                title: calendarTasks[i].name,
-                startDate: calendarTasks[i].startDate,
-                endDate: calendarTasks[i].endDate, 
-                id: {i}
-                //startDate: calendarTasks[i].startDate,
-                //endDate: calendarTasks[i].endDate,
-                //id: calendarTasks[i].id
-            });
-        }
-        // console.log("finished!!");
-        // console.log(calendarData);
-        // console.log("yeet");
+  if(userInfo !== undefined) {
+    calendarTasks = props.userInfo.tasks;
+    for(let i = 0; i < calendarTasks.length; i++) {
+      calendarData.push( {
+        title: calendarTasks[i].name,
+        startDate: calendarTasks[i].startDate,
+        endDate: calendarTasks[i].endDate, 
+        id: {i}
+      });
     }
-   //let tasksToDisplay =[];
-    return (
-        <Paper>
-            <Scheduler
-            data={calendarData}
-            >
-        
-                <ViewState
-                    currentDate={currentDate}
-                    />
-            
-                <DayView
-                    startDayHour={8}
-                    endDayHour={20}
-                    cellDuration = {60}
-                    />
-                <Appointments 
-                appointmentComponent={Appointment}
-                />
-
-            </Scheduler>
-        </Paper>
-    )
+  }
+  return (
+    <Paper>
+      <Scheduler
+        data={calendarData}
+        height={600}
+      >
+        <ViewState
+          defaultCurrentDate= {currentDate}
+        />
+        <DayView  
+          startDayHour={0}
+          endDayHour={24}
+          cellDuration = {60}
+        />
+        <Appointments 
+          appointmentComponent={Appointment}
+        />
+        <Toolbar />
+        <DateNavigator />
+        <TodayButton />
+      </Scheduler>
+    </Paper>
+  )
 }
 
 export default Calendar
