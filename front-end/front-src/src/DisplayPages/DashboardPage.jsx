@@ -69,6 +69,14 @@
    - https://www.w3schools.com/jsref/event_onchange.asp
 
    - https://css-tricks.com/snippets/css/a-guide-to-flexbox/
+  
+   - https://mui.com/x/react-date-pickers/getting-started/
+   - https://mui.com/x/react-date-pickers/getting-started/#react-components
+
+   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#examples
+   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/Date#syntax
+   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/Date
+   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
 */
 import {useState} from "react";
 import {useRef} from 'react';
@@ -116,10 +124,6 @@ const CompleteButton = styled.button`
   width: 200px;
   height: 40px;
   background-color: Lavender;
-`;
-
-const ChangeButton = styled(CompleteButton)`
-  display: inline;
 `;
 
 const ButtonSection = styled.div`
@@ -256,6 +260,7 @@ export default function Dashboard(props) {
               variant='outlined'
               defaultValue={new Date(task.startDate).toLocaleString()}
               sx={{ mb: 3 }}
+              onChange = {(event) => {}}
             />
             <TextField
               id='end-time'
@@ -264,9 +269,6 @@ export default function Dashboard(props) {
               defaultValue={new Date(task.endDate).toLocaleString()}
               sx={{ mb: 3 }}
             />
-            <ChangeButton type="submit">
-              Change Fields
-            </ChangeButton>
             <UserInfo.Consumer>
               {({username, password, userInfo, setUserInfo}) => {
                 const buttonHandler = function ({complete}) {
