@@ -137,7 +137,6 @@ const ButtonSection = styled.div`
 const TaskDisplay = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
 
   padding-top: 5%;
   padding-bottom: 3%;
@@ -238,91 +237,18 @@ export default function Dashboard(props) {
           mb: 2,
          }}>
           <TaskDisplay>
-            {/** 
-              Ask Team: Is it possible to adjust updateTask()
-                        so it can also change the task name in the back-end
-                        and database?
-            */}
-            <TextField
-              id='task-name'
-              label='Task Name'
-              name='Task Name'
-              variant='outlined'
-              defaultValue={task.name}
-              sx={{ mb: 3 }}
-            />
-            <TextField
-              id='category'
-              label='Category'
-              variant='outlined'
-              defaultValue={task.tag}
-              sx={{ mb: 3 }}
-              onChange = {(event) => {
-                task.tag = event.target.value;
-
-                updateTask(task.taskid, task.startDate,
-                  task.endDate, task.tag, task.complete,
-                  task.checkedIn, false);
-                return;
-              }}
-            />
-            {/**
-            <TextField
-              id='start-time'
-              label='Start Time'
-              variant='outlined'
-              defaultValue={new Date(task.startDate).toLocaleString()}
-              sx={{ mb: 3 }}
-              onChange = {(event) => {}}
-            />
-            */}
-            <Box sx={{ mb: 3 }}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}
-                sx={{ mb: 3 }}>
-                <DateTimePicker
-                  label="Start Time"
-                  value={new Date(task.startDate).toLocaleString()}
-                  onChange={(newDate) => {
-                    task.startDate = newDate;
-
-                    updateTask(task.taskid, task.startDate,
-                      task.endDate, task.tag, task.complete,
-                      task.checkedIn, true);
-                    return;
-                  }}
-                  renderInput={(params) => {
-                    return (<TextField {...params} />);
-                  }}
-                />
-              </LocalizationProvider>
-            </Box>
-
-            {/**
-              <TextField
-                id='end-time'
-                label='End Time'
-                variant='outlined'
-                defaultValue={new Date(task.endDate).toLocaleString()}
-                sx={{ mb: 3 }}
-              />
-            */}
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DateTimePicker
-                label="End Time"
-                value={new Date(task.endDate).toLocaleString()}
-                onChange={(newDate) => {
-                  task.endDate = newDate;
-
-                  updateTask(task.taskid, task.startDate,
-                    task.endDate, task.tag, task.complete,
-                    task.checkedIn, true);
-                  return;
-                }}
-                renderInput={(params) => {
-                  return (<TextField {...params} />);
-                }}
-              />
-            </LocalizationProvider>
+            <div>
+              <b>Task Name:</b> {task.name}
+            </div>
+            <div>
+              <b>Category:</b> {task.tag}
+            </div>
+            <div>
+              <b>Start Time:</b> {new Date(task.startDate).toLocaleString()}
+            </div>
+            <div>
+              <b>End Time:</b> {new Date(task.endDate).toLocaleString()}
+            </div>
             <UserInfo.Consumer>
               {({username, password, userInfo, setUserInfo}) => {
                 const buttonHandler = function ({complete}) {
