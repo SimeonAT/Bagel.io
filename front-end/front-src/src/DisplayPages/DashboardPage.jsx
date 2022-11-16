@@ -200,7 +200,7 @@ export default function Dashboard(props) {
   const [taskListToRender, setTaskListToRender] = useState(undefined);
 
   // NOTE: All fields must be present, or the back-end will give an error.
-  const updateTask = async function(taskId, startDate, endDate, tag, complete, checkedIn) {
+  const updateTask = async function(taskId, startDate, endDate, tag, complete, checkedIn, rerenderFlag) {
     console.log('updateTask() called: params. taskid: ' + taskId + ', startDate: ' + startDate + ', endDate: ' + endDate + ', tag: ' + tag + ', complete: ' + complete + ', checkedIn: ' + checkedIn );
     // Send new task data to server
     const httpResponse = await fetch(updateTaskURL, {
@@ -213,7 +213,10 @@ export default function Dashboard(props) {
 
     // This state change forces the DashboardPage to re-render
     // with the new info sent from the back-end.
-    setTaskListToRender(undefined);
+    //
+    if (rerenderFlag === true) {
+      setTaskListToRender(undefined);
+    }
   }
 
   const getTaskDisplayList = function (tasksToDisplay, setTaskListToRender) {
@@ -255,7 +258,7 @@ export default function Dashboard(props) {
 
                 updateTask(task.taskid, task.startDate,
                   task.endDate, task.tag, task.complete,
-                  task.checkedIn);
+                  task.checkedIn, false);
                 return;
               }}
             />
@@ -280,7 +283,7 @@ export default function Dashboard(props) {
 
                     updateTask(task.taskid, task.startDate,
                       task.endDate, task.tag, task.complete,
-                      task.checkedIn);
+                      task.checkedIn, true);
                     return;
                   }}
                   renderInput={(params) => {
@@ -308,7 +311,7 @@ export default function Dashboard(props) {
 
                   updateTask(task.taskid, task.startDate,
                     task.endDate, task.tag, task.complete,
-                    task.checkedIn);
+                    task.checkedIn, true);
                   return;
                 }}
                 renderInput={(params) => {
