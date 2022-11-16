@@ -85,9 +85,9 @@ export default function Register(props) {
     let pass = passwordOneState;
     let pass2 = passwordTwoState;
     
-    console.log(u_name);
-    console.log(email);
-    console.log(pass);
+    // console.log(u_name);
+    // console.log(email);
+    // console.log(pass);
     let allInputsCorrect = true; //FIXME: Might be a better way to do this???
     
     //Check if trying to Register without any submissions.
@@ -356,7 +356,7 @@ export default function Register(props) {
                           errors["u_password2"] = "Please Re-confirm Password";
                           //allInputsCorrect = false;
                         }
-                        console.log(pass, pass2);
+                        //console.log(pass, pass2);
                         //FIXME: Wonky string comparison, there may be better way to do this?
                         if(pass.normalize() !== pass2.normalize()) {
                           errors["u_password2"] = "Does not match the entered password";
