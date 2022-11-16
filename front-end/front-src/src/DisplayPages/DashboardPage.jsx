@@ -269,12 +269,42 @@ export default function Dashboard(props) {
               onChange = {(event) => {}}
             />
             */}
+            <Box sx={{ mb: 3 }}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}
+                sx={{ mb: 3 }}>
+                <DateTimePicker
+                  label="Start Time"
+                  value={new Date(task.startDate).toLocaleString()}
+                  onChange={(newDate) => {
+                    task.startDate = newDate;
+
+                    updateTask(task.taskid, task.startDate,
+                      task.endDate, task.tag, task.complete,
+                      task.checkedIn);
+                    return;
+                  }}
+                  renderInput={(params) => {
+                    return (<TextField {...params} />);
+                  }}
+                />
+              </LocalizationProvider>
+            </Box>
+
+            {/**
+              <TextField
+                id='end-time'
+                label='End Time'
+                variant='outlined'
+                defaultValue={new Date(task.endDate).toLocaleString()}
+                sx={{ mb: 3 }}
+              />
+            */}
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DateTimePicker
-                label="Start Time Date Picker"
-                value={new Date(task.startDate).toLocaleString()}
+                label="End Time"
+                value={new Date(task.endDate).toLocaleString()}
                 onChange={(newDate) => {
-                  task.startDate = newDate;
+                  task.endDate = newDate;
 
                   updateTask(task.taskid, task.startDate,
                     task.endDate, task.tag, task.complete,
@@ -282,19 +312,10 @@ export default function Dashboard(props) {
                   return;
                 }}
                 renderInput={(params) => {
-                  console.log(params.inputProps.value);
                   return (<TextField {...params} />);
                 }}
               />
             </LocalizationProvider>
-
-            <TextField
-              id='end-time'
-              label='End Time'
-              variant='outlined'
-              defaultValue={new Date(task.endDate).toLocaleString()}
-              sx={{ mb: 3 }}
-            />
             <UserInfo.Consumer>
               {({username, password, userInfo, setUserInfo}) => {
                 const buttonHandler = function ({complete}) {
