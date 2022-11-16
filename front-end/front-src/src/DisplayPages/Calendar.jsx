@@ -1,6 +1,5 @@
 // sources user:
 // https://devexpress.github.io/devextreme-reactive/react/scheduler/docs/guides/getting-started/
-
 import * as React from 'react';
 import Paper from '@mui/material/Paper';
 import { ViewState } from '@devexpress/dx-react-scheduler';
@@ -14,16 +13,11 @@ import {
 } from '@devexpress/dx-react-scheduler-material-ui';
 const BackendURL = "http://localhost:8000";
 
+
 const currentDate = new Date()
 
-function getNextDay(currentDate) {
-  const tomorrow = new Date(currentDate)
-  tomorrow.setDate(tomorrow.getDate() + 1)
-  return tomorrow
-}
 
-
-
+//sets the color for the appointments (the scheduled tasks)
 const Appointment = ({
     children, style, ...restProps
   }) => (
@@ -39,10 +33,8 @@ const Appointment = ({
     </Appointments.Appointment>
 );
 
-
+//Sends data to Calendar and populates 
 function Calendar(props) {
-  console.log(currentDate);
-  console.log(getNextDay(currentDate))
   const [userInfo, updateUserInfo] = React.useState(props.userInfo);
   let calendarTasks = undefined;
   let calendarData = []
@@ -67,7 +59,6 @@ function Calendar(props) {
         <ViewState
           defaultCurrentDate= {currentDate}
         />
-    
         <DayView  
           startDayHour={0}
           endDayHour={24}
@@ -79,7 +70,6 @@ function Calendar(props) {
         <Toolbar />
         <DateNavigator />
         <TodayButton />
-
       </Scheduler>
     </Paper>
   )

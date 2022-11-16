@@ -8,15 +8,6 @@ import {
 } from '@devexpress/dx-react-chart-material-ui';
 import { Animation } from '@devexpress/dx-react-chart';
 
-// const chartData = [
-//   { region: 'Asia', val: 4119626293 },
-//   { region: 'Africa', val: 1012956064 },
-//   { region: 'Northern America', val: 344124520 },
-//   { region: 'Latin America and the Caribbean', val: 590946440 },
-//   { region: 'Europe', val: 727082222 },
-//   { region: 'Oceania', val: 35104756 },
-// ];
-
 
 function Bagel(props){
     const [chartData, setChartData] = useState([]);
@@ -28,13 +19,11 @@ function Bagel(props){
     React.useEffect(() => {
       console.log("chartData: ", chartData);
     }, [chartData]);
-
+//adds task category and time to the data field everytime todayTask prop is updated
     React.useEffect(() => {
       if(props.todayTask != undefined) {
         const newData = [];
         for(let i = 0; i < props.todayTask.length; i++) {
-          // console.log(theseTasks[i][0])
-          // console.log(theseTasks[i][1])
           newData.push( {
             name: props.todayTask[i][0],
             time: props.todayTask[i][1]
@@ -43,9 +32,6 @@ function Bagel(props){
         setChartData(newData);
       }
     }, [props.todayTask]);
-
-    console.log("data:")
-    console.log(chartData)
     return (
       <Paper>
         <Chart
@@ -60,6 +46,7 @@ function Bagel(props){
           <Title
             text="Time on Tasks Today"
           />
+          {/* For some reason this animation statement is causing a lot of errors in the code */}
           {/* <Animation /> */}
         </Chart>
       </Paper>
