@@ -48,15 +48,9 @@ const theme = createTheme( {
   },
   });
 
-//FIXME: REMOVE BELOW VARIABLES...
-let usernameError = false;
-let emailError = false;
-let passwordError = false;
-let confirmError = false;  
-
 export default function Register(props) {
 
-  // const [errorMessage, setErrorMessages] = useState({});
+  //Checks errors.
   const [errors, setErrorMessages] = useState(
     { //set errors, empty by default
       u_name: "",       //"invalid username",
@@ -69,94 +63,16 @@ export default function Register(props) {
   //PLEASE USE STATES WHEN SENDING.
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-
-  //README PLEASE GOD
-  //CHANGE FROM FORMS TO STATES.
-  //PLEASE CHANGE ALL FIELDS TO USE USESTATE. IT WILL BE EASIER TO change states of values.
+  //Below useStates are for username, email, password, and password confirmation
   const [usernameState, setUsernameState]  = useState(undefined);
   const [emailState, setEmailState] = useState(undefined);
   const [passwordOneState, setPasswordOneState] = useState(undefined);
   const [passwordTwoState, setPasswordTwoState] = useState(undefined);
-  //const [password, setPassword] = useState("")
 
-  // console.log(usernameState);
-  // console.log(undefined);
-  // console.log(emailState);
-  
-  
-  //let { u_name, email, pass, pass2 } = document.forms[0]; //CHANGES TO STATES [user, email, pass1, pass2]
-  // let u_name = usernameState;
-  // let email = emailState;
-  // let pass = passwordOneState;
-  // let pass2 = passwordTwoState;
-
-  // FIXME: veryfy pass === pass2
-  // FIXME: Snake case when it should be camel case?
-  // these will be used to implement field verifications
-  // const u_name_empty = (u_name === "") ? true : false;
-  // const email_empty = (email === "") ? true : false;
-  // const pass_empty = (pass === "") ? true : false;
-  // const pass2_empty = (pass2 === "") ? true : false;
-
-  // console.log("u_name.value: ",u_name.value,":");
-  // console.log("u_name.value: ","Hello",":");
-
-  //Check basic verification
-  //User name limit 5~32 chars
-  //Password matches confirmed password.
-  
-
+  //Does basic input checking
+  //Notably does not check if username/email is already in use, that only occurs
+  //after the server call happens.
   let allInputsCorrect = true; //FIXME: Might be a better way to do this???
-  // usernameError = false;
-  // emailError = false;
-  // passwordError = false;
-  // confirmError = false;
-
-  //FIXME: Bunch of if statements to check each possible error, maybe better way to do this?
-  //USERNAME
-
-  
-
-  // //EMAIL
-  // errors["u_email"] = "";
-  // if(email !== undefined) {
-  //   if(email_empty) {
-  //     errors["u_email"] = "Email Empty";
-  //     allInputsCorrect = false;
-  //     emailError = true;
-  //   }
-  // }
-  
-  // //PASSWORD
-  // errors["u_password1"] = "";
-  // if(pass !== undefined) {
-  //   if(pass.length < 5 || pass.length > 32) {
-  //     errors["u_password1"] = "Keep passwords between 5~32 characters";
-  //     allInputsCorrect = false;
-  //     passwordError = true;
-  //   }
-  //   if(pass_empty) {
-  //     errors["u_password1"] = "Password Empty";
-  //     allInputsCorrect = false;
-  //     passwordError = true;
-  //   }
-  // }
-
-  // //PASSWORD CONFIRMATION
-  // errors["u_password2"] = "";
-  // if(pass2 !== undefined) {
-  //   if(pass2_empty) {
-  //     errors["u_password2"] = "Please Re-confirm Password";
-  //     allInputsCorrect = false;
-  //     confirmError = true;
-  //   }
-  //   //FIXME: Wonky string comparison, there may be better way to do this?
-  //   if(pass.normalize() !== pass2.normalize()) {
-  //     errors["u_password2"] = "Does not match the entered password";
-  //     allInputsCorrect = false;
-  //     confirmError = true;
-  //   }
-  // }
 
 
   const handleSubmit = async function(event, setUsername, setPassword,
@@ -198,11 +114,12 @@ export default function Register(props) {
       setPasswordTwoState("");
     }
 
+    //FIXME:
+    //MINOR (not very important issue)
+    //In back-end, tasks.js, if in for-loop if matching username is found first, then
+    //Returns immediately without search for if email has already been used (because if breaks if it finds one or the other)
+    //Vice-versa if email is found first, and not username.
     if(allInputsCorrect) { //if all inputs have been formatted correctly.
-      // usernameError = false;
-      // emailError = false;
-      // passwordError = false;
-      // confirmError = false;
       //Set username and password to the backend server
       const httpResponse = await fetch(RegisterURL, {
         mode: "cors",
@@ -248,16 +165,15 @@ export default function Register(props) {
         }
 
         if(responseBody.boolUsernameUsed) {
-          //usernameError = true;
           errors["u_name"] = responseBody.usernameUsed;
         }
         
         setErrorMessages({...errors}); //set errors
-        allInputsCorrect = false; //allinputsCorrect is false.
+        //allInputsCorrect = false; //allinputsCorrect is false.
       }
     }
     //errors.u_name = 'not valid'
-    setErrorMessages({...errors}); //set the error messages after all checks.
+    //setErrorMessages({...errors}); //set the error messages after all checks.
   };
   
   //Renders error messages below corresponding input
@@ -335,12 +251,10 @@ export default function Register(props) {
                         if(u_name.length < 5 || u_name.length > 32) {
                           errors["u_name"] = "Keep usernames between 5~32 characters";
                           allInputsCorrect = false;
-                          usernameError = true;
                         }
                         if(u_name_empty) { //if username empty
                           errors["u_name"] = "Username Empty";
                           allInputsCorrect = false;
-                          usernameError = true;
                         }
                       }
                     }}
@@ -368,7 +282,6 @@ export default function Register(props) {
                         if(email_empty) {
                           errors["u_email"] = "Email Empty";
                           allInputsCorrect = false;
-                          emailError = true;
                         }
                       }
                     }}
@@ -396,12 +309,12 @@ export default function Register(props) {
                           // console.log(pass + ' ', pass.length)
                           errors["u_password1"] = "Keep passwords between 5~32 characters";
                           allInputsCorrect = false;
-                          passwordError = true;
+                          
                         }
                         if(pass_empty) {
                           errors["u_password1"] = "Password Empty";
                           allInputsCorrect = false;
-                          passwordError = true;
+                          
                         }
                       }
                       console.log(pass, event.target.value);
@@ -430,13 +343,11 @@ export default function Register(props) {
                         if(pass2_empty) {
                           errors["u_password2"] = "Please Re-confirm Password";
                           allInputsCorrect = false;
-                          confirmError = true;
                         }
                         //FIXME: Wonky string comparison, there may be better way to do this?
                         if(pass.normalize() !== pass2.normalize()) {
                           errors["u_password2"] = "Does not match the entered password";
                           allInputsCorrect = false;
-                          confirmError = true;
                         }
                       }
                     }}
