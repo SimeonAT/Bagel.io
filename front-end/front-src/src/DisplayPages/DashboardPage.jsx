@@ -106,6 +106,8 @@ import Grid from '@mui/material/Grid';
 
 import UserInfo from '../UserContext';
 import styled from "styled-components";
+import Bagel from "./Bagel";
+
 
 const MILLISECONDS_IN_SECOND = 1000;
 const SECONDS_IN_MINUTE = 60;
@@ -118,6 +120,7 @@ const HomeURL = BackendURL + "/home";
 const scheduleTaskURL = BackendURL + "/scheduleTask";
 const GetTasks = BackendURL + "/getTasks";
 const updateTaskURL = BackendURL + "/updateTask";
+
 
 const CompleteButton = styled.button`
   font-size: 18px;
@@ -198,6 +201,8 @@ export default function Dashboard(props) {
   let taskDisplayList = [];
 
   const [taskListToRender, setTaskListToRender] = useState(undefined);
+  
+
 
   // NOTE: All fields must be present, or the back-end will give an error.
   const updateTask = async function(taskId, startDate, endDate, tag, complete, checkedIn, rerenderFlag) {
@@ -223,7 +228,6 @@ export default function Dashboard(props) {
     const uncheckedTasks = tasksToDisplay.filter((task) => {
       return task.checkedIn === false;
     });
-
     return uncheckedTasks.map((task) => {
       return (
         <Box key={task.taskid}
@@ -397,13 +401,17 @@ export default function Dashboard(props) {
         } else {
           //instantiate and add sum
           const taskTime = calculateTaskTime(taskList[i]);
+          console.log("new time to add");
           console.log(taskTime);
+          console.log("adding to following")
           console.log(totalsList);
           totalsList.push([category, taskTime]);
+          console.log("After new Push");
           console.log(totalsList);
         }
       }
     }
+     console.log("returning below");
     console.log(totalsList);
     return totalsList;
   }
@@ -432,6 +440,21 @@ export default function Dashboard(props) {
     openHome(true);
     return;
   }
+
+  //getting elements of the time task list (waiting on await so that an empty promise is not sent))
+  const [todaysTasks, setTodaysTask] = useState([]);
+  React.useEffect(() => {
+    const fetchTasks = async () => {
+      const tasks = await calculateTotalCompletedByCategory(true);
+      setTodaysTask(tasks);
+    }
+    fetchTasks();
+  }, []);
+
+  // React.useEffect(() => {
+  //   console.log("passing", todaysTasks);
+  // }, [todaysTasks]);
+
 
   const renderPage = (
     <ThemeProvider theme={theme}>
@@ -490,6 +513,7 @@ export default function Dashboard(props) {
                       <UserInfo.Consumer>
                         {({username, password, userInfo}) => {
                           console.log('Updating Task List to Render');
+                          console.log('taskListToRender')
                           if (taskListToRender === undefined) {
                             setTaskListToRender(getTaskDisplayList(userInfo.tasks,
                               setTaskListToRender));
@@ -515,6 +539,9 @@ export default function Dashboard(props) {
                       <Typography component="h1" variant="h5">
                         Your Productivity Bagel
                       </Typography>
+                      <Bagel
+                      todayTask = {todaysTasks}
+                       />
                     </Box>
                   </Grid>
                 </Grid>
