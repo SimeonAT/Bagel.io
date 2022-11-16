@@ -263,7 +263,7 @@ export default function Register(props) {
                     helperText = {errors["u_name"]}
                   />
                   
-                  <TextField
+                  <TextField //email
                     margin="normal"
                     required
                     fullWidth
@@ -289,7 +289,7 @@ export default function Register(props) {
                     helperText = {errors.u_email}
                   />
                   
-                  <TextField
+                  <TextField //password
                     margin="normal"
                     required
                     fullWidth
@@ -317,13 +317,13 @@ export default function Register(props) {
                           
                         }
                       }
-                      console.log(pass, event.target.value);
+                      //console.log(pass, event.target.value); //
                     }}
                     error = {(errors["u_password1"].length === 0 || passwordOneState === undefined) ? false : true}
                     helperText = {(passwordOneState !== undefined) ? errors["u_password1"] : ""}
                   />
                   
-                  <TextField
+                  <TextField //password confirmation
                     margin="normal"
                     required
                     fullWidth
