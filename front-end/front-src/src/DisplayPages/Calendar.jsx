@@ -65,10 +65,10 @@ function Calendar(props) {
         height={600}
       >
         <ViewState
-          currentDate={currentDate}
+          defaultCurrentDate= {currentDate}
         />
     
-        <DayView
+        <DayView  
           startDayHour={0}
           endDayHour={24}
           cellDuration = {60}
