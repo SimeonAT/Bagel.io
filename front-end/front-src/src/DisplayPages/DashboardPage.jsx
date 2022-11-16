@@ -223,6 +223,11 @@ export default function Dashboard(props) {
           mb: 2,
          }}>
           <TaskDisplay>
+            {/** 
+              Ask Team: Is it possible to adjust updateTask()
+                        so it can also change the task name in the back-end
+                        and database?
+            */}
             <TextField
               id='task-name'
               label='Task Name'
