@@ -72,7 +72,8 @@ export default function Register(props) {
   //Does basic input checking
   //Notably does not check if username/email is already in use, that only occurs
   //after the server call happens.
-  let allInputsCorrect = true; //FIXME: Might be a better way to do this???
+  //const [allInputsCorrect, setAllInputsCorrect] = useState(false);
+  //let allInputsCorrect = true; //FIXME: Might be a better way to do this???
 
 
   const handleSubmit = async function(event, setUsername, setPassword,
@@ -87,31 +88,42 @@ export default function Register(props) {
     console.log(u_name);
     console.log(email);
     console.log(pass);
+    let allInputsCorrect = true; //FIXME: Might be a better way to do this???
     
     //Check if trying to Register without any submissions.
     if(u_name === undefined) {
       //console.log("Username Empty");
       errors["u_name"] = "Username Empty"; //Set Error
       allInputsCorrect = false; //Make sure that it doesn't do a server call
+      //setAllInputsCorrect(false);
       setUsernameState(""); //change from undefined to empty string so that error message displays.
     }
     if(email === undefined) {
       //console.log("Email Empty");
       errors["u_email"] = "Email Empty";
       allInputsCorrect = false;
+      //setAllInputsCorrect(false);
       setEmailState("");
     }
     if(pass === undefined) {
-      console.log("Password Empty");
+      //console.log("Password Empty");
       errors["u_password1"] = "Password Empty";
       allInputsCorrect = false;
+      //setAllInputsCorrect(false);
       setPasswordOneState("");
     }
     if(pass2 === undefined) {
-      console.log("Please Re-confirm Password");
+      //console.log("Please Re-confirm Password");
       errors["u_password2"] = "Please Re-confirm Password";
       allInputsCorrect = false;
+      //setAllInputsCorrect(false);
       setPasswordTwoState("");
+    }
+
+    //Check all other errors.
+    if(errors["u_name"].length !== 0 || errors.u_email.length !== 0 || errors["u_password1"].length !== 0 || errors["u_password2"].length !== 0) {
+      console.log("Error with one or more input fields, please fix according to error");
+      allInputsCorrect = false;
     }
 
     //FIXME:
@@ -250,11 +262,11 @@ export default function Register(props) {
                       if(u_name !== undefined) {
                         if(u_name.length < 5 || u_name.length > 32) {
                           errors["u_name"] = "Keep usernames between 5~32 characters";
-                          allInputsCorrect = false;
+                          //allInputsCorrect = false;
                         }
                         if(u_name_empty) { //if username empty
                           errors["u_name"] = "Username Empty";
-                          allInputsCorrect = false;
+                          //allInputsCorrect = false;
                         }
                       }
                     }}
@@ -281,7 +293,7 @@ export default function Register(props) {
                       if(email !== undefined) {
                         if(email_empty) {
                           errors["u_email"] = "Email Empty";
-                          allInputsCorrect = false;
+                          //allInputsCorrect = false;
                         }
                       }
                     }}
@@ -308,12 +320,12 @@ export default function Register(props) {
                         if(pass.length < 5 || pass.length > 32) {
                           // console.log(pass + ' ', pass.length)
                           errors["u_password1"] = "Keep passwords between 5~32 characters";
-                          allInputsCorrect = false;
+                          //allInputsCorrect = false;
                           
                         }
                         if(pass_empty) {
                           errors["u_password1"] = "Password Empty";
-                          allInputsCorrect = false;
+                          //allInputsCorrect = false;
                           
                         }
                       }
@@ -342,12 +354,13 @@ export default function Register(props) {
                       if(pass2 !== undefined) {
                         if(pass2_empty) {
                           errors["u_password2"] = "Please Re-confirm Password";
-                          allInputsCorrect = false;
+                          //allInputsCorrect = false;
                         }
+                        console.log(pass, pass2);
                         //FIXME: Wonky string comparison, there may be better way to do this?
                         if(pass.normalize() !== pass2.normalize()) {
                           errors["u_password2"] = "Does not match the entered password";
-                          allInputsCorrect = false;
+                          //allInputsCorrect = false;
                         }
                       }
                     }}
