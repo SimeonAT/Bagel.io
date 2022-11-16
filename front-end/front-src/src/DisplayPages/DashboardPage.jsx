@@ -14,7 +14,17 @@
    - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
    - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
    - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
-  - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Default_parameters
+   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Default_parameters=
+   - https://developer.mozilla.org/en-US/docs/Web/API/Document/forms
+
+   - https://mui.com/system/spacing/#horizontal-centering
+   - https://mui.com/system/spacing/#transformation
+   - https://mui.com/system/spacing/
+   - https://mui.com/system/getting-started/the-sx-prop/#basic-example
+   - https://mui.com/system/getting-started/the-sx-prop/
+   - https://mui.com/material-ui/react-text-field/#form-props
+   - https://mui.com/material-ui/react-text-field/#basic-textfield
+   - https://mui.com/material-ui/react-text-field/
 
    - https://masteringjs.io/tutorials/fundamentals/parameters
    - https://stackabuse.com/get-http-post-body-in-express-js/
@@ -36,6 +46,8 @@
    - https://www.freecodecamp.org/news/how-to-clone-an-array-in-javascript-1d3183468f6a/
    - https://www.robinwieruch.de/react-event-handler/
    - https://reactjs.org/docs/handling-events.html
+   - https://reactjs.org/docs/refs-and-the-dom.html
+   - https://reactjs.org/docs/forms.html
 
    - https://styled-components.com/docs/api#primary
    - https://styled-components.com/
@@ -49,8 +61,22 @@
    - https://www.w3schools.com/css/css_margin.asp
    - https://www.w3schools.com/css/css_padding.asp
    - https://www.w3schools.com/css/css_boxmodel.as
+   - https://www.w3schools.com/CSSREF/css3_pr_opacity.php
+   - https://www.w3schools.com/cssref/pr_class_display.php
+   - https://www.w3schools.com/jsref/event_oninput.asp
+
+   - https://www.w3schools.com/html/html_forms.asp
+   - https://www.w3schools.com/jsref/event_onchange.asp
 
    - https://css-tricks.com/snippets/css/a-guide-to-flexbox/
+  
+   - https://mui.com/x/react-date-pickers/getting-started/
+   - https://mui.com/x/react-date-pickers/getting-started/#react-components
+
+   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#examples
+   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/Date#syntax
+   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/Date
+   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
 */
 import {useState} from "react";
 import {useRef} from 'react';
@@ -109,9 +135,14 @@ const ButtonSection = styled.div`
 `;
 
 const TaskDisplay = styled.div`
-  padding-top: 3%;
-  padding-left: 10%;
-  padding-right: 10%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding-top: 5%;
+  padding-bottom: 3%;
+  padding-left: 5%;
+  padding-right: 5%;
 `;
 
 const theme = createTheme( {
@@ -174,7 +205,7 @@ export default function Dashboard(props) {
 
 
   // NOTE: All fields must be present, or the back-end will give an error.
-  const updateTask = async function(taskId, startDate, endDate, tag, complete, checkedIn) {
+  const updateTask = async function(taskId, startDate, endDate, tag, complete, checkedIn, rerenderFlag) {
     console.log('updateTask() called: params. taskid: ' + taskId + ', startDate: ' + startDate + ', endDate: ' + endDate + ', tag: ' + tag + ', complete: ' + complete + ', checkedIn: ' + checkedIn );
     // Send new task data to server
     const httpResponse = await fetch(updateTaskURL, {
@@ -184,6 +215,13 @@ export default function Dashboard(props) {
       body: JSON.stringify({taskId: taskId, startDate: startDate, endDate: endDate, tag: tag, complete: complete, checkedIn: checkedIn})
     });
     console.log(httpResponse);
+
+    // This state change forces the DashboardPage to re-render
+    // with the new info sent from the back-end.
+    //
+    if (rerenderFlag === true) {
+      setTaskListToRender(undefined);
+    }
   }
 
   const getTaskDisplayList = function (tasksToDisplay, setTaskListToRender) {
@@ -192,29 +230,99 @@ export default function Dashboard(props) {
     });
     return uncheckedTasks.map((task) => {
       return (
-        <Box key={task.taskid} sx={{
+        <Box key={task.taskid}
+         sx={{
           width: 450,
           border: '2px dashed grey',
           margin: 'auto',
           mb: 2,
-          '&:hover': {
-            backgroundColor: 'blue',
-            opacity: [0.5, 0.5, 0.5],
-          },
-        }}>
+         }}>
           <TaskDisplay>
-            <div>
-              <b>Task Name:</b> {task.name}
-            </div>
-            <div>
-              <b>Category:</b> {task.tag}
-            </div>
-            <div>
-              <b>Start Time:</b> {new Date(task.startDate).toLocaleString()}
-            </div>
-            <div>
-              <b>End Time:</b> {new Date(task.endDate).toLocaleString()}
-            </div>
+            {/** 
+              Ask Team: Is it possible to adjust updateTask()
+                        so it can also change the task name in the back-end
+                        and database?
+            */}
+            <TextField
+              id='task-name'
+              label='Task Name'
+              name='Task Name'
+              variant='outlined'
+              defaultValue={task.name}
+              sx={{ mb: 3 }}
+            />
+            <TextField
+              id='category'
+              label='Category'
+              variant='outlined'
+              defaultValue={task.tag}
+              sx={{ mb: 3 }}
+              onChange = {(event) => {
+                task.tag = event.target.value;
+
+                updateTask(task.taskid, task.startDate,
+                  task.endDate, task.tag, task.complete,
+                  task.checkedIn, false);
+                return;
+              }}
+            />
+            {/**
+            <TextField
+              id='start-time'
+              label='Start Time'
+              variant='outlined'
+              defaultValue={new Date(task.startDate).toLocaleString()}
+              sx={{ mb: 3 }}
+              onChange = {(event) => {}}
+            />
+            */}
+            <Box sx={{ mb: 3 }}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}
+                sx={{ mb: 3 }}>
+                <DateTimePicker
+                  label="Start Time"
+                  value={new Date(task.startDate).toLocaleString()}
+                  onChange={(newDate) => {
+                    task.startDate = newDate;
+
+                    updateTask(task.taskid, task.startDate,
+                      task.endDate, task.tag, task.complete,
+                      task.checkedIn, true);
+                    return;
+                  }}
+                  renderInput={(params) => {
+                    return (<TextField {...params} />);
+                  }}
+                />
+              </LocalizationProvider>
+            </Box>
+
+            {/**
+              <TextField
+                id='end-time'
+                label='End Time'
+                variant='outlined'
+                defaultValue={new Date(task.endDate).toLocaleString()}
+                sx={{ mb: 3 }}
+              />
+            */}
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DateTimePicker
+                label="End Time"
+                value={new Date(task.endDate).toLocaleString()}
+                onChange={(newDate) => {
+                  task.endDate = newDate;
+
+                  updateTask(task.taskid, task.startDate,
+                    task.endDate, task.tag, task.complete,
+                    task.checkedIn, true);
+                  return;
+                }}
+                renderInput={(params) => {
+                  return (<TextField {...params} />);
+                }}
+              />
+            </LocalizationProvider>
             <UserInfo.Consumer>
               {({username, password, userInfo, setUserInfo}) => {
                 const buttonHandler = function ({complete}) {
@@ -237,19 +345,21 @@ export default function Dashboard(props) {
                 };
 
                 return (
-                  <ButtonSection>
-                    <CompleteButton onClick={() => {
-                      buttonHandler({complete: true});
-                    }}>
-                      Finished
-                    </CompleteButton>
-                    
-                    <CompleteButton onClick = {() => {
-                      buttonHandler({complete: false});
-                    }}>
-                      Incomplete
-                    </CompleteButton>
-                  </ButtonSection>
+                  <div>
+                    <ButtonSection>
+                      <CompleteButton onClick={() => {
+                        buttonHandler({ complete: true });
+                      }}>
+                        Finished
+                      </CompleteButton>
+
+                      <CompleteButton onClick={() => {
+                        buttonHandler({ complete: false });
+                      }}>
+                        Incomplete
+                      </CompleteButton>
+                    </ButtonSection>
+                  </div>
                 );
               }}
             </UserInfo.Consumer>
