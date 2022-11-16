@@ -22,7 +22,6 @@ const { user } = require("pg/lib/defaults");
 // <Returns> sends response with body: {loginAllowed: true} if register successful,
 // {loginAllowed: false} if unsuccessful
 exports.register = async (request, response) => {
-  //console.log("HELLO");
   try {
     // set response headers
     response.set("Access-Control-Allow-Origin", "*");
@@ -46,18 +45,24 @@ exports.register = async (request, response) => {
     if (alreadyInUse) {
       console.log("Register failed - Account already exists");
       let emailUsed = "";
+      let boolEmailUsed = false;
       let usernameUsed = "";
+      let boolUsernameUsed = false;
       //check if username already used
       if (checkUsername === registerReqBody.username) {
         usernameUsed = "This username has already been used.";
+        boolUsernameUsed = true;
       }
       //check if email already used
       if (checkEmail === registerReqBody.email) {
         emailUsed = "This email has already been used.";
+        boolEmailUsed = true;
       }
       response.send({
         loginAllowed: false,
+        boolEmailUsed: boolEmailUsed,
         emailUsed: emailUsed, //these two fields return error message of whether or not email/user has already been used.
+        boolUsernameUsed: boolUsernameUsed,
         usernameUsed: usernameUsed
       });
     } else {
