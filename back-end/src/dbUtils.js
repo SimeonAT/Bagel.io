@@ -16,7 +16,6 @@ exports.getMembers = async () => {
         values: [],
     };
     const {rows} = await pool.query(query);
-    // console.log(`rows: ${rows}`);
     return rows;
 };
 
@@ -31,7 +30,6 @@ exports.getMemberScheduledTasks = async (username) => {
         values: [username],
     };
     const {rows} = await pool.query(query);
-    // console.log(`rows: ${rows}`);
     return rows;
 };
 
@@ -43,7 +41,6 @@ exports.insertUser = async (username, email, password) => {
         values: [username, email, password],
     };
     const {rows} = await pool.query(query);
-    // console.log(`rows: ${rows}`);
     return rows;
 };
 
@@ -99,7 +96,6 @@ exports.updateTask = async (taskId, startDate, endDate, tag, complete, checkedin
         values: [startDate, endDate, complete, checkedin, taskId],
     }
     const scheduled = await pool.query(query);
-    console.log("dbUtils.js:102 "+scheduled.rows[0].presetid);
     update = `UPDATE taskpreset
               SET tasktag = $1
               WHERE presetid = $2`;
