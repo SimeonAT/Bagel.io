@@ -181,12 +181,8 @@ export const getTodayTasksFromList = function(fullTaskList) {
 
 export default function Dashboard(props) {
   /**
-   * NOTE: The userInfoProp object may be stale,
-   *       as the server may update the user information
-   *       after giving the front-end the "userInfoProp".
-   *
-   *       For the most up to date version of userInfo,
-   *       user the "userInfo" context.
+   * NOTE: The userInfoProp object may be stale, as the server may update the user information after giving the front-end the "userInfoProp".
+   * For the most up to date version of userInfo, user the "userInfo" context.
    */
   const userInfoProp = props.userInfo;
 
@@ -205,7 +201,6 @@ export default function Dashboard(props) {
 
   // NOTE: All fields must be present, or the back-end will give an error.
   const updateTask = async function(taskId, startDate, endDate, tag, complete, checkedIn, rerenderFlag) {
-    console.log('updateTask() called: params. taskid: ' + taskId + ', startDate: ' + startDate + ', endDate: ' + endDate + ', tag: ' + tag + ', complete: ' + complete + ', checkedIn: ' + checkedIn );
     // Send new task data to server
     const httpResponse = await fetch(updateTaskURL, {
       mode: "cors",
@@ -213,11 +208,8 @@ export default function Dashboard(props) {
       "Content-Type": "application/json",
       body: JSON.stringify({taskId: taskId, startDate: startDate, endDate: endDate, tag: tag, complete: complete, checkedIn: checkedIn})
     });
-    console.log(httpResponse);
 
-    // This state change forces the DashboardPage to re-render
-    // with the new info sent from the back-end.
-    //
+    // This state change forces the DashboardPage to re-render with the new info sent from the back-end.
     if (rerenderFlag === true) {
       setTaskListToRender(undefined);
     }
@@ -252,7 +244,6 @@ export default function Dashboard(props) {
             <UserInfo.Consumer>
               {({username, password, userInfo, setUserInfo}) => {
                 const buttonHandler = function ({complete}) {
-                  console.log('Before click. task.complete = ' + task.complete);
                   const taskToRemove = task;
                   taskToRemove.checkedIn = true;
                   taskToRemove.complete = complete;
@@ -266,7 +257,6 @@ export default function Dashboard(props) {
                   // setUserInfo(newUserInfo);
                   setTaskListToRender(undefined);
                   updateTask(task.taskid, task.startDate, task.endDate, task.tag, task.complete, task.checkedIn);
-                  console.log('Updated user info');
                   return;
                 };
 
@@ -304,7 +294,6 @@ export default function Dashboard(props) {
       taskList = getTodayTasksFromList(taskList);
     }
 
-    console.log(taskList);
     const totalsList = []
     for (let i = 0; i < taskList.length; i++){
       const needToAddTaskTime = (taskList[i].complete === true && taskList[i].checkedIn === true);
@@ -327,18 +316,10 @@ export default function Dashboard(props) {
         } else {
           //instantiate and add sum
           const taskTime = calculateTaskTime(taskList[i]);
-          console.log("new time to add");
-          console.log(taskTime);
-          console.log("adding to following")
-          console.log(totalsList);
           totalsList.push([category, taskTime]);
-          console.log("After new Push");
-          console.log(totalsList);
         }
       }
     }
-     console.log("returning below");
-    console.log(totalsList);
     return totalsList;
   }
 
@@ -376,11 +357,6 @@ export default function Dashboard(props) {
     }
     fetchTasks();
   }, []);
-
-  // React.useEffect(() => {
-  //   console.log("passing", todaysTasks);
-  // }, [todaysTasks]);
-
 
   const renderPage = (
     <ThemeProvider theme={theme}>
@@ -438,8 +414,6 @@ export default function Dashboard(props) {
 
                       <UserInfo.Consumer>
                         {({username, password, userInfo}) => {
-                          console.log('Updating Task List to Render');
-                          console.log('taskListToRender')
                           if (taskListToRender === undefined) {
                             setTaskListToRender(getTaskDisplayList(userInfo.tasks,
                               setTaskListToRender));

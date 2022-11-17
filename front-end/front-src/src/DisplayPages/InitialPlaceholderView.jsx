@@ -11,7 +11,6 @@ function InitialView() {
       method: "get",
       mode: "cors"
     });
-    console.log(http_response);
 
     let response_body = await http_response.text();
     set_server_response(response_body);

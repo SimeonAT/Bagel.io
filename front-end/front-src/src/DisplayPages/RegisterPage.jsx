@@ -85,35 +85,28 @@ export default function Register(props) {
     let pass = passwordOneState;
     let pass2 = passwordTwoState;
     
-    // console.log(u_name);
-    // console.log(email);
-    // console.log(pass);
     let allInputsCorrect = true; //FIXME: Might be a better way to do this???
     
     //Check if trying to Register without any submissions.
     if(u_name === undefined) {
-      //console.log("Username Empty");
       errors["u_name"] = "Username Empty"; //Set Error
       allInputsCorrect = false; //Make sure that it doesn't do a server call
       //setAllInputsCorrect(false);
       setUsernameState(""); //change from undefined to empty string so that error message displays.
     }
     if(email === undefined) {
-      //console.log("Email Empty");
       errors["u_email"] = "Email Empty";
       allInputsCorrect = false;
       //setAllInputsCorrect(false);
       setEmailState("");
     }
     if(pass === undefined) {
-      //console.log("Password Empty");
       errors["u_password1"] = "Password Empty";
       allInputsCorrect = false;
       //setAllInputsCorrect(false);
       setPasswordOneState("");
     }
     if(pass2 === undefined) {
-      //console.log("Please Re-confirm Password");
       errors["u_password2"] = "Please Re-confirm Password";
       allInputsCorrect = false;
       //setAllInputsCorrect(false);
@@ -122,7 +115,6 @@ export default function Register(props) {
 
     //Check all other errors.
     if(errors["u_name"].length !== 0 || errors.u_email.length !== 0 || errors["u_password1"].length !== 0 || errors["u_password2"].length !== 0) {
-      console.log("Error with one or more input fields, please fix according to error");
       allInputsCorrect = false;
     }
 
@@ -152,23 +144,18 @@ export default function Register(props) {
         //PRINT ERROR MESSAGE SENT FROM BACK END, needs double check?
         //Below two values are recieved from responseBody.loginAllowed === false
         //usernameUsed, emailUsed
-        console.log("Register failed");
         // below two lines worked before
         // errors["u_name"] = responseBody.usernameUsed;
         // errors["u_email"] = responseBody.emailUsed;
 
         // if(responseBody.usernameUsed.length === 0) { //send error message if username already in use
-        //   console.log("Username already in use");
         //   errors["u_name"] = responseBody.usernameUsed;
         // }
         // if(responseBody.emailUsed.length === 0) { //send error message if email already in use
-        //   console.log("Email already in use");
         //   errors["u_email"] = responseBody.emailUsed;
         // }
         
-        console.log("Responsebody on Failed Registration: ",responseBody);
         if(responseBody.boolEmailUsed) {
-          // console.log("HERERERE")
           // setErrorMessages({
           //   ...errors,
           //   'u_email': responseBody.emailUsed
@@ -192,7 +179,6 @@ export default function Register(props) {
   //Names must have correct corresponding value to "errors" in default func.
   //FIXME: Color and positioning, also some weird streching??? Front end pls fix.
   const renderErrorMessage = (name) =>
-    //console.log("Name: ", name)
     // name === "" && 
     (
       <div className="error">{errors[name]}</div>
@@ -318,7 +304,6 @@ export default function Register(props) {
                       errors["u_password1"] = "";
                       if(pass !== undefined) {
                         if(pass.length < 5 || pass.length > 32) {
-                          // console.log(pass + ' ', pass.length)
                           errors["u_password1"] = "Keep passwords between 5~32 characters";
                           //allInputsCorrect = false;
                           
@@ -329,7 +314,6 @@ export default function Register(props) {
                           
                         }
                       }
-                      //console.log(pass, event.target.value); //
                     }}
                     error = {(errors["u_password1"].length === 0 || passwordOneState === undefined) ? false : true}
                     helperText = {(passwordOneState !== undefined) ? errors["u_password1"] : ""}
@@ -356,7 +340,6 @@ export default function Register(props) {
                           errors["u_password2"] = "Please Re-confirm Password";
                           //allInputsCorrect = false;
                         }
-                        //console.log(pass, pass2);
                         //FIXME: Wonky string comparison, there may be better way to do this?
                         if(pass.normalize() !== pass2.normalize()) {
                           errors["u_password2"] = "Does not match the entered password";

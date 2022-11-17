@@ -47,11 +47,4 @@ server.post("/updateTask", tasks.updateTask);
 server.post("/fetchTags", tasks.fetchTags);
 server.post("/setuptesting", tasks.setuptesting);
 
-// FORTESTING
-server.get("/testdb", tasks.testDBGet);
-
-// server.listen(PORT, () => {
-//   console.log("Server is working");
-// });
-
 exports.server = server;
