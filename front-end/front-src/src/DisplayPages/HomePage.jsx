@@ -47,10 +47,10 @@ import UserInfo from '../UserContext';
 import {getTasksFromServer, getTodayTasksFromList} from './DashboardPage';
 import {validateDateFieldFormat} from '../frontendUtils';
 
+import axios from 'axios';
 
 const BackendURL = "http://localhost:8000";
 const scheduleTaskURL = BackendURL + "/scheduleTask";
-const fetchTagsURL = BackendURL + "/fetchTags";
 
 
 const theme = createTheme( {
@@ -163,23 +163,36 @@ export default function Home(props) {
       return;
     }
 
-    // Send task to backend for creation
-    const httpResponse = await fetch(scheduleTaskURL, {
-      mode: "cors",
-      method: "post",
-      "Content-Type": "application/json",
-      body: JSON.stringify({
-        username: userInfo.username,
-        taskName: taskNameRef.current.value,
-        startDate: taskStartISO,
-        endDate: taskEndISO,
-        tag: taskCategoryToRecord
-      })
+    // // Send task to backend for creation
+    // const httpResponse = await fetch(scheduleTaskURL, {
+    //   mode: "cors",
+    //   method: "post",
+    //   "Content-Type": "application/json",
+    //   body: JSON.stringify({
+    //     username: userInfo.username,
+    //     taskName: taskNameRef.current.value,
+    //     startDate: taskStartISO,
+    //     endDate: taskEndISO,
+    //     tag: taskCategoryToRecord
+    //   })
+    // });
+    // if (!httpResponse.ok) {
+    //   return;
+    // }
+    // let responseBody = await httpResponse.json();
+
+    //JSONFIX
+    const httpResponse = await axios.post('http://localhost:8000/scheduleTask', { 
+      username: userInfo.username,
+      taskName: taskNameRef.current.value,
+      startDate: taskStartISO,
+      endDate: taskEndISO,
+      tag: taskCategoryToRecord
     });
-    if (!httpResponse.ok) {
-      return;
-    }
-    let responseBody = await httpResponse.json();
+    const responseBody = httpResponse.data;
+    // console.log(`typeof(responseBody): ${typeof(responseBody)}`);
+    // console.log(`responseBody: ${JSON.stringify(responseBody)}`);
+
     // Update the front end's userInfo task list with the new task.
      const newUserInfo = userInfo;
      newUserInfo.tasks.push(responseBody);

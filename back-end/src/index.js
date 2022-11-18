@@ -27,17 +27,13 @@ const tasks = require("./tasks");
 const server = express();
 // const PORT = 8000;
 
-/* FIXME: bodyParser.text() can return JSON as text,
-          which the front-end can parse as JSON.
-
-          However, doing bodyParser.json() to parse the HTTP
-          Request's body will give an empty JSON object: "{}".
-
-          Any help to fix this would be greatly appreciated.
-
-          .json() works for testing the api endpoints
-*/
-server.use(bodyParser.text()); // FORTESTING
+// BELOW ADDED
+server.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "http://localhost:3000"); // update to match the domain you will make the request from
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+server.use(bodyParser.json());
 
 server.post("/register", tasks.register);
 server.post("/logindatabase", tasks.loginDatabase);

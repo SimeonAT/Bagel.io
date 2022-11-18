@@ -108,6 +108,7 @@ import UserInfo from '../UserContext';
 import styled from "styled-components";
 import Bagel from "./Bagel";
 
+import axios from 'axios';
 
 const MILLISECONDS_IN_SECOND = 1000;
 const SECONDS_IN_MINUTE = 60;
@@ -156,13 +157,12 @@ const theme = createTheme( {
   });
 
 export const getTasksFromServer = async function(username) {
-  const httpResponse = await fetch(GetTasks, {
-    mode: "cors",
-    method: "post",
-    "Content-Type": "application/json",
-    body: JSON.stringify({username: username})
+  //JSONFIX
+  const httpResponse = await axios.post('http://localhost:8000/getTasks', { 
+    username: username
   });
-  let responseBody = await httpResponse.json();
+  const responseBody = httpResponse.data;
+
   let taskList = responseBody.taskList;
   return taskList;
 }
@@ -225,12 +225,11 @@ export default function Dashboard(props) {
   // NOTE: All fields must be present, or the back-end will give an error.
   const updateTask = async function(taskId, startDate, endDate, tag, complete, checkedIn, rerenderFlag) {
     // Send new task data to server
-    const httpResponse = await fetch(updateTaskURL, {
-      mode: "cors",
-      method: "post",
-      "Content-Type": "application/json",
-      body: JSON.stringify({taskId: taskId, startDate: startDate, endDate: endDate, tag: tag, complete: complete, checkedIn: checkedIn})
+    //JSONFIX
+    const httpResponse = await axios.post('http://localhost:8000/updateTask', { 
+      taskId: taskId, startDate: startDate, endDate: endDate, tag: tag, complete: complete, checkedIn: checkedIn
     });
+    const responseBody = httpResponse.data;
 
     // This state change forces the DashboardPage to re-render with the new info sent from the back-end.
     if (rerenderFlag === true) {
