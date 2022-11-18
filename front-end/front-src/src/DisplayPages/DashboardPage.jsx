@@ -202,11 +202,13 @@ export default function Dashboard(props) {
     initialTaskList = userInfoProp.tasks;
   }
   const [taskDisplayList, setTaskDisplayList] = useState(initialTaskList);
+  const [renderTaskList, setRenderTaskList] = useState(true);
 
   React.useEffect(() => {
-    if (taskDisplayList !== undefined) {
+    if ((taskDisplayList !== undefined) && (renderTaskList === true)) {
       setTaskListToRender(getTaskDisplayList(taskDisplayList,
         setTaskListToRender));
+      setRenderTaskList(false);
     }
 
     return;
@@ -236,7 +238,7 @@ export default function Dashboard(props) {
 
 
   // NOTE: All fields must be present, or the back-end will give an error.
-  const updateTask = async function(taskId, startDate, endDate, tag, complete, checkedIn, rerenderFlag) {
+  const updateTask = async function(taskId, startDate, endDate, tag, complete, checkedIn) {
     // Send new task data to server
     const httpResponse = await fetch(updateTaskURL, {
       mode: "cors",
@@ -246,7 +248,7 @@ export default function Dashboard(props) {
     });
   }
 
-  const getTaskDisplayList = function (tasksToDisplay, setTaskListToRender) {
+  const getTaskDisplayList = function (tasksToDisplay) {
     const uncheckedTasks = tasksToDisplay.filter((task) => {
       return task.checkedIn === false;
     });
@@ -287,6 +289,7 @@ export default function Dashboard(props) {
 
                   // setUserInfo(newUserInfo);
                   setTaskDisplayList(newUserInfo.tasks);
+                  setRenderTaskList(true);
                   updateTask(task.taskid, task.startDate, task.endDate, task.tag, task.complete, task.checkedIn);
                   return;
                 };
