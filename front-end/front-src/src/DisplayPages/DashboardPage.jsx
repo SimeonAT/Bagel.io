@@ -244,11 +244,6 @@ export default function Dashboard(props) {
       "Content-Type": "application/json",
       body: JSON.stringify({taskId: taskId, startDate: startDate, endDate: endDate, tag: tag, complete: complete, checkedIn: checkedIn})
     });
-
-    // This state change forces the DashboardPage to re-render with the new info sent from the back-end.
-    if (rerenderFlag === true) {
-      setTaskListToRender(undefined);
-    }
   }
 
   const getTaskDisplayList = function (tasksToDisplay, setTaskListToRender) {
@@ -292,7 +287,6 @@ export default function Dashboard(props) {
 
                   // setUserInfo(newUserInfo);
                   setTaskDisplayList(newUserInfo.tasks);
-                  setTaskListToRender(undefined);
                   updateTask(task.taskid, task.startDate, task.endDate, task.tag, task.complete, task.checkedIn);
                   return;
                 };
@@ -438,17 +432,6 @@ export default function Dashboard(props) {
                       <Typography component="h1" variant="h5" sx={{ mb: 1 }}>
                         Check in your tasks!
                       </Typography>
-
-                      <UserInfo.Consumer>
-                        {({username, password, userInfo}) => {
-                          if (taskListToRender === undefined) {
-                            //setTaskListToRender(getTaskDisplayList(userInfo.tasks,
-                              //setTaskListToRender));
-                          }
-                          
-                          return (null);
-                        }}
-                      </UserInfo.Consumer>
                       {taskListToRender}
                     </Box>
                   </Grid>
