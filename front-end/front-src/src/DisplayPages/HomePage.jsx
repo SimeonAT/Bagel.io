@@ -66,27 +66,48 @@ const theme = createTheme( {
 
 export default function Home(props) {
   const userInfoProp = props.userInfo;
-
   const [dashboardView, openDashboard] = useState(false);
-  //let taskDisplayList = [];
-  //const [taskListToRender, updateList] = React.useState(undefined);
 
   const [tag, setTag] = React.useState('');
   const [overlapingTimeErrorMessage, setOverlapingTimeErrorMessage] = React.useState("");
   const [overlapingTimeSuggestion, setOverlapingTimeSuggestion] = React.useState("");
 
-  const [isTaskNameInvalid, setIsTaskNameInvalid] = useState(false);
-  const [isCategoryInvalid, setIsCategoryInvalid] = useState(false);
-  const [currentStartTimeError, setCurrentStartTimeError] = useState(null);
-  const [errorStartDate, setStartTimeErrorDate] = useState(false);
-  const [currentEndTimeError, setCurrentEndTimeError] = useState(null);
-  const [errorEndDate, setEndTimeErrorDate] = useState(false);
+  const [isTaskNameInvalid, setIsTaskNameInvalid] = React.useState(false);
+  const [isCategoryInvalid, setIsCategoryInvalid] = React.useState(false);
+  const [currentStartTimeError, setCurrentStartTimeError] = React.useState(null);
+  const [errorStartDate, setStartTimeErrorDate] = React.useState(false);
+  const [currentEndTimeError, setCurrentEndTimeError] = React.useState(null);
+  const [errorEndDate, setEndTimeErrorDate] = React.useState(false);
+
+  const [startDateWithNoInitialValue, setStartDateWithNoInitialValue] = React.useState(null);
+  const [endDateWithNoInitialValue, setEndDateWithNoInitialValue] = React.useState(null);
+
+  const [isStartDateOpen, setIsStartDateOpen] = React.useState(false);
+  const [anchorElStartDate, setAnchorElStartDate] = React.useState(null);
+  const [isEndDateOpen, setIsEndDateOpen] = React.useState(false);
+  const [anchorElEndDate, setAnchorElEndDate] = React.useState(null);
+
+  const taskNameRef = useRef('');
+  const taskStartRef = useRef('');
+  const taskEndRef = useRef('');
+  const categoryManualInputRef = useRef('');
+  const categoryDropdownInputRef = useRef('');
+  
+  const handleTagDropdownChange = (event) => {
+    setTag(event.target.value);
+  };
+
+  const handleStartDateAnchoring = (event) => {
+    setIsStartDateOpen((isOpen) => !isOpen);
+    setAnchorElStartDate(event.currentTarget);
+  }
+
+  const handleEndDateAnchoring = (event) => {
+    setIsEndDateOpen((isOpen) => !isOpen);
+    setAnchorElEndDate(event.currentTarget);
+  }
 
   const validateRequiredTaskFields = values => {
-    //taskNameRef.current.value
-    console.log(values);
-    console.log(values.taskName);
-    console.log(values.tag);
     // verify that task name is not blank
     if (values.taskName !== "") {
       setIsTaskNameInvalid(false);
@@ -120,65 +141,15 @@ export default function Home(props) {
 
   };
 
-  const handleTagDropdownChange = (event) => {
-    setTag(event.target.value);
-  };
-
-  const [startDateWithNoInitialValue, setStartDateWithNoInitialValue] =
-    React.useState(null);
-
-  const [endDateWithNoInitialValue, setEndDateWithNoInitialValue] =
-    React.useState(null);
-  
-  const taskNameRef = useRef('');
-  const taskStartRef = useRef('');
-  const taskEndRef = useRef('');
-  const categoryManualInputRef = useRef('');
-  const categoryDropdownInputRef = useRef('');
-
-  let dropDownCategoryOptions = [];
-
-  const setUpCategoriesForDropdown = async function() {
-    console.log(userInfoProp);
-
-    let username = undefined;
-    if (userInfoProp !== undefined) {
-      username = userInfoProp.username;
-    }
-
-    const httpResponse = await fetch(fetchTagsURL, {
-      mode: "cors",
-      method: "post",
-      "Content-Type": "application/json",
-      body: JSON.stringify({username: username})
-    });
-    let responseBody = await httpResponse.json();
-    let tagList = responseBody.tagList;
-    console.log('tagListL: ' + responseBody.tagList);
-
-    for (let i = 0; i < tagList.length; i++) {
-      dropDownCategoryOptions.push(<MenuItem value={tagList[i]}>{tagList[i]}</MenuItem>)
-    }
-  }
-
-  setUpCategoriesForDropdown();
-
   const createTask = async function(event, userInfo, setUserInfo) {
     event.preventDefault();
     const taskCategoryToRecord = categoryManualInputRef.current.value != '' ? categoryManualInputRef.current.value : categoryDropdownInputRef.current.value;
-    console.log('taskNameRef.current.value: ' + taskNameRef.current.value);
-    console.log('taskStartRef.current.value: ' + taskStartRef.current.value);
-    console.log('taskCategoryToRecord: ' + taskCategoryToRecord);
-    validateRequiredTaskFields({taskName: taskNameRef.current.value,
-                                startTime: taskStartRef.current.value,
-                                endTime: taskEndRef.current.value,
-                                tag: taskCategoryToRecord});
+    validateRequiredTaskFields({taskName: taskNameRef.current.value, startTime: taskStartRef.current.value,
+                                endTime: taskEndRef.current.value, tag: taskCategoryToRecord});
 
     // NOTE: must convert dates to ISO strings on front end to make this happend on the users local machine
     let taskStartISO = new Date(taskStartRef.current.value).toISOString();
     let taskEndISO = new Date(taskEndRef.current.value).toISOString();
-    console.log('taskEndISO:' + taskEndISO);
-    // FIXME: add check to make sure taskEndISO >= taskStartISO
 
     const isInvalidTask = await newTaskOverlapsExistingTask(taskStartISO, userInfo);
 
@@ -206,73 +177,13 @@ export default function Home(props) {
       })
     });
     if (!httpResponse.ok) {
-      console.log("Missing task info");
       return;
     }
     let responseBody = await httpResponse.json();
-    /**
-     * Update the front end's userInfo task list with the new task.
-     */
+    // Update the front end's userInfo task list with the new task.
      const newUserInfo = userInfo;
      newUserInfo.tasks.push(responseBody);
      setUserInfo(newUserInfo);
-
-    /**********************************************************************************************************************
-    // This was handling for old task list. We can remove it when we do clean up, or maybe move it to a different class.
-    // Seems a shame to just trash it. 
-    ***********************************************************************************************************************
-    const createTaskDisplayList = function (userInfoObject) {
-      const userInfo = userInfoObject.userInfo;
-      const tasksToDisplay = userInfo.tasks;
-    
-      for (let i = 0; i < tasksToDisplay.length; i++) {
-        const label = tasksToDisplay[i].name;
-        const complete = tasksToDisplay[i].complete;
-        const taskid = tasksToDisplay[i].taskid;
-        const checkedIn = tasksToDisplay[i].checkedIn;
-        taskDisplayList.push(
-          <FormControlLabel
-            sx={{ ml: 7, mr: 7 }}
-            control={complete ? <Checkbox defaultChecked /> : <Checkbox />}
-            label={label}
-            key={i}
-            taskid={taskid}
-            checkedin={checkedIn ? "true" : "false"}
-          />
-        );
-      }
-
-      return taskDisplayList;
-    };
-
-    /**
-     * React will not re-render the task list if we add a new task.
-     * We have to save the task list as a React state. Whenever
-     * we want to update the task list, we need to make a copy of the
-     * old task list, insert the new task, and set the task list state
-     * as the old task list + the new task.
-     /
-    const newList = [...taskListToRender];
-    // The new task will be at the end of the array.
-    const newTaskIndex = newList.length;
-    const newTaskLabel = taskNameRef.current.value;
-    const newTaskComplete = false;
-    const newTaskid = responseBody.taskid;
-    const newTaskCheckedIn = responseBody.checkedIn
-    newList.push(
-      <FormControlLabel 
-        sx={{ ml: 7, mr: 7 }}
-        control={newTaskComplete ? <Checkbox defaultChecked /> : <Checkbox />} 
-        label={newTaskLabel}
-        key={newTaskIndex}
-        taskid={newTaskid}
-        checkedin={newTaskCheckedIn ? "true" : "false"}
-      />
-    );
-    console.log(`newTask.taskid: ${JSON.stringify(responseBody.taskid)}`);
-    updateList(newList);
-    ***********************************************************************************************************************
-    **********************************************************************************************************************/
 
     resetFormValues(taskNameRef, categoryManualInputRef, categoryDropdownInputRef);
     setOverlapingTimeErrorMessage('');
@@ -315,12 +226,6 @@ export default function Home(props) {
   const navigateToDashboard = async function(event) {
     event.preventDefault();
     openDashboard(true);
-
-    // In the event the user adds new tasks,
-    // give <Main /> the new list of tasks,
-    // so it can be passed down to <Dashboard />
-    // through the use of Context.
-    //
     return;
   }
 
@@ -357,7 +262,7 @@ export default function Home(props) {
                 {(userInfo) => {
                   return (
                     <Typography component="h1" variant="h4" align="center" sx={{ mb: 10 }}>
-                      Welcome {userInfo.username}
+                      Welcome {userInfo.username}!
                     </Typography>
                   );
                 }}
@@ -429,6 +334,7 @@ export default function Home(props) {
                                 }
                               }}
                               renderInput={(params) => <TextField {...params}
+                                onClick={handleStartDateAnchoring}
                                 error={errorStartDate}
                                 helperText={currentStartTimeError ?? currentStartTimeError}
                                 inputRef={taskStartRef}
@@ -441,6 +347,13 @@ export default function Home(props) {
                               id="startDate"
                               value={startDateWithNoInitialValue}
                               onChange={(newValue) => setStartDateWithNoInitialValue(newValue)}
+                              clearable
+                              open={isStartDateOpen}
+                              onClose={() => setIsStartDateOpen(false)}
+                              PopperProps={{
+                                placement: "bottom-end",
+                                anchorEl: anchorElStartDate
+                              }}                            
                             />
 
                             <DateTimePicker
@@ -454,6 +367,7 @@ export default function Home(props) {
                                 }
                               }}
                               renderInput={(params) => <TextField {...params}
+                                onClick={handleEndDateAnchoring}
                                 inputRef={taskEndRef}
                                 error={errorEndDate}
                                 helperText={currentEndTimeError ?? currentEndTimeError}
@@ -466,6 +380,13 @@ export default function Home(props) {
                               id="endDate"
                               value={endDateWithNoInitialValue}
                               onChange={(newValue) => setEndDateWithNoInitialValue(newValue)}
+                              clearable
+                              open={isEndDateOpen}
+                              onClose={() => setIsEndDateOpen(false)}
+                              PopperProps={{
+                                placement: "bottom-end",
+                                anchorEl: anchorElEndDate
+                              }}  
                             />
                           </Stack>
 
@@ -480,7 +401,15 @@ export default function Home(props) {
                               label="Select a Category"
                               onChange={handleTagDropdownChange}
                             >
-                              {dropDownCategoryOptions}
+                              <MenuItem value='Work'>Work</MenuItem>
+                              <MenuItem value='Study'>Study</MenuItem>
+                              <MenuItem value='Exercise'>Exercise</MenuItem>
+                              <MenuItem value='Chores'>Chores</MenuItem>
+                              <MenuItem value='Socialization'>Socialization</MenuItem>
+                              <MenuItem value='Hobbies'>Hobbies</MenuItem>
+                              <MenuItem value='Rest'>Rest</MenuItem>
+                              <MenuItem value='Nourishment'>Nourishment</MenuItem>
+                              <MenuItem value='Relaxation'>Relaxation</MenuItem>
                             </Select>
                           </FormControl>
 
@@ -524,34 +453,6 @@ export default function Home(props) {
                   }}
                 </UserInfo.Consumer>
 
-{/* We have agreed to remove this from this page, just seems sad to just delete it. Maybe we move it to another class when we do some cleanup?  */}
-{/* This actually needs to be unwired properly. Just commenting it out crashes createTask()  */}
-
-                    {/* <Box label="see-task-list-column"
-                      sx={{
-                        width: 1,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                      }}
-                     >
-                      <Typography component="h1" variant="h5" sx={{ mb: 2 }}>
-                        Today's Tasks
-                      </Typography>
-
-                      <FormGroup sx={{ width:1 }}>
-                        <UserInfo.Consumer>
-                          {(userInfoObject) => {
-                            if (taskListToRender === undefined) {
-                              const tasksToDisplay = createTaskDisplayList(userInfoObject);
-                              updateList(tasksToDisplay);
-                            }
-                          }}
-                        </UserInfo.Consumer>
-                        {taskListToRender}
-                      </FormGroup>
-
-                    </Box> */}
                   </Grid>
                 </Grid>
 

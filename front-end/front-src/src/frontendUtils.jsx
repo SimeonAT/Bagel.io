@@ -4,9 +4,7 @@
 
 // Will need to comment properly later
 export const validateDateFieldFormat = values => {
-    console.log(values);
     const tokenizedDate = values.split(" ");
-    console.log(tokenizedDate);
     
     if (tokenizedDate.length !== 3) {
       return false;
@@ -29,7 +27,6 @@ export const validateDateFieldFormat = values => {
     }
 
     // validate the time part
-    console.log(tokenizedDate[1][2]);
     for (let i = 0; i < tokenizedDate[1].length; i++) {
       if (i === 2) {
         if (tokenizedDate[1][i] !== ':') {
@@ -104,7 +101,36 @@ export const validateDateFieldFormat = values => {
         checkedin={newTaskCheckedIn ? "true" : "false"}
       />
     );
-    console.log(`newTask.taskid: ${JSON.stringify(responseBody.taskid)}`);
     updateList(newList);
     ***********************************************************************************************************************
     **********************************************************************************************************************/
+
+
+{/* We have agreed to remove this from this page, just seems sad to just delete it. Maybe we move it to another class when we do some cleanup?  */}
+{/* This actually needs to be unwired properly. Just commenting it out crashes createTask()  */}
+
+                    {/* <Box label="see-task-list-column"
+                      sx={{
+                        width: 1,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                      }}
+                     >
+                      <Typography component="h1" variant="h5" sx={{ mb: 2 }}>
+                        Today's Tasks
+                      </Typography>
+
+                      <FormGroup sx={{ width:1 }}>
+                        <UserInfo.Consumer>
+                          {(userInfoObject) => {
+                            if (taskListToRender === undefined) {
+                              const tasksToDisplay = createTaskDisplayList(userInfoObject);
+                              updateList(tasksToDisplay);
+                            }
+                          }}
+                        </UserInfo.Consumer>
+                        {taskListToRender}
+                      </FormGroup>
+
+                    </Box> */}

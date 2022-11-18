@@ -43,7 +43,6 @@ exports.register = async (request, response) => {
     }
     // if username/email in db: send failure, else: insert and send success
     if (alreadyInUse) {
-      console.log("Register failed - Account already exists");
       let emailUsed = "";
       let boolEmailUsed = false;
       let usernameUsed = "";
@@ -67,7 +66,6 @@ exports.register = async (request, response) => {
       });
     } else {
       await dbUtils.insertUser(registerReqBody.username, registerReqBody.email, registerReqBody.password);
-      console.log("Register succeeded");
       response.send({
         loginAllowed: true,
         payload: {
@@ -80,7 +78,6 @@ exports.register = async (request, response) => {
     }
   }
   catch (error) {
-    console.log("Register failed");
     sendError.sendError(error, response);
   }
 }
@@ -91,15 +88,12 @@ exports.register = async (request, response) => {
 // <Returns> sends response with body: {loginAllowed: true, payload: {}} if match,
 // {loginAllowed: false} if no match
 exports.loginDatabase = async (request, response) => {
-  //console.log("Here?");
   try {
     response.set("Access-Control-Allow-Origin", "*");
     response.setHeader("Content-Type", "application/json");
     const loginReqBody = JSON.parse(request.body);
     // get users from db
     const users = await dbUtils.getMembers();
-    // console.log(`loginInfo: ${JSON.stringify(loginInfo)}`);
-    // console.log(`users: ${JSON.stringify(users)}`);
     // check if user in db
     let theUser = null;
     let userInDatabase = false;
@@ -110,17 +104,12 @@ exports.loginDatabase = async (request, response) => {
         break;
       }
     }
-    // console.log(`userInDatabase: ${userInDatabase}`);
     if (userInDatabase) {
       // get tasks from db
       let theUserTasks = await dbUtils.getMemberScheduledTasks(theUser.username);
-      // console.log(`theUser: ${JSON.stringify(theUser)}`);
-      // console.log(`theUserTasks: ${JSON.stringify(theUserTasks)}`);
       // make task array
       const taskArray = [];
       for (const task of theUserTasks) {
-        // console.log(`(loginDatabase)taskid: ${task.scheduledid}`);
-        // console.log(`task: ${JSON.stringify(task)}`);
         taskArray.push({
           "name": task.taskname,
           "startDate": task.starttime,
@@ -131,7 +120,6 @@ exports.loginDatabase = async (request, response) => {
           "taskid": task.scheduledid,
         })
       }
-      // console.log(`taskArray: ${JSON.stringify(taskArray)}`);
       // send response with user info in body
       response.send({
         loginAllowed: true,
@@ -146,7 +134,6 @@ exports.loginDatabase = async (request, response) => {
       response.send({loginAllowed: false});
     }
   } catch (error) {
-    console.log("Login unsuccessful");
     sendError.sendError(error, response);
   }
 }
@@ -200,14 +187,11 @@ exports.scheduletask = async (request, response) => {
     // Also check objects.js to see how to format Task() objects.
     const schedReqBody = JSON.parse(request.body);
     if (!schedReqBody || !schedReqBody.username || !schedReqBody.taskName || !schedReqBody.startDate || !schedReqBody.endDate || !schedReqBody.tag) {
-      console.log("No request body or request body missing fields.");
       response.status(500).send();
     } else {
       let presetid = uuidv4();
       let scheduledid = uuidv4();
-      // console.log(payload.startDate);
       let result = await dbUtils.insertTask(schedReqBody.username, schedReqBody.taskName, schedReqBody.startDate, schedReqBody.endDate, schedReqBody.tag, presetid, scheduledid);
-      // console.log(JSON.stringify(result));
       response.status(200).send({taskid: result[1].scheduledid, complete: result[1].complete, checkedIn: result[1].checkedin, endDate: result[1].endtime, name: result[0].taskname, startDate: result[1].starttime, username: result[0].username, tag: result[0].tasktag});
     }
   }
@@ -268,8 +252,6 @@ exports.setuptesting = async (request, response) => {
   try {
     response.set("Access-Control-Allow-Origin", "*");
     response.setHeader("Content-Type", "application/json");
-    console.log(`typeof(request.body): ${typeof(request.body)}`);
-    console.log(`JSON.stringify(request.body): ${JSON.stringify(request.body)}`);
     response.status(201).send({hi2: 'hello2'});
   }
   catch (error) {
