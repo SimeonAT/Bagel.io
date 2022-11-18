@@ -196,7 +196,12 @@ export default function Dashboard(props) {
   const [homeView, openHome] = useState(false);
 
   const [taskListToRender, setTaskListToRender] = useState(undefined);
-  const [taskDisplayList, setTaskDisplayList] = useState(userInfoProp.tasks);
+
+  let initialTaskList = undefined;
+  if (userInfoProp !== undefined) {
+    initialTaskList = userInfoProp.tasks;
+  }
+  const [taskDisplayList, setTaskDisplayList] = useState(initialTaskList);
 
   React.useEffect(() => {
     if (taskDisplayList !== undefined) {
