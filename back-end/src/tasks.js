@@ -11,28 +11,16 @@ const dbUtils = require("./dbUtils");
 const { v4: uuidv4 } = require('uuid');
 const { user } = require("pg/lib/defaults");
 
-// //CHECK OBJECTS.JS FOR MOCKDATABASE + TASK OBJ IMPLEMENTATION.
-// const objects = require("./objects");
-// let Task = objects.Task;
-// let mockDatabase = new objects.mockDatabase();
-// let temp_user_obj = new objects.user("user1", "pass1", "");
-// temp_user_obj = mockDatabase.registerUser(temp_user_obj);
-// temp_user_obj.addTask(new Task("test", 0, new Date(), "Work", true));
-// exports.mockDatabase = mockDatabase;
+// //CHECK OBJECTS.JS FOR TASK OBJ IMPLEMENTATION.
 
-// register new user
-// <Inputs> request body: {username:"", email:"", password:""}
-// <Functionality> compares given username & email with the usernames & emails in db
-// if no duplicates, adds given username, email, password to database
-// <Returns> sends response with body: {loginAllowed: true} if register successful,
-// {loginAllowed: false} if unsuccessful
 exports.register = async (request, response) => {
   try {
     // set response headers
     response.set("Access-Control-Allow-Origin", "*");
     response.setHeader("Content-Type", "application/json");
     // get username/email/password from request body
-    const registerReqBody = JSON.parse(request.body);    
+    const registerReqBody = request.body;
+    console.log('json.stringify(registerReqBody)'+console.log(JSON.stringify(registerReqBody)));
     // check if username/email in db
     const users = await dbUtils.getMembers();
     let alreadyInUse = false;
@@ -94,9 +82,12 @@ exports.register = async (request, response) => {
 // {loginAllowed: false} if no match
 exports.loginDatabase = async (request, response) => {
   try {
+    // console.log(`request.body: ${request.body}`);
+    // console.log(`typeof(request.body): ${typeof(request.body)}`);
+
     response.set("Access-Control-Allow-Origin", "*");
     response.setHeader("Content-Type", "application/json");
-    const loginReqBody = JSON.parse(request.body);
+    const loginReqBody = request.body;
     // get users from db
     const users = await dbUtils.getMembers();
     // check if user in db
@@ -152,7 +143,7 @@ exports.getTasks = async (request, response) => {
     response.set("Access-Control-Allow-Origin", "*");
     response.setHeader("Content-Type", "application/json");
 
-    const getReqBody = JSON.parse(request.body);
+    const getReqBody = request.body;
     let theUserTasks = await dbUtils.getMemberScheduledTasks(getReqBody.username);
     const taskArray = [];
     if (!theUserTasks) {
@@ -190,7 +181,7 @@ exports.scheduletask = async (request, response) => {
     
     // check createtask() in HomePage.js, it's formatted like below.
     // Also check objects.js to see how to format Task() objects.
-    const schedReqBody = JSON.parse(request.body);
+    const schedReqBody = request.body;
     if (!schedReqBody || !schedReqBody.username || !schedReqBody.taskName || !schedReqBody.startDate || !schedReqBody.endDate || !schedReqBody.tag) {
       response.status(500).send();
     } else {
@@ -213,7 +204,7 @@ exports.updateTask = async (request, response) => {
   try {
     response.set("Access-Control-Allow-Origin", "*");
     response.setHeader("Content-Type", "application/json");
-    const updateTaskReqBody = JSON.parse(request.body);
+    const updateTaskReqBody = request.body;
     dbUtils.updateTask(updateTaskReqBody.taskId, updateTaskReqBody.startDate, updateTaskReqBody.endDate, 
       updateTaskReqBody.tag, updateTaskReqBody.complete, updateTaskReqBody.checkedIn);
     response.send({success: true});
@@ -233,7 +224,7 @@ exports.fetchTags = async (request, response) => {
     response.set("Access-Control-Allow-Origin", "*");
     response.setHeader("Content-Type", "application/json");
 
-    const fetchTagsReqBody = JSON.parse(request.body);
+    const fetchTagsReqBody = request.body;
     // const fetchTagsReqBody = request.body; //FORTESTING
 
     let userTags = await dbUtils.getUserTags(fetchTagsReqBody.username);

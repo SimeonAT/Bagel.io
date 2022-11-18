@@ -33,6 +33,8 @@ import {Navigate} from "react-router-dom"
 
 import UserInfo from '../UserContext';
 
+import axios from 'axios';
+
 const BackendURL = "http://localhost:8000";
 const LoginURL = BackendURL + "/logindatabase";
 const RegisterURL = BackendURL + "/register";
@@ -125,15 +127,14 @@ export default function Register(props) {
     //Vice-versa if email is found first, and not username.
     if(allInputsCorrect) { //if all inputs have been formatted correctly.
       //Set username and password to the backend server
-      const httpResponse = await fetch(RegisterURL, {
-        mode: "cors",
-        method: "post",
-        "Content-Type": "application/json",
-        body: JSON.stringify({username: u_name, password: pass, email: email, password: pass})
+      //JSONFIX
+      const httpResponse = await axios.post('http://localhost:8000/register', { 
+	      username: u_name, password: pass, email: email, password: pass
       });
+      const responseBody = httpResponse.data;
+      // console.log(`typeof(responseBody): ${typeof(responseBody)}`);
+      // console.log(`responseBody: ${JSON.stringify(responseBody)}`);
 
-      const responseBody = await httpResponse.json();
-      
       if (responseBody.loginAllowed === true) {
         setIsSubmitted(true);
 

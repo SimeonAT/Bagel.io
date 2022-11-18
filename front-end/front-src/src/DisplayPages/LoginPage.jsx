@@ -40,6 +40,8 @@ import { Navigate } from "react-router-dom";
 
 import UserInfo from '../UserContext';
 
+import axios from 'axios';
+
 const BackendURL = "http://localhost:8000";
 const LoginURL = BackendURL + "/logindatabase";
 const RegisterURL = BackendURL + "/register";
@@ -69,15 +71,24 @@ export default function SignIn(props) {
     event.preventDefault();
     let { userName, pass } = document.forms[0];
 
-    // Set username and password to the backend server
-    const httpResponse = await fetch(LoginURL, {
-      mode: "cors",
-      method: "post",
-      "Content-Type": "application/json",
-      body: JSON.stringify({ username: userName.value, password: pass.value })
-    });
+    //-----
+    // // Set username and password to the backend server
+    // const httpResponse = await fetch(LoginURL, {
+    //   mode: "cors",
+    //   method: "post",
+    //   "Content-Type": "application/json",
+    //   body: JSON.stringify({ username: userName.value, password: pass.value })
+    // });
 
-    const responseBody = await httpResponse.json();
+    // const responseBody = await httpResponse.json();
+    //-----
+    //JSONFIX
+    const httpResponse = await axios.post('http://localhost:8000/logindatabase', { 
+	    username: userName.value, password: pass.value
+    });
+    const responseBody = httpResponse.data;
+    // console.log(`typeof(responseBody): ${typeof(responseBody)}`);
+    // console.log(`responseBody: ${JSON.stringify(responseBody)}`);
 
     if (responseBody.loginAllowed === true) {
       setLoginAllowed(true);
