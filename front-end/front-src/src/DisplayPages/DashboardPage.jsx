@@ -244,15 +244,7 @@ export default function Dashboard(props) {
     const httpResponse = await axios.post('http://localhost:8000/updateTask', { 
       taskId: taskId, startDate: startDate, endDate: endDate, tag: tag, complete: complete, checkedIn: checkedIn
     });
-<<<<<<< HEAD
-=======
     const responseBody = httpResponse.data;
-
-    // This state change forces the DashboardPage to re-render with the new info sent from the back-end.
-    if (rerenderFlag === true) {
-      setTaskListToRender(undefined);
-    }
->>>>>>> main
   }
 
   const getTaskDisplayList = function (tasksToDisplay) {
