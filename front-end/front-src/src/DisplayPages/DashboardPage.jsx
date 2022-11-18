@@ -194,10 +194,18 @@ export default function Dashboard(props) {
   }
 
   const [homeView, openHome] = useState(false);
-  let tasksToDisplay = undefined;
-  let taskDisplayList = [];
 
   const [taskListToRender, setTaskListToRender] = useState(undefined);
+  const [taskDisplayList, setTaskDisplayList] = useState(userInfoProp.tasks);
+
+  React.useEffect(() => {
+    if (taskDisplayList !== undefined) {
+      setTaskListToRender(getTaskDisplayList(taskDisplayList,
+        setTaskListToRender));
+    }
+
+    return;
+  });
 
   //getting elements of the time task list (waiting on await so that an empty promise is not sent))
   const [todaysTasks, setTodaysTask] = useState([]);
@@ -278,6 +286,7 @@ export default function Dashboard(props) {
                   });
 
                   // setUserInfo(newUserInfo);
+                  setTaskDisplayList(newUserInfo.tasks);
                   setTaskListToRender(undefined);
                   updateTask(task.taskid, task.startDate, task.endDate, task.tag, task.complete, task.checkedIn);
                   return;
@@ -428,8 +437,8 @@ export default function Dashboard(props) {
                       <UserInfo.Consumer>
                         {({username, password, userInfo}) => {
                           if (taskListToRender === undefined) {
-                            setTaskListToRender(getTaskDisplayList(userInfo.tasks,
-                              setTaskListToRender));
+                            //setTaskListToRender(getTaskDisplayList(userInfo.tasks,
+                              //setTaskListToRender));
                           }
                           
                           return (null);
