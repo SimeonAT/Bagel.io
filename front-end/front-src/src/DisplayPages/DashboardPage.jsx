@@ -177,6 +177,7 @@ export const getTodayTasksFromList = function(fullTaskList) {
       todayTaskList.push(fullTaskList[i]);
     }
   }
+
   return todayTaskList;
 }
 
@@ -191,6 +192,7 @@ export default function Dashboard(props) {
    */
   const userInfoProp = props.userInfo;
 
+
   let username = undefined;
   if (userInfoProp !== undefined) {
     username = userInfoProp.username;
@@ -201,7 +203,28 @@ export default function Dashboard(props) {
   let taskDisplayList = [];
 
   const [taskListToRender, setTaskListToRender] = useState(undefined);
-  
+
+  //getting elements of the time task list (waiting on await so that an empty promise is not sent))
+  const [todaysTasks, setTodaysTask] = useState([]);
+  React.useEffect(() => {
+    const fetchTasks = async () => {
+      const taskList = await getTasksFromServer(username)
+      const tasks = await calculateTotalCompletedByCategory(true);
+      setTodaysTask(tasks);
+      
+    }
+    fetchTasks();
+  }, [taskListToRender]);
+  const [overallTasks, setOverallTask] = useState([]);
+  React.useEffect(() => {
+    const fetchTasks = async () => {
+
+      const tasks = await calculateTotalCompletedByCategory(false);
+      setOverallTask(tasks);
+    }
+    fetchTasks();
+  }, [taskListToRender]);
+
 
 
   // NOTE: All fields must be present, or the back-end will give an error.
@@ -215,6 +238,7 @@ export default function Dashboard(props) {
       body: JSON.stringify({taskId: taskId, startDate: startDate, endDate: endDate, tag: tag, complete: complete, checkedIn: checkedIn})
     });
     console.log(httpResponse);
+    
 
     // This state change forces the DashboardPage to re-render
     // with the new info sent from the back-end.
@@ -341,6 +365,8 @@ export default function Dashboard(props) {
                   setTaskListToRender(undefined);
                   updateTask(task.taskid, task.startDate, task.endDate, task.tag, task.complete, task.checkedIn);
                   console.log('Updated user info');
+                  
+
                   return;
                 };
 
@@ -441,21 +467,6 @@ export default function Dashboard(props) {
     return;
   }
 
-  //getting elements of the time task list (waiting on await so that an empty promise is not sent))
-  const [todaysTasks, setTodaysTask] = useState([]);
-  React.useEffect(() => {
-    const fetchTasks = async () => {
-      const tasks = await calculateTotalCompletedByCategory(true);
-      setTodaysTask(tasks);
-    }
-    fetchTasks();
-  }, []);
-
-  // React.useEffect(() => {
-  //   console.log("passing", todaysTasks);
-  // }, [todaysTasks]);
-
-
   const renderPage = (
     <ThemeProvider theme={theme}>
 
@@ -497,7 +508,7 @@ export default function Dashboard(props) {
                 </UserInfo.Consumer>
 
                 <Grid container spacing={2} >
-                  <Grid item xs={6}>
+                  <Grid item xs={4}>
                     <Box
                       sx={{
                         marginTop: 8,
@@ -526,7 +537,7 @@ export default function Dashboard(props) {
                     </Box>
                   </Grid>
 
-                  <Grid item xs={6}>
+                  <Grid item xs={8}>
                     <Box
                       sx={{
                         marginTop: 8,
@@ -541,6 +552,12 @@ export default function Dashboard(props) {
                       </Typography>
                       <Bagel
                       todayTask = {todaysTasks}
+                      title = {"Hours Spent on Tasks Today"}
+                       />
+                       <Bagel
+                      todayTask = {overallTasks}
+                      title = {"Hours Spent on Tasks Overall"}
+
                        />
                     </Box>
                   </Grid>
