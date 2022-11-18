@@ -1,3 +1,8 @@
+/**
+ * --- SOURCES UTILIZED ---
+ * - https://stackoverflow.com/questions/4746672/put-current-changes-in-a-new-git-branch
+ * - https://stackoverflow.com/questions/1394797/move-existing-uncommitted-work-to-a-new-branch-in-git
+ */
 // NOTE: modify this file, creating/editing functions and adding comments with calls to the database function you would like me to implement later in dbUtils.js.
 // Then use the mock database to test it for the time being
 

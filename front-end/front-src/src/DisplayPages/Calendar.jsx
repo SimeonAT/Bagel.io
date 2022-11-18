@@ -46,7 +46,7 @@ function Calendar(props) {
         title: calendarTasks[i].name,
         startDate: calendarTasks[i].startDate,
         endDate: calendarTasks[i].endDate, 
-        id: {i}
+        id: calendarTasks[i].taskid
       });
     }
   }
