@@ -1,8 +1,187 @@
-// We should have a utils file for the front end, so we don't clog the display pages 
+import { MenuItem } from '@mui/material';
+import axios from 'axios';
+// Utils file for the front end, so we don't clog the display pages 
 
+const MILLISECONDS_IN_SECOND = 1000;
+const SECONDS_IN_MINUTE = 60;
+const MILLISECONDS_IN_MINUTE = MILLISECONDS_IN_SECOND*SECONDS_IN_MINUTE;
 
+/**
+ * Calculates totals per category
+ *
+ * @param calculatingOnlyToday : boolean flag to indicate if we only want today's tasks or whole month
+ * @return totalsList : 2d array in the form : [ [tagName, tagTime] , [tagName2, tag2Time] ]
+ */
+export const calculateTotalCompletedByCategory = async function(username, calculatingOnlyToday) {
+  let taskList = await getTasksFromServer(username);
 
-// Will need to comment properly later
+  if (calculatingOnlyToday) {
+    //fliter for only today's tasks
+    taskList = getTodayTasksFromList(taskList);
+  } else {
+    //fliter for only this months's tasks
+    taskList = getThisMonthTasksFromList(taskList);
+  }
+
+  const totalsList = []
+  for (let i = 0; i < taskList.length; i++){
+    const needToAddTaskTime = (taskList[i].complete === true && taskList[i].checkedIn === true);
+
+    if (needToAddTaskTime) {
+      const category = taskList[i].tag;
+      const categoryAlreadyPresent = isCategoryInTotalList(totalsList, category);
+      if (categoryAlreadyPresent) {
+        //add sum
+        const taskTime = calculateTaskTime(taskList[i]);
+        let tagIndex = 0;
+        for (let j = 0; j < totalsList.length; j++) {
+          if (totalsList[j][0] === category) {
+            tagIndex = j;
+          }
+        }
+        const oldTotal = totalsList[tagIndex][1];
+        const newTotal = oldTotal + taskTime;
+        totalsList[tagIndex][1] = newTotal;
+      } else {
+        //instantiate and add sum
+        const taskTime = calculateTaskTime(taskList[i]);
+        totalsList.push([category, taskTime]);
+      }
+    }
+  }
+  return totalsList;
+}
+
+/**
+ * Checks to see if the category is already in the 2d array
+ *
+ * @param totalsList : the 2d array with totals
+ * @param tag : the category we are looking for in the array
+ * @return boolean : true if found, false otherwise
+ */
+const isCategoryInTotalList = function(totalsList, tag){
+  if(totalsList.length === 0) {
+    return false;
+  }
+  for (let i = 0; i < totalsList.length; i++){
+    if (totalsList[i][0] === tag) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * Calculates how long this task took
+ *
+ * @param task : task object from which to extract start and end dates
+ * @return taskLengthInHours : length of task in hours as an integer
+ */
+const calculateTaskTime = function(task){
+  const startTime = new Date(task.startDate);
+  const endTime = new Date(task.endDate);
+  const taskLengthInHours = (endTime.getTime() - startTime.getTime()) / MILLISECONDS_IN_MINUTE;
+  return taskLengthInHours;
+}
+
+/**
+ * Fetches task list from server
+ *
+ * @param username : username of current user 
+ * @return taskList : list of all tasks for current user
+ */
+ export const getTasksFromServer = async function(username) {
+  //JSONFIX
+  const httpResponse = await axios.post('http://localhost:8000/getTasks', { 
+    username: username
+  });
+  const responseBody = httpResponse.data;
+
+  let taskList = responseBody.taskList;
+  return taskList;
+}
+
+/**
+ * Filters task list for only today's tasks
+ *
+ * @param fullTaskList : list of all tasks for current user
+ * @return todayTaskList : list of all tasks only for today for current user
+ */
+export const getTodayTasksFromList = function(fullTaskList) {
+  const now = new Date();
+  const todayTaskList = [];
+  for (let i = 0; i < fullTaskList.length; i++){
+    const taskDate = new Date(fullTaskList[i].startDate);
+    if (now.getDay() === taskDate.getDay()) { 
+      todayTaskList.push(fullTaskList[i]);
+    }
+  }
+
+  return todayTaskList;
+}
+
+/**
+ * Filters task list for only this month's tasks
+ *
+ * @param fullTaskList : list of all tasks for current user
+ * @return thisMonthTaskList : list of all tasks only for this month for current user
+ */
+ export const getThisMonthTasksFromList = function(fullTaskList) {
+  const now = new Date();
+  const thisMonthTaskList = [];
+  for (let i = 0; i < fullTaskList.length; i++){
+    const taskDate = new Date(fullTaskList[i].startDate);
+    if (now.getMonth() === taskDate.getMonth()) { 
+      thisMonthTaskList.push(fullTaskList[i]);
+    }
+  }
+
+  return thisMonthTaskList;
+}
+
+/**
+ * Calculates to see if tasks overlap
+ *
+ * @param taskStartISO : start date of new task
+ * @param userInfo : info of current user, used to call server functions
+ * @return boolean : true if overlapping, false otherwise
+ */
+export const newTaskOverlapsExistingTask = async function(taskStartISO, userInfo) {
+  const currentTaskStartTime = new Date(taskStartISO).getTime();
+  const existingTaskList = await getTasksFromServer(userInfo.username);
+  const existingTodayTasks = getTodayTasksFromList(existingTaskList);
+  for (let i = 0; i < existingTodayTasks.length; i++){
+    const existingTaskStartTime = new Date(existingTodayTasks[i].startDate).getTime();
+    const existingTaskEndTime = new Date(existingTodayTasks[i].endDate).getTime();
+    if (startTimeOverlapsExisting(currentTaskStartTime, existingTaskStartTime, existingTaskEndTime)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * Actual time check part of newTaskOverlapsExistingTask()
+ *
+ * @param currentTaskStartTime : new task start time
+ * @param existingTaskStartTime : old task start time
+ * @param existingTaskEndTime : old task end time
+ * @return boolean : true if overlapping, false otherwise
+ */
+const startTimeOverlapsExisting = function(currentTaskStartTime, existingTaskStartTime, existingTaskEndTime){
+  if (currentTaskStartTime >= existingTaskStartTime && currentTaskStartTime <= existingTaskEndTime) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+/**
+ * Error checking for date field to make sure format is valid
+ *
+ * @param values : input from the field under test
+ * @return boolean : true if valid, false otherwise
+ */
 export const validateDateFieldFormat = values => {
     const tokenizedDate = values.split(" ");
     
@@ -48,89 +227,32 @@ export const validateDateFieldFormat = values => {
   }
 
 
+/**
+ * Deprecated function for setting up dynamic list of categories for drop down
+ *
+ * @param userInfoProp : user info to call server for proper user
+ * @param fetchTagsURL : server end point
+ * @return dropDownCategoryOptions : custome array of MenuItem elements for UI
+ */
+export const setUpCategoriesForDropdown = async function(userInfoProp, fetchTagsURL) {
+  let dropDownCategoryOptions = [];
+  let username = undefined;
+  if (userInfoProp !== undefined) {
+    username = userInfoProp.username;
+  }
 
-      /**********************************************************************************************************************
-    // This was handling for old task list. We can remove it when we do clean up, or maybe move it to a different class.
-    // Seems a shame to just trash it. 
-    ***********************************************************************************************************************
-    const createTaskDisplayList = function (userInfoObject) {
-      const userInfo = userInfoObject.userInfo;
-      const tasksToDisplay = userInfo.tasks;
-    
-      for (let i = 0; i < tasksToDisplay.length; i++) {
-        const label = tasksToDisplay[i].name;
-        const complete = tasksToDisplay[i].complete;
-        const taskid = tasksToDisplay[i].taskid;
-        const checkedIn = tasksToDisplay[i].checkedIn;
-        taskDisplayList.push(
-          <FormControlLabel
-            sx={{ ml: 7, mr: 7 }}
-            control={complete ? <Checkbox defaultChecked /> : <Checkbox />}
-            label={label}
-            key={i}
-            taskid={taskid}
-            checkedin={checkedIn ? "true" : "false"}
-          />
-        );
-      }
+  const httpResponse = await fetch(fetchTagsURL, {
+    mode: "cors",
+    method: "post",
+    "Content-Type": "application/json",
+    body: JSON.stringify({username: username})
+  });
+  let responseBody = await httpResponse.json();
+  let tagList = responseBody.tagList;
 
-      return taskDisplayList;
-    };
+  for (let i = 0; i < tagList.length; i++) {
+    dropDownCategoryOptions.push(<MenuItem value={tagList[i]}>{tagList[i]}</MenuItem>)
+  }
+  return dropDownCategoryOptions;
+}
 
-    /**
-     * React will not re-render the task list if we add a new task.
-     * We have to save the task list as a React state. Whenever
-     * we want to update the task list, we need to make a copy of the
-     * old task list, insert the new task, and set the task list state
-     * as the old task list + the new task.
-     /
-    const newList = [...taskListToRender];
-    // The new task will be at the end of the array.
-    const newTaskIndex = newList.length;
-    const newTaskLabel = taskNameRef.current.value;
-    const newTaskComplete = false;
-    const newTaskid = responseBody.taskid;
-    const newTaskCheckedIn = responseBody.checkedIn
-    newList.push(
-      <FormControlLabel 
-        sx={{ ml: 7, mr: 7 }}
-        control={newTaskComplete ? <Checkbox defaultChecked /> : <Checkbox />} 
-        label={newTaskLabel}
-        key={newTaskIndex}
-        taskid={newTaskid}
-        checkedin={newTaskCheckedIn ? "true" : "false"}
-      />
-    );
-    updateList(newList);
-    ***********************************************************************************************************************
-    **********************************************************************************************************************/
-
-
-{/* We have agreed to remove this from this page, just seems sad to just delete it. Maybe we move it to another class when we do some cleanup?  */}
-{/* This actually needs to be unwired properly. Just commenting it out crashes createTask()  */}
-
-                    {/* <Box label="see-task-list-column"
-                      sx={{
-                        width: 1,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                      }}
-                     >
-                      <Typography component="h1" variant="h5" sx={{ mb: 2 }}>
-                        Today's Tasks
-                      </Typography>
-
-                      <FormGroup sx={{ width:1 }}>
-                        <UserInfo.Consumer>
-                          {(userInfoObject) => {
-                            if (taskListToRender === undefined) {
-                              const tasksToDisplay = createTaskDisplayList(userInfoObject);
-                              updateList(tasksToDisplay);
-                            }
-                          }}
-                        </UserInfo.Consumer>
-                        {taskListToRender}
-                      </FormGroup>
-
-                    </Box> */}

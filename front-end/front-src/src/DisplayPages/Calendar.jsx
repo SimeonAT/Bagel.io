@@ -1,21 +1,9 @@
-// sources user:
-// https://devexpress.github.io/devextreme-reactive/react/scheduler/docs/guides/getting-started/
 import * as React from 'react';
 import Paper from '@mui/material/Paper';
 import { ViewState } from '@devexpress/dx-react-scheduler';
-import {
-  Scheduler,
-  DayView,
-  Appointments,
-  Toolbar,
-  DateNavigator,
-  TodayButton
-} from '@devexpress/dx-react-scheduler-material-ui';
-const BackendURL = "http://localhost:8000";
-
+import { Scheduler, DayView, Appointments, Toolbar, DateNavigator, TodayButton } from '@devexpress/dx-react-scheduler-material-ui';
 
 const currentDate = new Date()
-
 
 //sets the color for the appointments (the scheduled tasks)
 const Appointment = ({

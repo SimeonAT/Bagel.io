@@ -1,16 +1,7 @@
-//API for Bagel from https://devexpress.github.io/devextreme-reactive/react/chart/demos/pie/doughnut/
 import * as React from 'react';
 import {useState} from "react";
-import Paper from '@mui/material/Paper';
-import {
-  Chart,
-  PieSeries,
-  Title,
-  Tooltip,
-  Legend,
-} from '@devexpress/dx-react-chart-material-ui';
+import { Chart, PieSeries, Title, Tooltip, Legend } from '@devexpress/dx-react-chart-material-ui';
 import {EventTracker, HoverState } from '@devexpress/dx-react-chart';
-
 
 function Bagel(props){
     const [chartData, setChartData] = useState([]);
@@ -46,8 +37,8 @@ function Bagel(props){
         />
 
         <Legend
-        position="bottom"
-         />
+          position="bottom"
+        />
 
         <EventTracker />
         <HoverState />
