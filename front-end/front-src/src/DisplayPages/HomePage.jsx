@@ -1,57 +1,17 @@
-/* ---- SOURCES USED ----
-   - https://developer.mozilla.org/en-US/docs/Web/API/fetch
-   - https://developer.mozilla.org/en-US/docs/Web/API/Response
-   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse
-   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
-   - https://expressjs.com/en/4x/api.html#express.json
-   - https://www.stackhawk.com/blog/react-cors-guide-what-it-is-and-how-to-enable-it/
-
-   - https://stackabuse.com/get-http-post-body-in-express-js/
-   - https://www.npmjs.com/package/body-parser
-   - https://dmitripavlutin.com/fetch-with-json/
-   - http://expressjs.com/en/resources/middleware/body-parser.html#bodyparserjsonoptions
-   - https://reactrouter.com/en/main/components/navigate
-   - https://reactjs.org/docs/components-and-props.html
-   - https://reactjs.org/docs/context.html
-
-   - https://reactjs.org/docs/state-and-lifecycle.html
-   - https://reactjs.org/docs/hooks-intro.html
-   - https://beta.reactjs.org/learn/updating-arrays-in-state
-   - https://www.robinwieruch.de/react-update-item-in-list/
-   - https://reactjs.org/docs/lists-and-keys.html
-   - https://www.freecodecamp.org/news/how-to-clone-an-array-in-javascript-1d3183468f6a/
-
-   - https://stackoverflow.com/questions/35098324/react-form-component-onsubmit-handler-not-working
-   - https://stackoverflow.com/questions/51521237/onsubmit-is-not-working-in-react-js
-   - https://stackoverflow.com/questions/69128531/react-to-do-list-not-updating
-   - https://stackoverflow.com/questions/71790680/react-not-rendering-list-after-the-state-is-changed
-*/
-import {useState} from "react";
-import {useRef} from 'react';
 import * as React from 'react';
-//import Avatar from '@mui/material/Avatar';
-import { Button, TextField, Link, Box, Container, Typography} from '@mui/material';
-import CssBaseline from '@mui/material/CssBaseline';
-//import { Checkbox, FormGroup, FormControlLabel} from '@mui/material';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Button, TextField, Link, Box, Container, Typography, CssBaseline, createTheme, ThemeProvider, Stack, Grid, Select, FormControl, MenuItem, InputLabel  } from '@mui/material';
 import { Navigate } from "react-router-dom";
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { Stack, Grid } from '@mui/material';
-import { Select, FormControl, MenuItem, InputLabel } from '@mui/material';
-
 import Copyright from "./Copyright";
 import Calendar from "./Calendar";
 import UserInfo from '../UserContext';
-import {getTasksFromServer, getTodayTasksFromList} from './DashboardPage';
-import {validateDateFieldFormat} from '../frontendUtils';
-
+import {validateDateFieldFormat, newTaskOverlapsExistingTask} from '../frontendUtils';
 import axios from 'axios';
 
 const BackendURL = "http://localhost:8000";
 const scheduleTaskURL = BackendURL + "/scheduleTask";
-
 
 const theme = createTheme( {
   palette: {
@@ -65,8 +25,7 @@ const theme = createTheme( {
   });
 
 export default function Home(props) {
-  const userInfoProp = props.userInfo;
-  const [dashboardView, openDashboard] = useState(false);
+  const [dashboardView, openDashboard] = React.useState(false);
 
   const [tag, setTag] = React.useState('');
   const [overlapingTimeErrorMessage, setOverlapingTimeErrorMessage] = React.useState("");
@@ -87,11 +46,11 @@ export default function Home(props) {
   const [isEndDateOpen, setIsEndDateOpen] = React.useState(false);
   const [anchorElEndDate, setAnchorElEndDate] = React.useState(null);
 
-  const taskNameRef = useRef('');
-  const taskStartRef = useRef('');
-  const taskEndRef = useRef('');
-  const categoryManualInputRef = useRef('');
-  const categoryDropdownInputRef = useRef('');
+  const taskNameRef = React.useRef('');
+  const taskStartRef = React.useRef('');
+  const taskEndRef = React.useRef('');
+  const categoryManualInputRef = React.useRef('');
+  const categoryDropdownInputRef = React.useRef('');
   
   const handleTagDropdownChange = (event) => {
     setTag(event.target.value);
@@ -107,6 +66,11 @@ export default function Home(props) {
     setAnchorElEndDate(event.currentTarget);
   }
 
+  /**
+   * Checks to see if all fields are valid for creating task
+   *
+   * @param values : the input from the fields
+   */
   const validateRequiredTaskFields = values => {
     // verify that task name is not blank
     if (values.taskName !== "") {
@@ -141,6 +105,12 @@ export default function Home(props) {
 
   };
 
+  /**
+   * Creates task in backend
+   *
+   * @param userInfo : user info with name ect for calling server functions
+   * @param setUserInfo : function to update user info state
+   */
   const createTask = async function(event, userInfo, setUserInfo) {
     event.preventDefault();
     const taskCategoryToRecord = categoryManualInputRef.current.value != '' ? categoryManualInputRef.current.value : categoryDropdownInputRef.current.value;
@@ -162,24 +132,6 @@ export default function Home(props) {
       taskEndRef.current.value = '';
       return;
     }
-
-    // // Send task to backend for creation
-    // const httpResponse = await fetch(scheduleTaskURL, {
-    //   mode: "cors",
-    //   method: "post",
-    //   "Content-Type": "application/json",
-    //   body: JSON.stringify({
-    //     username: userInfo.username,
-    //     taskName: taskNameRef.current.value,
-    //     startDate: taskStartISO,
-    //     endDate: taskEndISO,
-    //     tag: taskCategoryToRecord
-    //   })
-    // });
-    // if (!httpResponse.ok) {
-    //   return;
-    // }
-    // let responseBody = await httpResponse.json();
 
     //JSONFIX
     const httpResponse = await axios.post('http://localhost:8000/scheduleTask', { 
@@ -203,28 +155,6 @@ export default function Home(props) {
     setOverlapingTimeSuggestion('');
 
   };
-
-  const newTaskOverlapsExistingTask = async function(taskStartISO, userInfo) {
-    const currentTaskStartTime = new Date(taskStartISO).getTime();
-    const existingTaskList = await getTasksFromServer(userInfo.username);
-    const existingTodayTasks = getTodayTasksFromList(existingTaskList);
-    for (let i = 0; i < existingTodayTasks.length; i++){
-      const existingTaskStartTime = new Date(existingTodayTasks[i].startDate).getTime();
-      const existingTaskEndTime = new Date(existingTodayTasks[i].endDate).getTime();
-      if (startTimeOverlapsExisting(currentTaskStartTime, existingTaskStartTime, existingTaskEndTime)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  const startTimeOverlapsExisting = function(currentTaskStartTime, existingTaskStartTime, existingTaskEndTime){
-    if (currentTaskStartTime >= existingTaskStartTime && currentTaskStartTime <= existingTaskEndTime) {
-      return true;
-    } else {
-      return false;
-    }
-  }
 
   const resetFormValues = async function(taskNameRef, categoryManualInputRef, categoryDropdownInputRef){
     taskNameRef.current.value = '';
@@ -304,167 +234,167 @@ export default function Home(props) {
                   </Grid>
 
                   <Grid item xs={6}>
-                <UserInfo.Consumer>
-                  {(userInfo) => {
-                    return (
-                      <Box label="create-task-column"
-                        sx={{
-                          width: 1,
-                          display: 'flex',
-                          flexDirection: 'column',
-                          alignItems: 'center',
-                        }}
-                      >
+                    <UserInfo.Consumer>
+                      {(userInfo) => {
+                        return (
+                          <Box label="create-task-column"
+                            sx={{
+                              width: 1,
+                              display: 'flex',
+                              flexDirection: 'column',
+                              alignItems: 'center',
+                            }}
+                          >
 
-                        <Typography component="h1" variant="h5">
-                          Add New Task
-                        </Typography>
+                            <Typography component="h1" variant="h5">
+                              Add New Task
+                            </Typography>
 
-                        <Box noValidate sx={{ mt: 1 }}>
-                          <TextField
-                            inputRef={taskNameRef}
-                            margin="normal"
-                            required
-                            fullWidth
-                            error={isTaskNameInvalid}
-                            helperText={isTaskNameInvalid && "Task Name is required"}
-                            id="taskName"
-                            label="Task Name"
-                            name="taskName"
-                            autoFocus
-                            sx={{ mb: 3 }}
-                          />
+                            <Box noValidate sx={{ mt: 1 }}>
+                              <TextField
+                                inputRef={taskNameRef}
+                                margin="normal"
+                                required
+                                fullWidth
+                                error={isTaskNameInvalid}
+                                helperText={isTaskNameInvalid && "Task Name is required"}
+                                id="taskName"
+                                label="Task Name"
+                                name="taskName"
+                                autoFocus
+                                sx={{ mb: 3 }}
+                              />
 
-                          <Stack width={500} margin="normal" spacing={3} sx={{ mb: 3 }}>
-                            <DateTimePicker
-                              onError={(reason, value) => {
-                                if (reason) {
-                                  setCurrentStartTimeError('Please enter valid date in format MM/DD/YYYY TT:TT XM');
-                                  setStartTimeErrorDate(true);
-                                } else {
-                                  setCurrentStartTimeError(null);
-                                  setStartTimeErrorDate(false);
-                                }
-                              }}
-                              renderInput={(params) => <TextField {...params}
-                                onClick={handleStartDateAnchoring}
-                                error={errorStartDate}
-                                helperText={currentStartTimeError ?? currentStartTimeError}
-                                inputRef={taskStartRef}
-                              />}
-                              margin="normal"
-                              required
-                              fullWidth
-                              name="startDate"
-                              label="Start Date/Time *"
-                              id="startDate"
-                              value={startDateWithNoInitialValue}
-                              onChange={(newValue) => setStartDateWithNoInitialValue(newValue)}
-                              clearable
-                              open={isStartDateOpen}
-                              onClose={() => setIsStartDateOpen(false)}
-                              PopperProps={{
-                                placement: "bottom-end",
-                                anchorEl: anchorElStartDate
-                              }}                            
-                            />
+                              <Stack width={500} margin="normal" spacing={3} sx={{ mb: 3 }}>
+                                <DateTimePicker
+                                  onError={(reason, value) => {
+                                    if (reason) {
+                                      setCurrentStartTimeError('Please enter valid date in format MM/DD/YYYY TT:TT XM');
+                                      setStartTimeErrorDate(true);
+                                    } else {
+                                      setCurrentStartTimeError(null);
+                                      setStartTimeErrorDate(false);
+                                    }
+                                  }}
+                                  renderInput={(params) => <TextField {...params}
+                                    onClick={handleStartDateAnchoring}
+                                    error={errorStartDate}
+                                    helperText={currentStartTimeError ?? currentStartTimeError}
+                                    inputRef={taskStartRef}
+                                  />}
+                                  margin="normal"
+                                  required
+                                  fullWidth
+                                  name="startDate"
+                                  label="Start Date/Time *"
+                                  id="startDate"
+                                  value={startDateWithNoInitialValue}
+                                  onChange={(newValue) => setStartDateWithNoInitialValue(newValue)}
+                                  clearable
+                                  open={isStartDateOpen}
+                                  onClose={() => setIsStartDateOpen(false)}
+                                  PopperProps={{
+                                    placement: "bottom-end",
+                                    anchorEl: anchorElStartDate
+                                  }}                            
+                                />
 
-                            <DateTimePicker
-                              onError={(reason, value) => {
-                                if (reason) {
-                                  setCurrentEndTimeError('Please enter valid date in format MM/DD/YYYY TT:TT XM');
-                                  setEndTimeErrorDate(true);
-                                } else {
-                                  setCurrentEndTimeError(null);
-                                  setEndTimeErrorDate(false);
-                                }
-                              }}
-                              renderInput={(params) => <TextField {...params}
-                                onClick={handleEndDateAnchoring}
-                                inputRef={taskEndRef}
-                                error={errorEndDate}
-                                helperText={currentEndTimeError ?? currentEndTimeError}
-                              />}
-                              margin="normal"
-                              required
-                              fullWidth
-                              name="endDate"
-                              label="End Date/Time *"
-                              id="endDate"
-                              value={endDateWithNoInitialValue}
-                              onChange={(newValue) => setEndDateWithNoInitialValue(newValue)}
-                              clearable
-                              open={isEndDateOpen}
-                              onClose={() => setIsEndDateOpen(false)}
-                              PopperProps={{
-                                placement: "bottom-end",
-                                anchorEl: anchorElEndDate
-                              }}  
-                            />
-                          </Stack>
+                                <DateTimePicker
+                                  onError={(reason, value) => {
+                                    if (reason) {
+                                      setCurrentEndTimeError('Please enter valid date in format MM/DD/YYYY TT:TT XM');
+                                      setEndTimeErrorDate(true);
+                                    } else {
+                                      setCurrentEndTimeError(null);
+                                      setEndTimeErrorDate(false);
+                                    }
+                                  }}
+                                  renderInput={(params) => <TextField {...params}
+                                    onClick={handleEndDateAnchoring}
+                                    inputRef={taskEndRef}
+                                    error={errorEndDate}
+                                    helperText={currentEndTimeError ?? currentEndTimeError}
+                                  />}
+                                  margin="normal"
+                                  required
+                                  fullWidth
+                                  name="endDate"
+                                  label="End Date/Time *"
+                                  id="endDate"
+                                  value={endDateWithNoInitialValue}
+                                  onChange={(newValue) => setEndDateWithNoInitialValue(newValue)}
+                                  clearable
+                                  open={isEndDateOpen}
+                                  onClose={() => setIsEndDateOpen(false)}
+                                  PopperProps={{
+                                    placement: "bottom-end",
+                                    anchorEl: anchorElEndDate
+                                  }}  
+                                />
+                              </Stack>
 
-                          <FormControl fullWidth
-                          error={isCategoryInvalid}
-                          helperText={isCategoryInvalid && "Category Name is required"} >
-                            <InputLabel id="demo-simple-select-label">Select a Category</InputLabel>
-                            <Select
-                              inputRef={categoryDropdownInputRef}
-                              id="select-a-category"
-                              value={tag}
-                              label="Select a Category"
-                              onChange={handleTagDropdownChange}
-                            >
-                              <MenuItem value='Work'>Work</MenuItem>
-                              <MenuItem value='Study'>Study</MenuItem>
-                              <MenuItem value='Exercise'>Exercise</MenuItem>
-                              <MenuItem value='Chores'>Chores</MenuItem>
-                              <MenuItem value='Socialization'>Socialization</MenuItem>
-                              <MenuItem value='Hobbies'>Hobbies</MenuItem>
-                              <MenuItem value='Rest'>Rest</MenuItem>
-                              <MenuItem value='Nourishment'>Nourishment</MenuItem>
-                              <MenuItem value='Relaxation'>Relaxation</MenuItem>
-                            </Select>
-                          </FormControl>
+                              <FormControl fullWidth
+                              error={isCategoryInvalid}
+                              helperText={isCategoryInvalid && "Category Name is required"} >
+                                <InputLabel id="demo-simple-select-label">Select a Category</InputLabel>
+                                <Select
+                                  inputRef={categoryDropdownInputRef}
+                                  id="select-a-category"
+                                  value={tag}
+                                  label="Select a Category"
+                                  onChange={handleTagDropdownChange}
+                                >
+                                  <MenuItem value='Work'>Work</MenuItem>
+                                  <MenuItem value='Study'>Study</MenuItem>
+                                  <MenuItem value='Exercise'>Exercise</MenuItem>
+                                  <MenuItem value='Chores'>Chores</MenuItem>
+                                  <MenuItem value='Socialization'>Socialization</MenuItem>
+                                  <MenuItem value='Hobbies'>Hobbies</MenuItem>
+                                  <MenuItem value='Rest'>Rest</MenuItem>
+                                  <MenuItem value='Nourishment'>Nourishment</MenuItem>
+                                  <MenuItem value='Relaxation'>Relaxation</MenuItem>
+                                </Select>
+                              </FormControl>
 
-                          <Typography align="center">-or-</Typography>
+                              <Typography align="center">-or-</Typography>
 
-                          <TextField 
-                            inputRef={categoryManualInputRef}
-                            error={isCategoryInvalid}
-                            helperText={isCategoryInvalid && "Please enter a category or select one from above!"}
-                            margin="normal"
-                            fullWidth
-                            name="category"
-                            label="Create your own Category"
-                            id="category"
-                            sx={{ mt: 0, mb: 3 }}
-                          />
+                              <TextField 
+                                inputRef={categoryManualInputRef}
+                                error={isCategoryInvalid}
+                                helperText={isCategoryInvalid && "Please enter a category or select one from above!"}
+                                margin="normal"
+                                fullWidth
+                                name="category"
+                                label="Create your own Category"
+                                id="category"
+                                sx={{ mt: 0, mb: 3 }}
+                              />
 
-                          <Box textAlign='center'>
-                            <Button
-                              color="primary"
-                              type="submit"
-                              variant="outlined"
-                              onClick={(event) => {
-                                createTask(event, userInfo.userInfo,
-                                  userInfo.setUserInfo);
-                              }}
-                              sx={{
-                                mt: 3, mb: 2,
-                                pr: 7, pl: 7,
-                                border: 2
-                              }}
-                            >
-                              Add Task
-                            </Button>
-                            {overlapingTimeErrorMessage && <Typography style={{color: 'red'}} className="error"> {overlapingTimeErrorMessage} </Typography>}
-                            {overlapingTimeSuggestion && <Typography style={{color: 'red'}} className="error"> {overlapingTimeSuggestion} </Typography>}
+                              <Box textAlign='center'>
+                                <Button
+                                  color="primary"
+                                  type="submit"
+                                  variant="outlined"
+                                  onClick={(event) => {
+                                    createTask(event, userInfo.userInfo,
+                                      userInfo.setUserInfo);
+                                  }}
+                                  sx={{
+                                    mt: 3, mb: 2,
+                                    pr: 7, pl: 7,
+                                    border: 2
+                                  }}
+                                >
+                                  Add Task
+                                </Button>
+                                {overlapingTimeErrorMessage && <Typography style={{color: 'red'}} className="error"> {overlapingTimeErrorMessage} </Typography>}
+                                {overlapingTimeSuggestion && <Typography style={{color: 'red'}} className="error"> {overlapingTimeSuggestion} </Typography>}
+                              </Box>
+                            </Box>
                           </Box>
-                        </Box>
-                      </Box>
-                    );
-                  }}
-                </UserInfo.Consumer>
+                        );
+                      }}
+                    </UserInfo.Consumer>
 
                   </Grid>
                 </Grid>

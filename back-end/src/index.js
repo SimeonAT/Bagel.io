@@ -1,19 +1,3 @@
-/* ---- SOURCES UTILIZED ----
- * - https://www.geeksforgeeks.org/how-to-connect-node-js-with-react-js/
- * - https://www.stackhawk.com/blog/react-cors-guide-what-it-is-and-how-to-enable-it/
- * - https://www.npmjs.com/package/nodemon  
- * - https://expressjs.com/en/4x/api.html#req
- * - https://expressjs.com/en/4x/api.html#express.json
- * - https://stackoverflow.com/questions/19696240/proper-way-to-return-json-using-node-or-express
- * - https://expressjs.com/en/api.html#res
- * - https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#server_error_responses
- * - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse
- * - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
- * - https://nodejs.org/en/knowledge/getting-started/what-is-require/
- * - https://jsdoc.app/about-getting-started.html
- * - https://www.npmjs.com/package/body-parser
- * - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/push
- * */
 require('dotenv').config();
 // const objects = require("./objects");
 const express = require("express");

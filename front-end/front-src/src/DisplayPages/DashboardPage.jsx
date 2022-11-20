@@ -1,127 +1,14 @@
-/* ---- SOURCES USED ----
-   - https://developer.mozilla.org/en-US/docs/Web/API/fetch
-   - https://developer.mozilla.org/en-US/docs/Web/API/Response
-   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse
-   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
-   - https://expressjs.com/en/4x/api.html#express.json
-   - https://www.stackhawk.com/blog/react-cors-guide-what-it-is-and-how-to-enable-it/
-
-   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
-   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
-   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString
-   - https://jsdoc.app/about-getting-started.html
-   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
-   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
-   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
-   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
-   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Default_parameters=
-   - https://developer.mozilla.org/en-US/docs/Web/API/Document/forms
-
-   - https://mui.com/system/spacing/#horizontal-centering
-   - https://mui.com/system/spacing/#transformation
-   - https://mui.com/system/spacing/
-   - https://mui.com/system/getting-started/the-sx-prop/#basic-example
-   - https://mui.com/system/getting-started/the-sx-prop/
-   - https://mui.com/material-ui/react-text-field/#form-props
-   - https://mui.com/material-ui/react-text-field/#basic-textfield
-   - https://mui.com/material-ui/react-text-field/
-
-   - https://masteringjs.io/tutorials/fundamentals/parameters
-   - https://stackabuse.com/get-http-post-body-in-express-js/
-   - https://www.npmjs.com/package/body-parser
-   - https://dmitripavlutin.com/fetch-with-json/
-   - http://expressjs.com/en/resources/middleware/body-parser.html#bodyparserjsonoptions
-   - https://reactrouter.com/en/main/components/navigate
-   - https://reactjs.org/docs/components-and-props.html
-   - https://reactjs.org/docs/context.html
-
-   - https://stackoverflow.com/questions/35098324/react-form-component-onsubmit-handler-not-working
-   - https://stackoverflow.com/questions/51521237/onsubmit-is-not-working-in-react-js
-
-   - https://reactjs.org/docs/state-and-lifecycle.html
-   - https://reactjs.org/docs/hooks-intro.html
-   - https://beta.reactjs.org/learn/updating-arrays-in-state
-   - https://www.robinwieruch.de/react-update-item-in-list/
-   - https://reactjs.org/docs/lists-and-keys.html
-   - https://www.freecodecamp.org/news/how-to-clone-an-array-in-javascript-1d3183468f6a/
-   - https://www.robinwieruch.de/react-event-handler/
-   - https://reactjs.org/docs/handling-events.html
-   - https://reactjs.org/docs/refs-and-the-dom.html
-   - https://reactjs.org/docs/forms.html
-
-   - https://styled-components.com/docs/api#primary
-   - https://styled-components.com/
-
-   - https://www.w3schools.com/css/css_font.asp
-   - https://www.w3schools.com/css/css_inline-block.asp
-   - https://www.w3schools.com/colors/colors_picker.asp
-   - https://www.w3schools.com/colors/colors_names.asp
-   - https://www.w3schools.com/css/css_positioning.asp
-   - https://www.w3schools.com/cssref/pr_font_weight.asp
-   - https://www.w3schools.com/css/css_margin.asp
-   - https://www.w3schools.com/css/css_padding.asp
-   - https://www.w3schools.com/css/css_boxmodel.as
-   - https://www.w3schools.com/CSSREF/css3_pr_opacity.php
-   - https://www.w3schools.com/cssref/pr_class_display.php
-   - https://www.w3schools.com/jsref/event_oninput.asp
-
-   - https://www.w3schools.com/html/html_forms.asp
-   - https://www.w3schools.com/jsref/event_onchange.asp
-
-   - https://css-tricks.com/snippets/css/a-guide-to-flexbox/
-  
-   - https://mui.com/x/react-date-pickers/getting-started/
-   - https://mui.com/x/react-date-pickers/getting-started/#react-components
-
-   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#examples
-   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/Date#syntax
-   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/Date
-   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
-*/
-import {useState} from "react";
-import {useRef} from 'react';
 import * as React from 'react';
-//import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-// import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Link from '@mui/material/Link';
-//import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import TableRow from '@mui/material/TableRow';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Button, CssBaseline, Link, Box, Typography, Container, createTheme, ThemeProvider, Grid } from '@mui/material';
 import Copyright from "./Copyright";
 import {Navigate} from "react-router-dom";
-import dayjs, { Dayjs } from 'dayjs';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import Grid from '@mui/material/Grid';
-
 import UserInfo from '../UserContext';
 import styled from "styled-components";
 import Bagel from "./Bagel";
-
 import axios from 'axios';
-
-const MILLISECONDS_IN_SECOND = 1000;
-const SECONDS_IN_MINUTE = 60;
-const MILLISECONDS_IN_MINUTE = MILLISECONDS_IN_SECOND*SECONDS_IN_MINUTE;
-
-const BackendURL = "http://localhost:8000";
-const LoginURL = BackendURL + "/logindatabase";
-const RegisterURL = BackendURL + "/register";
-const HomeURL = BackendURL + "/home";
-const scheduleTaskURL = BackendURL + "/scheduleTask";
-const GetTasks = BackendURL + "/getTasks";
-const updateTaskURL = BackendURL + "/updateTask";
-
+import {calculateTotalCompletedByCategory, getTasksFromServer} from '../frontendUtils';
 
 const CompleteButton = styled.button`
   font-size: 18px;
@@ -156,53 +43,23 @@ const theme = createTheme( {
   },
   });
 
-export const getTasksFromServer = async function(username) {
-  //JSONFIX
-  const httpResponse = await axios.post('http://localhost:8000/getTasks', { 
-    username: username
-  });
-  const responseBody = httpResponse.data;
-
-  let taskList = responseBody.taskList;
-  return taskList;
-}
-
-export const getTodayTasksFromList = function(fullTaskList) {
-  const now = new Date();
-  const todayTaskList = [];
-  for (let i = 0; i < fullTaskList.length; i++){
-    const taskDate = new Date(fullTaskList[i].startDate);
-    if (now.getDay() === taskDate.getDay()) { 
-      todayTaskList.push(fullTaskList[i]);
-    }
-  }
-
-  return todayTaskList;
-}
-
 export default function Dashboard(props) {
-  /**
-   * NOTE: The userInfoProp object may be stale, as the server may update the user information after giving the front-end the "userInfoProp".
-   * For the most up to date version of userInfo, user the "userInfo" context.
-   */
   const userInfoProp = props.userInfo;
-
-
   let username = undefined;
   if (userInfoProp !== undefined) {
     username = userInfoProp.username;
   }
 
-  const [homeView, openHome] = useState(false);
-
-  const [taskListToRender, setTaskListToRender] = useState(undefined);
+  const [homeView, openHome] = React.useState(false);
+  const [taskListToRender, setTaskListToRender] = React.useState(undefined);
 
   let initialTaskList = undefined;
   if (userInfoProp !== undefined) {
     initialTaskList = userInfoProp.tasks;
   }
-  const [taskDisplayList, setTaskDisplayList] = useState(initialTaskList);
-  const [renderTaskList, setRenderTaskList] = useState(true);
+
+  const [taskDisplayList, setTaskDisplayList] = React.useState(initialTaskList);
+  const [renderTaskList, setRenderTaskList] = React.useState(true);
 
   React.useEffect(() => {
     if ((taskDisplayList !== undefined) && (renderTaskList === true)) {
@@ -210,26 +67,24 @@ export default function Dashboard(props) {
         setTaskListToRender));
       setRenderTaskList(false);
     }
-
     return;
   });
 
   //getting elements of the time task list (waiting on await so that an empty promise is not sent))
-  const [todaysTasks, setTodaysTask] = useState([]);
+  const [todaysTasks, setTodaysTask] = React.useState([]);
   React.useEffect(() => {
     const fetchTasks = async () => {
       const taskList = await getTasksFromServer(username)
-      const tasks = await calculateTotalCompletedByCategory(true);
+      const tasks = await calculateTotalCompletedByCategory(username, true);
       setTodaysTask(tasks);
       
     }
     fetchTasks();
   }, [taskListToRender]);
-  const [overallTasks, setOverallTask] = useState([]);
+  const [overallTasks, setOverallTask] = React.useState([]);
   React.useEffect(() => {
     const fetchTasks = async () => {
-
-      const tasks = await calculateTotalCompletedByCategory(false);
+      const tasks = await calculateTotalCompletedByCategory(username, false);
       setOverallTask(tasks);
     }
     fetchTasks();
@@ -318,63 +173,10 @@ export default function Dashboard(props) {
     });
   }
 
-
-  const calculateTotalCompletedByCategory = async function(calculatingOnlyToday) {
-    let taskList = await getTasksFromServer(username);
-
-    if (calculatingOnlyToday) {
-      //fliter for only today's tasks
-      taskList = getTodayTasksFromList(taskList);
-    }
-
-    const totalsList = []
-    for (let i = 0; i < taskList.length; i++){
-      const needToAddTaskTime = (taskList[i].complete === true && taskList[i].checkedIn === true);
-
-      if (needToAddTaskTime) {
-        const category = taskList[i].tag;
-        const categoryAlreadyPresent = isCategoryInTotalList(totalsList, category);
-        if (categoryAlreadyPresent) {
-          //add sum
-          const taskTime = calculateTaskTime(taskList[i]);
-          let tagIndex = 0;
-          for (let j = 0; j < totalsList.length; j++) {
-            if (totalsList[j][0] === category) {
-              tagIndex = j;
-            }
-          }
-          const oldTotal = totalsList[tagIndex][1];
-          const newTotal = oldTotal + taskTime;
-          totalsList[tagIndex][1] = newTotal;
-        } else {
-          //instantiate and add sum
-          const taskTime = calculateTaskTime(taskList[i]);
-          totalsList.push([category, taskTime]);
-        }
-      }
-    }
-    return totalsList;
-  }
-
-  const isCategoryInTotalList = function(totalsList, tag){
-    if(totalsList.length === 0) {
-      return false;
-    }
-    for (let i = 0; i < totalsList.length; i++){
-      if (totalsList[i][0] === tag) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  const calculateTaskTime = function(task){
-    const startTime = new Date(task.startDate);
-    const endTime = new Date(task.endDate);
-    const taskLengthInHours = (endTime.getTime() - startTime.getTime()) / MILLISECONDS_IN_MINUTE;
-    return taskLengthInHours;
-  }
-
+  /**
+   * Navigates user to home page
+   *
+   */
   const navigateToHome = async function(event) {
     event.preventDefault();
     openHome(true);
@@ -414,7 +216,7 @@ export default function Dashboard(props) {
                 <UserInfo.Consumer>
                   {({username, password, userInfo}) => {
                     return (
-                      <Typography component="h1" variant="h5" onClick={() => calculateTotalCompletedByCategory(true)}>
+                      <Typography component="h1" variant="h5" onClick={() => calculateTotalCompletedByCategory(username, true)}>
                           {username}'s Dashboard
                       </Typography>
                     );

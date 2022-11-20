@@ -1,38 +1,8 @@
-/* ---- SOURCES USED ----
-   - https://developer.mozilla.org/en-US/docs/Web/API/fetch
-   - https://developer.mozilla.org/en-US/docs/Web/API/Response
-   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse
-   - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
-   - https://expressjs.com/en/4x/api.html#express.json
-   - https://www.stackhawk.com/blog/react-cors-guide-what-it-is-and-how-to-enable-it/
-
-   - https://stackabuse.com/get-http-post-body-in-express-js/
-   - https://www.npmjs.com/package/body-parser
-   - https://dmitripavlutin.com/fetch-with-json/
-   - http://expressjs.com/en/resources/middleware/body-parser.html#bodyparserjsonoptions
-   - https://reactrouter.com/en/main/components/navigate
-
-   - https://reactjs.org/docs/context.html
-*/
-import {useState} from "react";
 import * as React from 'react';
-//import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-// import FormControlLabel from '@mui/material/FormControlLabel';
-// import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-//import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Button, CssBaseline, TextField, Link, Box, Typography, Container, createTheme, ThemeProvider } from '@mui/material';
 import Copyright from "./Copyright";
 import {Navigate} from "react-router-dom"
-
 import UserInfo from '../UserContext';
-
 import axios from 'axios';
 
 const BackendURL = "http://localhost:8000";
@@ -53,7 +23,7 @@ const theme = createTheme( {
 export default function Register(props) {
 
   //Checks errors.
-  const [errors, setErrorMessages] = useState(
+  const [errors, setErrorMessages] = React.useState(
     { //set errors, empty by default
       u_name: "",       //"invalid username",
       u_name_taken: "", //"Sorry, that username is already taken!",
@@ -63,55 +33,43 @@ export default function Register(props) {
     }
   );
   //PLEASE USE STATES WHEN SENDING.
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitted, setIsSubmitted] = React.useState(false);
 
   //Below useStates are for username, email, password, and password confirmation
-  const [usernameState, setUsernameState]  = useState(undefined);
-  const [emailState, setEmailState] = useState(undefined);
-  const [passwordOneState, setPasswordOneState] = useState(undefined);
-  const [passwordTwoState, setPasswordTwoState] = useState(undefined);
-
-  //Does basic input checking
-  //Notably does not check if username/email is already in use, that only occurs
-  //after the server call happens.
-  //const [allInputsCorrect, setAllInputsCorrect] = useState(false);
-  //let allInputsCorrect = true; //FIXME: Might be a better way to do this???
-
+  const [usernameState, setUsernameState]  = React.useState(undefined);
+  const [emailState, setEmailState] = React.useState(undefined);
+  const [passwordOneState, setPasswordOneState] = React.useState(undefined);
+  const [passwordTwoState, setPasswordTwoState] = React.useState(undefined);
 
   const handleSubmit = async function(event, setUsername, setPassword,
     setUserInfo) {
     event.preventDefault();
-    // //let { u_name, email, pass, pass2 } = document.forms[0]; //CHANGES TO STATES [user, email, pass1, pass2]
     let u_name = usernameState;
     let email = emailState;
     let pass = passwordOneState;
     let pass2 = passwordTwoState;
     
-    let allInputsCorrect = true; //FIXME: Might be a better way to do this???
+    let allInputsCorrect = true; 
     
     //Check if trying to Register without any submissions.
     if(u_name === undefined) {
       errors["u_name"] = "Username Empty"; //Set Error
       allInputsCorrect = false; //Make sure that it doesn't do a server call
-      //setAllInputsCorrect(false);
       setUsernameState(""); //change from undefined to empty string so that error message displays.
     }
     if(email === undefined) {
       errors["u_email"] = "Email Empty";
       allInputsCorrect = false;
-      //setAllInputsCorrect(false);
       setEmailState("");
     }
     if(pass === undefined) {
       errors["u_password1"] = "Password Empty";
       allInputsCorrect = false;
-      //setAllInputsCorrect(false);
       setPasswordOneState("");
     }
     if(pass2 === undefined) {
       errors["u_password2"] = "Please Re-confirm Password";
       allInputsCorrect = false;
-      //setAllInputsCorrect(false);
       setPasswordTwoState("");
     }
 
@@ -120,11 +78,6 @@ export default function Register(props) {
       allInputsCorrect = false;
     }
 
-    //FIXME:
-    //MINOR (not very important issue)
-    //In back-end, tasks.js, if in for-loop if matching username is found first, then
-    //Returns immediately without search for if email has already been used (because if breaks if it finds one or the other)
-    //Vice-versa if email is found first, and not username.
     if(allInputsCorrect) { //if all inputs have been formatted correctly.
       //Set username and password to the backend server
       //JSONFIX
@@ -132,8 +85,6 @@ export default function Register(props) {
 	      username: u_name, password: pass, email: email, password: pass
       });
       const responseBody = httpResponse.data;
-      // console.log(`typeof(responseBody): ${typeof(responseBody)}`);
-      // console.log(`responseBody: ${JSON.stringify(responseBody)}`);
 
       if (responseBody.loginAllowed === true) {
         setIsSubmitted(true);
@@ -142,25 +93,7 @@ export default function Register(props) {
         setPassword(pass);
         setUserInfo(responseBody.payload);
       } else {
-        //PRINT ERROR MESSAGE SENT FROM BACK END, needs double check?
-        //Below two values are recieved from responseBody.loginAllowed === false
-        //usernameUsed, emailUsed
-        // below two lines worked before
-        // errors["u_name"] = responseBody.usernameUsed;
-        // errors["u_email"] = responseBody.emailUsed;
-
-        // if(responseBody.usernameUsed.length === 0) { //send error message if username already in use
-        //   errors["u_name"] = responseBody.usernameUsed;
-        // }
-        // if(responseBody.emailUsed.length === 0) { //send error message if email already in use
-        //   errors["u_email"] = responseBody.emailUsed;
-        // }
-        
         if(responseBody.boolEmailUsed) {
-          // setErrorMessages({
-          //   ...errors,
-          //   'u_email': responseBody.emailUsed
-          // })
           errors["u_email"] = responseBody.emailUsed;
         }
 
@@ -169,26 +102,9 @@ export default function Register(props) {
         }
         
         setErrorMessages({...errors}); //set errors
-        //allInputsCorrect = false; //allinputsCorrect is false.
       }
     }
-    //errors.u_name = 'not valid'
-    //setErrorMessages({...errors}); //set the error messages after all checks.
   };
-  
-  //Renders error messages below corresponding input
-  //Names must have correct corresponding value to "errors" in default func.
-  //FIXME: Color and positioning, also some weird streching??? Front end pls fix.
-  const renderErrorMessage = (name) =>
-    // name === "" && 
-    (
-      <div className="error">{errors[name]}</div>
-    );
-
-  //?
-  // function handleInputChange(event, name) {
-  //   setErrorMessages.errors[name] = event.target.value;
-  // }
 
   const renderForm = (
     <ThemeProvider theme={theme}>
@@ -249,16 +165,13 @@ export default function Register(props) {
                       if(u_name !== undefined) {
                         if(u_name.length < 5 || u_name.length > 32) {
                           errors["u_name"] = "Keep usernames between 5~32 characters";
-                          //allInputsCorrect = false;
                         }
                         if(u_name_empty) { //if username empty
                           errors["u_name"] = "Username Empty";
-                          //allInputsCorrect = false;
                         }
                       }
                     }}
                     error = {(errors["u_name"].length === 0 || usernameState === undefined) ? false : true}
-                    //helperText = {(usernameState !== undefined) ? errors["u_name"] : ""}
                     helperText = {errors["u_name"]}
                   />
                   
@@ -280,7 +193,6 @@ export default function Register(props) {
                       if(email !== undefined) {
                         if(email_empty) {
                           errors["u_email"] = "Email Empty";
-                          //allInputsCorrect = false;
                         }
                       }
                     }}
@@ -305,13 +217,10 @@ export default function Register(props) {
                       errors["u_password1"] = "";
                       if(pass !== undefined) {
                         if(pass.length < 5 || pass.length > 32) {
-                          errors["u_password1"] = "Keep passwords between 5~32 characters";
-                          //allInputsCorrect = false;
-                          
+                          errors["u_password1"] = "Keep passwords between 5~32 characters";                       
                         }
                         if(pass_empty) {
                           errors["u_password1"] = "Password Empty";
-                          //allInputsCorrect = false;
                           
                         }
                       }
@@ -339,12 +248,10 @@ export default function Register(props) {
                       if(pass2 !== undefined) {
                         if(pass2_empty) {
                           errors["u_password2"] = "Please Re-confirm Password";
-                          //allInputsCorrect = false;
                         }
                         //FIXME: Wonky string comparison, there may be better way to do this?
                         if(pass.normalize() !== pass2.normalize()) {
                           errors["u_password2"] = "Does not match the entered password";
-                          //allInputsCorrect = false;
                         }
                       }
                     }}
@@ -352,7 +259,6 @@ export default function Register(props) {
                     helperText = {(passwordTwoState !== undefined) ? errors["u_password2"] : ""}
                   />
                   
-
                   <Box textAlign='center'>
                     <Button
                       color="primary"
