@@ -9,6 +9,11 @@ const pool = new Pool({
     database: process.env.POSTGRES_DB
 });
 
+/** 
+ * Returns all users in DB
+ * 
+ * @returns  - List of users
+ */
 exports.getMembers = async () => {
     const select = `SELECT * FROM member`;
     const query = {
@@ -19,6 +24,12 @@ exports.getMembers = async () => {
     return rows;
 };
 
+/** 
+ * Returns list of tasks for user
+ * 
+ * @param username - unique user identifier
+ * @returns - List of all tasks for user
+ */
 exports.getMemberScheduledTasks = async (username) => {
     const select = `SELECT taskpreset.taskname, taskpreset.tasktag, taskscheduled.starttime, taskscheduled.endtime, taskscheduled.complete, taskscheduled.scheduledid, taskscheduled.checkedin
                     FROM member, taskpreset, taskscheduled
@@ -33,6 +44,14 @@ exports.getMemberScheduledTasks = async (username) => {
     return rows;
 };
 
+/** 
+ * Creates new user
+ * 
+ * @param username - unique name for user
+ * @param email - user's email address 
+ * @param password - user's password
+ * @returns - payload with saved info
+ */
 exports.insertUser = async (username, email, password) => {
     const insert = `INSERT INTO member(username, email, memberpassword) 
                     VALUES ($1, $2, $3)`;
@@ -44,6 +63,12 @@ exports.insertUser = async (username, email, password) => {
     return rows;
 };
 
+/** 
+ * Creates new task
+ * 
+ * @param taskData - all of the fields present on task object
+ * @returns - created task object
+ */
 exports.insertTask = async (username, taskName, startDate, endDate, tagName, presetid, scheduledid) => {
     let insert = `INSERT INTO taskpreset(taskname, presetid, tasktag, username) 
                   VALUES ($1, $2, $3, $4)
@@ -64,6 +89,11 @@ exports.insertTask = async (username, taskName, startDate, endDate, tagName, pre
     return [preset.rows[0], scheduled.rows[0]];
 };
 
+/** 
+ *  Selects all. Test function
+ * 
+ * @returns - the time
+ */
 exports.selectAll = async () => {
     const select = 'SELECT * FROM foobar';
     const query = {
@@ -74,6 +104,12 @@ exports.selectAll = async () => {
     return rows[0].thetime;
 };
 
+/** 
+ * Deletes tasks from DB.
+ * 
+ * @param  taskId - unique id of task to remove
+ * @returns - deleted task
+ */
 exports.deleteTask = async (taskId) => {
     const deleteSQL = `DELETE FROM taskscheduled
                        WHERE tasksched.taskid = $1
@@ -86,6 +122,13 @@ exports.deleteTask = async (taskId) => {
     return rows;
 }
 
+/** 
+ * Replaces task info with new info
+ * All fields get replaced
+ * 
+ * @param taskData - all the fields present on task object
+ * @returns undefined - No return value
+ */
 exports.updateTask = async (taskId, startDate, endDate, tag, complete, checkedin) => {
     let update = `UPDATE taskscheduled
                   SET starttime = $1, endtime = $2, complete = $3, checkedin = $4
@@ -107,7 +150,13 @@ exports.updateTask = async (taskId, startDate, endDate, tag, complete, checkedin
     return;
 }
 
-//New Request for function:
+/** 
+ * Returns list of categories that user has used
+ * Deprecated due to lack of time
+ * 
+ * @param username - unique identfier of user
+ * @returns - Array of strings
+ */
 exports.getUserTags = async (username) => {
     let select = `SELECT taskpreset.tasktag
                   FROM member, taskpreset

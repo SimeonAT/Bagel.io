@@ -208,3 +208,16 @@ Backend:
  * - https://stackoverflow.com/questions/4746672/put-current-changes-in-a-new-git-branch
  * - https://stackoverflow.com/questions/1394797/move-existing-uncommitted-work-to-a-new-branch-in-git
  */
+
+ /* ---- SOURCES USED ----
+ * - https://www.robinwieruch.de/react-event-handler/
+ * - https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+ * - https://reactjs.org/docs/handling-events.html
+ * - https://www.digitalocean.com/community/tutorials/how-to-write-asynchronous-code-in-node-js
+ * - https://www.stackhawk.com/blog/react-cors-guide-what-it-is-and-how-to-enable-it/
+ * - https://developer.mozilla.org/en-US/docs/Web/API/Response
+ * - https://reactjs.org/docs/hooks-state.html
+ * - https://www.robinwieruch.de/react-event-handler/
+ * - https://reactjs.org/docs/context.html
+ * - https://stackoverflow.com/questions/60697733/react-context-not-updating
+*/

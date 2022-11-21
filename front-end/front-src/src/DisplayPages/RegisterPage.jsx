@@ -5,10 +5,6 @@ import {Navigate} from "react-router-dom"
 import UserInfo from '../UserContext';
 import axios from 'axios';
 
-const BackendURL = "http://localhost:8000";
-const LoginURL = BackendURL + "/logindatabase";
-const RegisterURL = BackendURL + "/register";
-
 const theme = createTheme( {
   palette: {
     primary: {
@@ -82,8 +78,7 @@ export default function Register(props) {
       //Set username and password to the backend server
       //JSONFIX
       const httpResponse = await axios.post('http://localhost:8000/register', { 
-	      username: u_name, password: pass, email: email, password: pass
-      });
+	      username: u_name, password: pass, email: email });
       const responseBody = httpResponse.data;
 
       if (responseBody.loginAllowed === true) {

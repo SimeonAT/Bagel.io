@@ -23,7 +23,7 @@ const Appointment = ({
 
 //Sends data to Calendar and populates 
 function Calendar(props) {
-  const [userInfo, updateUserInfo] = React.useState(props.userInfo);
+  let userInfo = props.userInfo;
   let calendarTasks = undefined;
   let calendarData = []
 

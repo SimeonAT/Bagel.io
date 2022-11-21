@@ -8,7 +8,7 @@ import UserInfo from '../UserContext';
 import styled from "styled-components";
 import Bagel from "./Bagel";
 import axios from 'axios';
-import {calculateTotalCompletedByCategory, getTasksFromServer} from '../frontendUtils';
+import {calculateTotalCompletedByTag} from '../frontendUtils';
 
 const CompleteButton = styled.button`
   font-size: 18px;
@@ -45,10 +45,6 @@ const theme = createTheme( {
 
 export default function Dashboard(props) {
   const userInfoProp = props.userInfo;
-  let username = undefined;
-  if (userInfoProp !== undefined) {
-    username = userInfoProp.username;
-  }
 
   const [homeView, openHome] = React.useState(false);
   const [taskListToRender, setTaskListToRender] = React.useState(undefined);
@@ -63,8 +59,7 @@ export default function Dashboard(props) {
 
   React.useEffect(() => {
     if ((taskDisplayList !== undefined) && (renderTaskList === true)) {
-      setTaskListToRender(getTaskDisplayList(taskDisplayList,
-        setTaskListToRender));
+      setTaskListToRender(getTaskDisplayList(taskDisplayList));
       setRenderTaskList(false);
     }
     return;
@@ -73,9 +68,8 @@ export default function Dashboard(props) {
   //getting elements of the time task list (waiting on await so that an empty promise is not sent))
   const [todaysTasks, setTodaysTask] = React.useState([]);
   React.useEffect(() => {
-    const fetchTasks = async () => {
-      const taskList = await getTasksFromServer(username)
-      const tasks = await calculateTotalCompletedByCategory(username, true);
+    const fetchTasks = async (username) => {
+      const tasks = await calculateTotalCompletedByTag(username, true);
       setTodaysTask(tasks);
       
     }
@@ -83,25 +77,44 @@ export default function Dashboard(props) {
   }, [taskListToRender]);
   const [overallTasks, setOverallTask] = React.useState([]);
   React.useEffect(() => {
-    const fetchTasks = async () => {
-      const tasks = await calculateTotalCompletedByCategory(username, false);
+    const fetchTasks = async (username) => {
+      const tasks = await calculateTotalCompletedByTag(username, false);
       setOverallTask(tasks);
     }
     fetchTasks();
   }, [taskListToRender]);
 
 
-
-  // NOTE: All fields must be present, or the back-end will give an error.
+  /**
+   * Updates task in backend
+   * NOTE: All fields must be present, or the back-end will give an error.
+   * 
+   * @param taskId : unique id for task
+   * @param startDate : ISO start date string
+   * @param endDate : ISO end date string
+   * @param tag : string for category
+   * @param complete : boolean flag whether task is marked complete
+   * @param checkedIn : boolean flag whether task has been checked in, regardless of whether or not it is marked complete
+   */
   const updateTask = async function(taskId, startDate, endDate, tag, complete, checkedIn) {
     // Send new task data to server
     //JSONFIX
     const httpResponse = await axios.post('http://localhost:8000/updateTask', { 
       taskId: taskId, startDate: startDate, endDate: endDate, tag: tag, complete: complete, checkedIn: checkedIn
     });
-    const responseBody = httpResponse.data;
+    if (httpResponse) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
+  /**
+   * Constructs list of tasks that need to be checked in
+   *
+   * @param tasksToDisplay : list of all tasks for user
+   * @return: UI block to insert into page 
+   */
   const getTaskDisplayList = function (tasksToDisplay) {
     const uncheckedTasks = tasksToDisplay.filter((task) => {
       return task.checkedIn === false;
@@ -140,8 +153,6 @@ export default function Dashboard(props) {
                   newUserInfo.tasks = newUserInfo.tasks.filter((task) => {
                     return task.checkedIn === false;
                   });
-
-                  // setUserInfo(newUserInfo);
                   setTaskDisplayList(newUserInfo.tasks);
                   setRenderTaskList(true);
                   updateTask(task.taskid, task.startDate, task.endDate, task.tag, task.complete, task.checkedIn);
@@ -216,7 +227,7 @@ export default function Dashboard(props) {
                 <UserInfo.Consumer>
                   {({username, password, userInfo}) => {
                     return (
-                      <Typography component="h1" variant="h5" onClick={() => calculateTotalCompletedByCategory(username, true)}>
+                      <Typography component="h1" variant="h5" onClick={() => calculateTotalCompletedByTag(username, true)}>
                           {username}'s Dashboard
                       </Typography>
                     );
@@ -254,20 +265,17 @@ export default function Dashboard(props) {
                         Your Productivity Bagel
                       </Typography>
                       <Bagel
-                      todayTask = {todaysTasks}
-                      title = {"Hours Spent on Tasks Today"}
+                        todayTask = {todaysTasks}
+                        title = {"Hours Spent on Tasks Today"}
                        />
-                       <Bagel
-                      todayTask = {overallTasks}
-                      title = {"Hours Spent on Tasks Overall"}
-
+                      <Bagel
+                        todayTask = {overallTasks}
+                        title = {"Hours Spent on Tasks Overall"}
                        />
                     </Box>
                   </Grid>
                 </Grid>
-
               </Box>
-
           <Copyright sx={{ mt: 8, mb: 4 }} />
         </Container>
       </LocalizationProvider>

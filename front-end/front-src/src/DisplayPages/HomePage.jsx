@@ -10,9 +10,6 @@ import UserInfo from '../UserContext';
 import {validateDateFieldFormat, newTaskOverlapsExistingTask} from '../frontendUtils';
 import axios from 'axios';
 
-const BackendURL = "http://localhost:8000";
-const scheduleTaskURL = BackendURL + "/scheduleTask";
-
 const theme = createTheme( {
   palette: {
     primary: {
@@ -32,7 +29,7 @@ export default function Home(props) {
   const [overlapingTimeSuggestion, setOverlapingTimeSuggestion] = React.useState("");
 
   const [isTaskNameInvalid, setIsTaskNameInvalid] = React.useState(false);
-  const [isCategoryInvalid, setIsCategoryInvalid] = React.useState(false);
+  const [isTagInvalid, setIsTagInvalid] = React.useState(false);
   const [currentStartTimeError, setCurrentStartTimeError] = React.useState(null);
   const [errorStartDate, setStartTimeErrorDate] = React.useState(false);
   const [currentEndTimeError, setCurrentEndTimeError] = React.useState(null);
@@ -49,8 +46,8 @@ export default function Home(props) {
   const taskNameRef = React.useRef('');
   const taskStartRef = React.useRef('');
   const taskEndRef = React.useRef('');
-  const categoryManualInputRef = React.useRef('');
-  const categoryDropdownInputRef = React.useRef('');
+  const tagManualInputRef = React.useRef('');
+  const tagDropdownInputRef = React.useRef('');
   
   const handleTagDropdownChange = (event) => {
     setTag(event.target.value);
@@ -98,9 +95,9 @@ export default function Home(props) {
     }
 
     if (values.tag !== "") {
-      setIsCategoryInvalid(false);
+      setIsTagInvalid(false);
     } else {
-      setIsCategoryInvalid(true);
+      setIsTagInvalid(true);
     }
 
   };
@@ -113,9 +110,9 @@ export default function Home(props) {
    */
   const createTask = async function(event, userInfo, setUserInfo) {
     event.preventDefault();
-    const taskCategoryToRecord = categoryManualInputRef.current.value != '' ? categoryManualInputRef.current.value : categoryDropdownInputRef.current.value;
+    const taskTagToRecord = tagManualInputRef.current.value !== '' ? tagManualInputRef.current.value : tagDropdownInputRef.current.value;
     validateRequiredTaskFields({taskName: taskNameRef.current.value, startTime: taskStartRef.current.value,
-                                endTime: taskEndRef.current.value, tag: taskCategoryToRecord});
+                                endTime: taskEndRef.current.value, tag: taskTagToRecord});
 
     // NOTE: must convert dates to ISO strings on front end to make this happend on the users local machine
     let taskStartISO = new Date(taskStartRef.current.value).toISOString();
@@ -139,33 +136,42 @@ export default function Home(props) {
       taskName: taskNameRef.current.value,
       startDate: taskStartISO,
       endDate: taskEndISO,
-      tag: taskCategoryToRecord
+      tag: taskTagToRecord
     });
     const responseBody = httpResponse.data;
-    // console.log(`typeof(responseBody): ${typeof(responseBody)}`);
-    // console.log(`responseBody: ${JSON.stringify(responseBody)}`);
 
     // Update the front end's userInfo task list with the new task.
      const newUserInfo = userInfo;
      newUserInfo.tasks.push(responseBody);
      setUserInfo(newUserInfo);
 
-    resetFormValues(taskNameRef, categoryManualInputRef, categoryDropdownInputRef);
+    resetFormValues(taskNameRef, tagManualInputRef, tagDropdownInputRef);
     setOverlapingTimeErrorMessage('');
     setOverlapingTimeSuggestion('');
 
   };
 
-  const resetFormValues = async function(taskNameRef, categoryManualInputRef, categoryDropdownInputRef){
+  /**
+   * Resets form values to prepare for next task creation
+   *
+   * @param taskNameRef : pointer to ref of name field
+   * @param tagManualInputRef : pointer to ref of manual input of category field
+   * @param tagDropdownInputRef: pointer to ref of dropdown input of category field
+   */
+  const resetFormValues = async function(taskNameRef, tagManualInputRef, tagDropdownInputRef){
     taskNameRef.current.value = '';
-    categoryManualInputRef.current.value = '';
-    categoryDropdownInputRef.current.value = '';
+    tagManualInputRef.current.value = '';
+    tagDropdownInputRef.current.value = '';
     setEndDateWithNoInitialValue(null);
     setStartDateWithNoInitialValue(null);
     taskStartRef.current.value = '';
     taskEndRef.current.value = '';
   }
 
+  /**
+   * Navigates user to dashboard page
+   *
+   */
   const navigateToDashboard = async function(event) {
     event.preventDefault();
     openDashboard(true);
@@ -334,11 +340,11 @@ export default function Home(props) {
                               </Stack>
 
                               <FormControl fullWidth
-                              error={isCategoryInvalid}
-                              helperText={isCategoryInvalid && "Category Name is required"} >
+                              error={isTagInvalid}
+                              helperText={isTagInvalid && "Category Name is required"} >
                                 <InputLabel id="demo-simple-select-label">Select a Category</InputLabel>
                                 <Select
-                                  inputRef={categoryDropdownInputRef}
+                                  inputRef={tagDropdownInputRef}
                                   id="select-a-category"
                                   value={tag}
                                   label="Select a Category"
@@ -359,9 +365,9 @@ export default function Home(props) {
                               <Typography align="center">-or-</Typography>
 
                               <TextField 
-                                inputRef={categoryManualInputRef}
-                                error={isCategoryInvalid}
-                                helperText={isCategoryInvalid && "Please enter a category or select one from above!"}
+                                inputRef={tagManualInputRef}
+                                error={isTagInvalid}
+                                helperText={isTagInvalid && "Please enter a category or select one from above!"}
                                 margin="normal"
                                 fullWidth
                                 name="category"

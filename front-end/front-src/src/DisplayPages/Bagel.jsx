@@ -6,12 +6,12 @@ import {EventTracker, HoverState } from '@devexpress/dx-react-chart';
 function Bagel(props){
     const [chartData, setChartData] = useState([]);
 
-    React.useEffect(() => {
+    React.useEffect((chartData) => {
       console.log("chartData: ", chartData);
     }, [props.todayTask]);
    //adds task category and time to the data field everytime todayTask prop is updated
     React.useEffect(() => {
-      if(props.todayTask != undefined) {
+      if(props.todayTask !== undefined) {
         const newData = [];
         for(let i = 0; i < props.todayTask.length; i++) {
           newData.push( {

@@ -1,13 +1,14 @@
-// NOTE: modify this file, creating/editing functions and adding comments with calls to the database function you would like me to implement later in dbUtils.js.
-// Then use the mock database to test it for the time being
-
 const sendError = require("./sendError");
 const dbUtils = require("./dbUtils");
 const { v4: uuidv4 } = require('uuid');
-const { user } = require("pg/lib/defaults");
 
-// //CHECK OBJECTS.JS FOR TASK OBJ IMPLEMENTATION.
-
+/** 
+ * Creates new user in DB
+ * 
+ * @param request: {username:"", email:"", password:""}
+ * @param response - HTTP response object to send to client
+ * @returns - {loginAllowed: true, payload: {}} if success, {loginAllowed: false} otherwise
+ */
 exports.register = async (request, response) => {
   try {
     // set response headers
@@ -70,16 +71,16 @@ exports.register = async (request, response) => {
   }
 }
 
-// Log user in
-// <Inputs> request body: {username:"", email:"", password:""}
-// <Functionality> compares given username & password with the usernames & passwords in db
-// <Returns> sends response with body: {loginAllowed: true, payload: {}} if match,
-// {loginAllowed: false} if no match
+/** 
+ * Compares given username & password with the usernames & passwords in db
+ * Logs in User
+ * 
+ * @param request: {username:"", email:"", password:""}
+ * @param response - HTTP response object to send to client
+ * @returns - {loginAllowed: true, payload: {}} if match, {loginAllowed: false} if no match
+ */
 exports.loginDatabase = async (request, response) => {
   try {
-    // console.log(`request.body: ${request.body}`);
-    // console.log(`typeof(request.body): ${typeof(request.body)}`);
-
     response.set("Access-Control-Allow-Origin", "*");
     response.setHeader("Content-Type", "application/json");
     const loginReqBody = request.body;
@@ -129,10 +130,14 @@ exports.loginDatabase = async (request, response) => {
   }
 }
 
-// Get task list from DB using username as key & send result to front-end
-// <Inputs> request body: {username:""}
-// <Functionality> queries db for all tasks associated with username
-// <Returns> sends response with body: {taskList: taskArray}
+/** 
+ * Get task list from DB using username as key & send result to front-end
+ * Queries db for all tasks associated with username
+ * 
+ * @param request: {username:""}
+ * @param response - HTTP response object to send to client
+ * @returns - {taskList: taskArray}
+ */
 exports.getTasks = async (request, response) => {
   try {
     response.set("Access-Control-Allow-Origin", "*");
@@ -163,12 +168,16 @@ exports.getTasks = async (request, response) => {
   }
 }
 
-// Adds task to database, returns code 200 on success
-// <Inputs> request body: {username:"", taskName:"", startDate:"", endDate:"", tag:""}
-// <Functionality> inserts task described in request body into the database
-// <Returns> taskid of the inserted task
-// NOTE: any Date() in the request body must have been 
-// converted to a UTC string with the "new Date().toUTCString()" method
+
+/** 
+ * Adds task to database, returns code 200 on success
+ * Inserts task described in request body into the database
+ * NOTE: any Date() in the request body must have been converted to a UTC string with the "new Date().toUTCString()" method
+ * 
+ * @param request: {username:"", taskName:"", startDate:"", endDate:"", tag:""}
+ * @param response - HTTP response object to send to client
+ * @returns - taskid of the inserted task
+ */
 exports.scheduletask = async (request, response) => {
   try {
     response.set("Access-Control-Allow-Origin", "*");
@@ -191,10 +200,14 @@ exports.scheduletask = async (request, response) => {
   }
 }
 
-// Updates task parameters using ID as primary key
-// <Inputs> request body: {taskId:"", taskName:"", startDate:"", endDate:"", tag:"", complete:"" }
-// <Functionality> updates task with whatever data is sent in body (some fields may be received as blank)
-// <Returns> sends response with body: {success: true}
+/** 
+ * Updates task parameters using ID as primary key
+ * Updates task with whatever data is sent in body (some fields may be received as blank)
+ * 
+ * @param request: {taskId:"", taskName:"", startDate:"", endDate:"", tag:"", complete:"" }
+ * @param response - HTTP response object to send to client
+ * @returns - {success: true}
+ */
 exports.updateTask = async (request, response) => {
   try {
     response.set("Access-Control-Allow-Origin", "*");
@@ -209,11 +222,14 @@ exports.updateTask = async (request, response) => {
   }
 }
 
-
-// Returns a list of all tags a user should have in their dropdown menu
-// <Inputs> request body: {username:"" }
-// <Functionality> queries DB with username that is sent passed in
-// <Returns> sends response with body: {tagList: []}
+/** 
+ * Returns a list of all tags a user should have in their dropdown menu
+ * Queries DB with username that is sent passed in
+ * 
+ * @param request: {username:"" }
+ * @param response - HTTP response object to send to client
+ * @returns - {tagList: []}
+ */
 exports.fetchTags = async (request, response) => {
   try {
     response.set("Access-Control-Allow-Origin", "*");
@@ -239,6 +255,13 @@ exports.fetchTags = async (request, response) => {
   }
 }
 
+/** 
+ * Sets up environment for testing
+ * 
+ * @param request: HTTP response object to recieved from client
+ * @param response - HTTP response object to send to client
+ * @returns - undefined - No return value
+ */
 exports.setuptesting = async (request, response) => {
   try {
     response.set("Access-Control-Allow-Origin", "*");
@@ -249,13 +272,3 @@ exports.setuptesting = async (request, response) => {
     sendError.sendError(error, response);
   }
 }
-
-
-// FORTESTING
-exports.testDBGet = async (request, response) => {
-  response.set("Access-Control-Allow-Origin", "*");
-  response.setHeader("Content-Type", "application/json");
-  const queryResult = await dbUtils.selectAll();
-  response.status(200).json({displayStr: `Miliseconds Since 1970: [${new Date().getTime()}], 
-      First DB Entry Inserted At: [${queryResult}]`});
-};
