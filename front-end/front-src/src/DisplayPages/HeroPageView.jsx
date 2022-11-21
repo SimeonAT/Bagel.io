@@ -58,10 +58,6 @@ const Perfect = styled(SellingPoint)`
   margin-left: 7em;
 `;
 
-const RegisterButton = styled(Button)`
-  width: 500px;
-`;
-
 const StyledFooter = styled.footer`
   margin-top: 5em;
 `;

@@ -5,10 +5,6 @@ import { Navigate } from "react-router-dom";
 import UserInfo from '../UserContext';
 import axios from 'axios';
 
-const BackendURL = "http://localhost:8000";
-const LoginURL = BackendURL + "/logindatabase";
-const RegisterURL = BackendURL + "/register";
-
 const theme = createTheme({
   palette: {
     primary: {

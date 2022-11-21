@@ -12,7 +12,7 @@ const MILLISECONDS_IN_MINUTE = MILLISECONDS_IN_SECOND*SECONDS_IN_MINUTE;
  * @param calculatingOnlyToday : boolean flag to indicate if we only want today's tasks or whole month
  * @return totalsList : 2d array in the form : [ [tagName, tagTime] , [tagName2, tag2Time] ]
  */
-export const calculateTotalCompletedByCategory = async function(username, calculatingOnlyToday) {
+export const calculateTotalCompletedByTag = async function(username, calculatingOnlyToday) {
   let taskList = await getTasksFromServer(username);
 
   if (calculatingOnlyToday) {
@@ -28,14 +28,14 @@ export const calculateTotalCompletedByCategory = async function(username, calcul
     const needToAddTaskTime = (taskList[i].complete === true && taskList[i].checkedIn === true);
 
     if (needToAddTaskTime) {
-      const category = taskList[i].tag;
-      const categoryAlreadyPresent = isCategoryInTotalList(totalsList, category);
-      if (categoryAlreadyPresent) {
+      const tag = taskList[i].tag;
+      const tagAlreadyPresent = isTagInTotalList(totalsList, tag);
+      if (tagAlreadyPresent) {
         //add sum
         const taskTime = calculateTaskTime(taskList[i]);
         let tagIndex = 0;
         for (let j = 0; j < totalsList.length; j++) {
-          if (totalsList[j][0] === category) {
+          if (totalsList[j][0] === tag) {
             tagIndex = j;
           }
         }
@@ -45,7 +45,7 @@ export const calculateTotalCompletedByCategory = async function(username, calcul
       } else {
         //instantiate and add sum
         const taskTime = calculateTaskTime(taskList[i]);
-        totalsList.push([category, taskTime]);
+        totalsList.push([tag, taskTime]);
       }
     }
   }
@@ -59,7 +59,7 @@ export const calculateTotalCompletedByCategory = async function(username, calcul
  * @param tag : the category we are looking for in the array
  * @return boolean : true if found, false otherwise
  */
-const isCategoryInTotalList = function(totalsList, tag){
+const isTagInTotalList = function(totalsList, tag){
   if(totalsList.length === 0) {
     return false;
   }
@@ -232,7 +232,7 @@ export const validateDateFieldFormat = values => {
  *
  * @param userInfoProp : user info to call server for proper user
  * @param fetchTagsURL : server end point
- * @return dropDownCategoryOptions : custome array of MenuItem elements for UI
+ * @return dropDownCategoryOptions : custom array of MenuItem elements for UI
  */
 export const setUpCategoriesForDropdown = async function(userInfoProp, fetchTagsURL) {
   let dropDownCategoryOptions = [];
