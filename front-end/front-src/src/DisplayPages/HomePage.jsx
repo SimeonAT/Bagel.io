@@ -348,10 +348,16 @@ export default function Home(props) {
                               {/** --- FIXME ---
                                    The "helperText" warning is beign caused
                                    by the FormControl helperText.
+
+                                   Ask Team:
+                                    Is it okay to remove this line:
+                                    helperText={isTagInvalid && "Category Name is required"}
+
+                                    The "Category Name is required" string will never appear,
+                                    even when the line is in the code.
                                */}
                               <FormControl fullWidth
-                              error={isTagInvalid}
-                              helperText={isTagInvalid && "Category Name is required"} >
+                              error={isTagInvalid}>
                                 <InputLabel id="demo-simple-select-label">Select a Category</InputLabel>
                                 <Select
                                   inputRef={tagDropdownInputRef}
