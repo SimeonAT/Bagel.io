@@ -61,6 +61,10 @@ HeroPage:
 
 HomePage:
 /* ---- SOURCES USED ----
+	 - https://mui.com/material-ui/react-select/
+	 - https://mui.com/material-ui/react-select/#other-props
+	 - https://mui.com/material-ui/react-select/#basic-select
+
    - https://developer.mozilla.org/en-US/docs/Web/API/fetch
    - https://developer.mozilla.org/en-US/docs/Web/API/Response
    - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse

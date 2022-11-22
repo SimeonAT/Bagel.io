@@ -131,6 +131,8 @@ export default function Home(props) {
     }
 
     //JSONFIX
+    console.log({taskName: taskNameRef.current.value, startTime: taskStartRef.current.value,
+      endTime: taskEndRef.current.value, tag: taskTagToRecord});
     const httpResponse = await axios.post('http://localhost:8000/scheduleTask', { 
       username: userInfo.username,
       taskName: taskNameRef.current.value,
@@ -166,6 +168,12 @@ export default function Home(props) {
     setStartDateWithNoInitialValue(null);
     taskStartRef.current.value = '';
     taskEndRef.current.value = '';
+
+    // The drop-down menu is dependent on the "tag" state, not
+    // on the "tagDropdownInputRef". If we reset the "tag" state,
+    // then the drop-down menu resets.
+    //
+    setTag('');
   }
 
   /**
