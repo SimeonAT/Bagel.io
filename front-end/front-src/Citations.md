@@ -56,20 +56,7 @@ HeroPage:
  * - https://reactjs.org/docs/components-and-props.html
  * - https://reactjs.org/docs/state-and-lifecycle.html
  * 
- * - https://styled-components.com/docs/api#primary
- * - https://styled-components.com/
- * 
  * - https://v5.reactrouter.com/web/guides/quick-start
- * 
- * - https://www.w3schools.com/css/css_font.asp
- * - https://www.w3schools.com/css/css_inline-block.asp
- * - https://www.w3schools.com/colors/colors_picker.asp
- * - https://www.w3schools.com/colors/colors_names.asp
- * - https://www.w3schools.com/css/css_positioning.asp
- * - https://www.w3schools.com/cssref/pr_font_weight.asp
- * - https://www.w3schools.com/css/css_margin.asp
- * - https://www.w3schools.com/css/css_padding.asp
- * - https://www.w3schools.com/css/css_boxmodel.asp
 */
 
 HomePage:
@@ -154,22 +141,7 @@ DashboardPage:
    - https://reactjs.org/docs/refs-and-the-dom.html
    - https://reactjs.org/docs/forms.html
 
-   - https://styled-components.com/docs/api#primary
-   - https://styled-components.com/
-
-   - https://www.w3schools.com/css/css_font.asp
-   - https://www.w3schools.com/css/css_inline-block.asp
-   - https://www.w3schools.com/colors/colors_picker.asp
-   - https://www.w3schools.com/colors/colors_names.asp
-   - https://www.w3schools.com/css/css_positioning.asp
-   - https://www.w3schools.com/cssref/pr_font_weight.asp
-   - https://www.w3schools.com/css/css_margin.asp
-   - https://www.w3schools.com/css/css_padding.asp
-   - https://www.w3schools.com/css/css_boxmodel.as
-   - https://www.w3schools.com/CSSREF/css3_pr_opacity.php
-   - https://www.w3schools.com/cssref/pr_class_display.php
    - https://www.w3schools.com/jsref/event_oninput.asp
-
    - https://www.w3schools.com/html/html_forms.asp
    - https://www.w3schools.com/jsref/event_onchange.asp
 
@@ -182,6 +154,36 @@ DashboardPage:
    - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/Date#syntax
    - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/Date
    - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
+*/
+
+Styles.jsx
+/*
+ * - https://developer.mozilla.org/en-US/docs/web/javascript/reference/statements/export
+ *
+ * - https://styled-components.com/docs/api#primary
+ * - https://styled-components.com/
+ *
+ * - https://www.w3schools.com/css/css_font.asp
+ * - https://www.w3schools.com/css/css_inline-block.asp
+ * - https://www.w3schools.com/colors/colors_picker.asp
+ * - https://www.w3schools.com/colors/colors_names.asp
+ * - https://www.w3schools.com/css/css_positioning.asp
+ * - https://www.w3schools.com/cssref/pr_font_weight.asp
+ * - https://www.w3schools.com/css/css_margin.asp
+ * - https://www.w3schools.com/css/css_padding.asp
+ * - https://www.w3schools.com/css/css_boxmodel.asp
+ *
+ * - https://www.w3schools.com/css/css_font.asp
+ * - https://www.w3schools.com/css/css_inline-block.asp
+ * - https://www.w3schools.com/colors/colors_picker.asp
+ * - https://www.w3schools.com/colors/colors_names.asp
+ * - https://www.w3schools.com/css/css_positioning.asp
+ * - https://www.w3schools.com/cssref/pr_font_weight.asp
+ * - https://www.w3schools.com/css/css_margin.asp
+ * - https://www.w3schools.com/css/css_padding.asp
+ * - https://www.w3schools.com/css/css_boxmodel.as
+ * - https://www.w3schools.com/CSSREF/css3_pr_opacity.php
+ * - https://www.w3schools.com/cssref/pr_class_display.php
 */
 
 Backend:
@@ -222,7 +224,3 @@ Backend:
  * - https://stackoverflow.com/questions/60697733/react-context-not-updating
 */
 
-Styles.jsx
-/*
- * https://developer.mozilla.org/en-US/docs/web/javascript/reference/statements/export
-*/
