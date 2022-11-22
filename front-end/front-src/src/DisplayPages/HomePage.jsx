@@ -131,8 +131,6 @@ export default function Home(props) {
     }
 
     //JSONFIX
-    console.log({taskName: taskNameRef.current.value, startTime: taskStartRef.current.value,
-      endTime: taskEndRef.current.value, tag: taskTagToRecord});
     const httpResponse = await axios.post('http://localhost:8000/scheduleTask', { 
       username: userInfo.username,
       taskName: taskNameRef.current.value,
