@@ -1,5 +1,4 @@
 import React from "react";
-import styled from "styled-components";
 import {WelcomeDiv, MainLetter, SubLetters, LogoDiv} from './Styles';
 import {Tagline, SellingPoint, Prioritize, Perfect, StyledFooter} from './Styles';
 import '../styles.css';

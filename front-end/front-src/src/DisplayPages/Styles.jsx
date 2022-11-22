@@ -28,7 +28,7 @@ export const Tagline = styled.h5`
   padding: 0px;
 `;
 
-export const SellingPoint = styled.h5`
+export const SellingPoint = styled(Tagline)`
   margin-top: 0.5em;
   font-size: 25px;
   font-weight: normal;
@@ -44,4 +44,26 @@ export const Perfect = styled(SellingPoint)`
 
 export const StyledFooter = styled.footer`
   margin-top: 5em;
+`;
+
+export const CompleteButton = styled.button`
+  font-size: 18px;
+  width: 200px;
+  height: 40px;
+  background-color: Lavender;
+`;
+
+export const ButtonSection = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
+export const TaskDisplay = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  padding-top: 5%;
+  padding-bottom: 3%;
+  padding-left: 5%;
+  padding-right: 5%;
 `;

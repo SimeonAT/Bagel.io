@@ -5,32 +5,10 @@ import {Navigate} from "react-router-dom";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import UserInfo from '../UserContext';
-import styled from "styled-components";
 import Bagel from "./Bagel";
 import axios from 'axios';
 import {calculateTotalCompletedByTag} from '../frontendUtils';
-
-const CompleteButton = styled.button`
-  font-size: 18px;
-  width: 200px;
-  height: 40px;
-  background-color: Lavender;
-`;
-
-const ButtonSection = styled.div`
-  display: flex;
-  flex-direction: row;
-`;
-
-const TaskDisplay = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  padding-top: 5%;
-  padding-bottom: 3%;
-  padding-left: 5%;
-  padding-right: 5%;
-`;
+import {CompleteButton, ButtonSection, TaskDisplay} from './Styles';
 
 const theme = createTheme( {
   palette: {
