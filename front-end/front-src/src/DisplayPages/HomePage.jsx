@@ -115,6 +115,11 @@ export default function Home(props) {
                                 endTime: taskEndRef.current.value, tag: taskTagToRecord});
 
     // NOTE: must convert dates to ISO strings on front end to make this happend on the users local machine
+    if ((taskStartRef.current.value === "") || (taskEndRef.current.value === "")) {
+        // The user has not entered any times. Do not create the task,
+        // and tell the user about this error.
+        return;
+    }
     let taskStartISO = new Date(taskStartRef.current.value).toISOString();
     let taskEndISO = new Date(taskEndRef.current.value).toISOString();
 
