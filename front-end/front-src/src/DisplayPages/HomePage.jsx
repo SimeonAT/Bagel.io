@@ -345,6 +345,10 @@ export default function Home(props) {
                                 />
                               </Stack>
 
+                              {/** --- FIXME ---
+                                   The "helperText" warning is beign caused
+                                   by the FormControl helperText.
+                               */}
                               <FormControl fullWidth
                               error={isTagInvalid}
                               helperText={isTagInvalid && "Category Name is required"} >
