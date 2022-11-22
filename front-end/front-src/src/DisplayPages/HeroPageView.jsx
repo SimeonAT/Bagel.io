@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "styled-components";
+import {WelcomeDiv, MainLetter, SubLetters, LogoDiv} from './Styles';
+import {Tagline, SellingPoint, Prioritize, Perfect, StyledFooter} from './Styles';
 import '../styles.css';
 import Copyright from "./Copyright";
 import {Box, Button, createTheme, ThemeProvider, CssBaseline} from '@mui/material';
@@ -15,52 +17,6 @@ const theme = createTheme( {
     },
   },
   });
-
-const WelcomeDiv = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const MainLetter = styled.div`
-  font-size: 300px;
-  font-weight: bold;
-  display: inline;
-`;
-
-const SubLetters = styled.div`
-  font-size: 100px;
-  display: inline;
-`;
-
-const LogoDiv = styled.div`
-  width: 500px;
-  text-align: center;
-`;
-
-const Tagline = styled.h5`
-  font-size: 30px;
-  margin: 0px;
-  padding: 0px;
-`;
-
-const SellingPoint = styled(Tagline)`
-  margin-top: 0.5em;
-  font-size: 25px;
-  font-weight: normal;
-`;
-
-const Prioritize = styled(SellingPoint)`
-  margin-right: 7em;
-`;
-
-const Perfect = styled(SellingPoint)`
-  margin-left: 7em;
-`;
-
-const StyledFooter = styled.footer`
-  margin-top: 5em;
-`;
 
 function HeroView(props) {
 
