@@ -128,23 +128,23 @@ button {
 .login-button {
   width: 10vw;
   color: #FFEADF;
-  background-color: #553c9a;;
-  border: .1vw solid #553c9a;
+  background-color: rgba(135, 142, 98, 0.6)a;;
+  border: .1vw solid rgba(135, 142, 98, 0.6);
   font-weight: bold;
   padding: .5vw .5vw;
 }
 
 button:hover {
-  color: #553c9a;
+  color: black;
   box-shadow: 0 0 5vw rgba(135, 142, 98, 0.6);
-  background-color: #FFEADF;
+  background-color: #A38879;
 }
 
 .create-account-button {
   font-size: 2vw;
-  color: #FFEADF;
-  background-color: #553c9a;
-  border: .1vw solid #553c9a;
+  color: #A38879;
+  background-color: rgba(135, 142, 98, 0.6);
+  border: .1vw solid rgba(135, 142, 98, 0.6);
   font-weight: bold;
   padding: .5vw 3vw;
 }

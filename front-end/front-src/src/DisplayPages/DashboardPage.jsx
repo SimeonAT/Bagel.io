@@ -102,7 +102,9 @@ export default function Dashboard(props) {
         <Box key={task.taskid}
          sx={{
           width: 450,
-          border: '2px dashed grey',
+          border: 4,
+          boxShadow: 3,
+          borderRadius: 8,
           margin: 'auto',
           mb: 2,
          }}>
