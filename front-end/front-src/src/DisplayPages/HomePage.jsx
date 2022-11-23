@@ -135,6 +135,12 @@ export default function Home(props) {
       return;
     }
 
+    if (taskNameRef.current.value.length > 32) {
+      setOverlapingTimeErrorMessage('The task name is too long.');
+      setOverlapingTimeSuggestion('Please enter a task name that is 32 characters or less.');
+      return;
+    }
+
     //JSONFIX
     const httpResponse = await axios.post('http://localhost:8000/scheduleTask', { 
       username: userInfo.username,
