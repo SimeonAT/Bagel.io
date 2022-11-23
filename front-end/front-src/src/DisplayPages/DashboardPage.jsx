@@ -27,6 +27,11 @@ export default function Dashboard(props) {
   const [homeView, openHome] = React.useState(false);
   const [taskListToRender, setTaskListToRender] = React.useState(undefined);
 
+  let username = undefined;
+  if (userInfoProp !== undefined) {
+    username = userInfoProp.username;
+  }
+
   let initialTaskList = undefined;
   if (userInfoProp !== undefined) {
     initialTaskList = userInfoProp.tasks;
@@ -46,7 +51,7 @@ export default function Dashboard(props) {
   //getting elements of the time task list (waiting on await so that an empty promise is not sent))
   const [todaysTasks, setTodaysTask] = React.useState([]);
   React.useEffect(() => {
-    const fetchTasks = async (username) => {
+    const fetchTasks = async () => {
       const tasks = await calculateTotalCompletedByTag(username, true);
       setTodaysTask(tasks);
       
@@ -55,7 +60,7 @@ export default function Dashboard(props) {
   }, [taskListToRender]);
   const [overallTasks, setOverallTask] = React.useState([]);
   React.useEffect(() => {
-    const fetchTasks = async (username) => {
+    const fetchTasks = async () => {
       const tasks = await calculateTotalCompletedByTag(username, false);
       setOverallTask(tasks);
     }
