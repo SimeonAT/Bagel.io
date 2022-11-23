@@ -180,12 +180,19 @@ export default function Register(props) {
                     id="email"
                     autoComplete="email"
                     onChange={event => {
+                      const email_too_long = (event.target.value.length > 32) ? true : false;
+                      if (email_too_long === true) {
+                        setEmailState("");
+                        errors["u_email"] = "Email is too long";
+                        return;
+                      }
+
                       const email_empty = (event.target.value === "") ? true : false;
                       setEmailState(event.target.value);
                       let email = event.target.value;
                       //EMAIL
                       errors["u_email"] = "";
-                      if(email !== undefined) {
+                      if (email !== undefined) {
                         if(email_empty) {
                           errors["u_email"] = "Email Empty";
                         }
