@@ -9,6 +9,7 @@ import Bagel from "./Bagel";
 import axios from 'axios';
 import {calculateTotalCompletedByTag} from '../frontendUtils';
 import {CompleteButton, ButtonSection, TaskDisplay} from './Styles';
+import background from './TEST.png'
 
 const theme = createTheme( {
   palette: {
@@ -181,25 +182,28 @@ export default function Dashboard(props) {
 
   const renderPage = (
     <ThemeProvider theme={theme}>
-
-      <Link href = '/home' style={{ textDecoration: 'none' }}>
-        <Box textAlign='left'>
-            <Button 
-              color="primary"
-              type="submit"
-              onClick = {navigateToHome}
-              sx={{ mt: 3, mb: 2, mr: 5, ml: 5,
-                pr: 7, pl: 7, 
-                border: 2,
-                fontWeight: 600,
-                fontSize: 16 }} >
-              Home
-            </Button>
-          </Box>
-      </Link>
+      <div style={{ backgroundImage:`url(${background})` }}>
+        <Link href = '/home' style={{ textDecoration: 'none' }}>
+          <Box textAlign='left'>
+              <Button 
+                color="primary"
+                type="submit"
+                onClick = {navigateToHome}
+                sx={{ mt: 3, mb: 2, mr: 5, ml: 5,
+                  pr: 7, pl: 7, 
+                  border: 2,
+                  fontWeight: 600,
+                  fontSize: 16 }} >
+                Home
+              </Button>
+            </Box>
+        </Link>
+      </div>
 
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Container component="main">
+        
+
           <CssBaseline />
               <Box
                 sx={{
@@ -208,19 +212,17 @@ export default function Dashboard(props) {
                   alignItems: 'center',
                 }}
                 >
-
                 <UserInfo.Consumer>
                   {({username, password, userInfo}) => {
                     return (
-                      <Typography component="h1" variant="h5" onClick={() => calculateTotalCompletedByTag(username, true)}>
+                      <Typography component="h1" variant="h2" sx={{ mb: 5, textTransform: 'capitalize' }} onClick={() => calculateTotalCompletedByTag(username, true)}>
                           {username}'s Dashboard
                       </Typography>
                     );
                   }}
                 </UserInfo.Consumer>
-
                 <Grid container spacing={2} >
-                  <Grid item xs={4}>
+                  <Grid item xs={6}>
                     <Box
                       sx={{
                         marginTop: 8,
@@ -229,14 +231,14 @@ export default function Dashboard(props) {
                         alignItems: 'center',
                       }}
                       >
-                      <Typography component="h1" variant="h5" sx={{ mb: 1 }}>
+                      <Typography component="h1" variant="h3" sx={{ mb: 1 }}>
                         Check in your tasks!
                       </Typography>
                       {taskListToRender}
                     </Box>
                   </Grid>
 
-                  <Grid item xs={8}>
+                  <Grid item xs={6}>
                     <Box
                       sx={{
                         marginTop: 8,
@@ -246,7 +248,7 @@ export default function Dashboard(props) {
                       }}
                       >
 
-                      <Typography component="h1" variant="h5">
+                      <Typography component="h1" variant="h3">
                         Your Productivity Bagel
                       </Typography>
                       <Bagel
@@ -262,6 +264,7 @@ export default function Dashboard(props) {
                 </Grid>
               </Box>
           <Copyright sx={{ mt: 8, mb: 4 }} />
+          
         </Container>
       </LocalizationProvider>
     </ThemeProvider>

@@ -4,10 +4,8 @@ import {Tagline, SellingPoint, Prioritize, Perfect, StyledFooter} from './Styles
 import '../styles.css';
 import Copyright from "./Copyright";
 import {Box, Button, createTheme, ThemeProvider, CssBaseline} from '@mui/material';
-import Paper from '@mui/material/Paper';
 import {Link} from "react-router-dom";
-import logo from './Logo.jpg'
-import background from './Background.jpg'
+import background from './Hero.jpeg'
 
 const theme = createTheme( {
   palette: {
@@ -36,9 +34,10 @@ function HeroView(props) {
                 onClick = {props.loginHandler}
                 sx={{ mt: 3, mb: 2, mr: 5,
                   pr: 7, pl: 7, 
-                  border: 2,
-                  fontWeight: 600,
-                  fontSize: 16 }} >
+                  border: 5,
+                  borderRadius: 3,
+                  fontWeight: 500,
+                  fontSize: 24 }} >
                 Login
               </Button>
             </Box>

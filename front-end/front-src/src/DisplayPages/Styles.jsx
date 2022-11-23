@@ -23,7 +23,7 @@ export const LogoDiv = styled.div`
   text-align: center;
 `;
 
-export const Tagline = styled.h5`
+export const Tagline = styled.h1`
   font-size: 30px;
   margin: 0px;
   padding: 0px;
