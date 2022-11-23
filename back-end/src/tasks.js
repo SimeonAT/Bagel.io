@@ -89,11 +89,20 @@ exports.loginDatabase = async (request, response) => {
     // check if user in db
     let theUser = null;
     let userInDatabase = false;
+    let usernameError = true;
+    let passwordError = false;
     for (const userObj of users) {
       if (userObj.username === loginReqBody.username && userObj.memberpassword === loginReqBody.password) {
         userInDatabase = true;
         theUser = userObj;
         break;
+      }
+      
+      if(userObj.username === loginReqBody.username) {
+        usernameError = false; //username exists
+        if(userObj.memberpassword != loginReqBody.password) {
+          passwordError = true; //password is wrong.
+        }
       }
     }
     if (userInDatabase) {
@@ -123,7 +132,10 @@ exports.loginDatabase = async (request, response) => {
         }
       });
     } else {
-      response.send({loginAllowed: false});
+      response.send({loginAllowed: false,
+                     password: passwordError,
+                     username: usernameError
+                    });
     }
   } catch (error) {
     sendError.sendError(error, response);

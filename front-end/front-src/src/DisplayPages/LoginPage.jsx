@@ -25,6 +25,9 @@ export default function SignIn(props) {
     pass: "invalid password"
   };
 
+  const [usernameError, setUsernameError] = React.useState(undefined);
+  const [passwordError, setPasswordError] = React.useState(undefined);
+
   const handleSubmit = async function (event, setUsername,
     setPassword, setUserInfo) {
     event.preventDefault();
@@ -43,7 +46,13 @@ export default function SignIn(props) {
       setUserInfo(responseBody.payload);
     }
     else {
-      setErrorMessages({ name: "pass", message: errors.pass });
+      if(responseBody.username) {
+        setUsernameError("Username does not exist");
+      }
+      if(responseBody.password) {
+        setPasswordError("Incorrect Password");
+      }
+      //setErrorMessages({ name: "pass", message: errors.pass });
     }
   };
 
@@ -100,9 +109,15 @@ export default function SignIn(props) {
                     id="username"
                     label="Username"
                     name="userName"
-                    autoFocus
+                    //autoFocus
+                    defaultValue=""
+                    onChange={event => {
+                      setUsernameError("");
+                    }}
+                    error = {(usernameError != undefined && usernameError.length > 0)}
+                    helperText = {usernameError}
                   />
-                  {renderErrorMessage("userName")}
+                  {/* {renderErrorMessage("userName")} */}
 
                   <TextField
                     margin="normal"
@@ -113,8 +128,14 @@ export default function SignIn(props) {
                     type="password"
                     id="password"
                     autoComplete="current-password"
+                    defaultValue=""
+                    onChange={event => {
+                      setPasswordError("");
+                    }}
+                    error = {(passwordError != undefined && passwordError.length > 0)}
+                    helperText = {passwordError}
                   />
-                  {renderErrorMessage("pass")}
+                  {/* {renderErrorMessage("pass")} */}
 
                   <Box textAlign='center'>
                     <Button
