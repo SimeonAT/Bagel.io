@@ -140,6 +140,11 @@ export default function Home(props) {
       setOverlapingTimeSuggestion('Please enter a task name that is 32 characters or less.');
       return;
     }
+    if (taskTagToRecord.length > 32) {
+      setOverlapingTimeErrorMessage('The task tag is too long.');
+      setOverlapingTimeSuggestion('Please enter a task tag that is 32 characters or less.');
+      return;
+    }
 
     //JSONFIX
     const httpResponse = await axios.post('http://localhost:8000/scheduleTask', { 
