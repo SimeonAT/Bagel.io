@@ -21,8 +21,8 @@ function Bagel(props){
       "#20b2aa", 
       "#468499",
     ];
-    React.useEffect((chartData) => {
-      console.log("chartData: ", chartData);
+
+    React.useEffect(() => {
     }, [props.todayTask]);
    //adds task category and time to the data field everytime todayTask prop is updated
     React.useEffect(() => {
