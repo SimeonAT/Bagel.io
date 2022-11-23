@@ -4,7 +4,10 @@ import {Tagline, SellingPoint, Prioritize, Perfect, StyledFooter} from './Styles
 import '../styles.css';
 import Copyright from "./Copyright";
 import {Box, Button, createTheme, ThemeProvider, CssBaseline} from '@mui/material';
+import Paper from '@mui/material/Paper';
 import {Link} from "react-router-dom";
+import logo from './Logo.jpg'
+import background from './Background.jpg'
 
 const theme = createTheme( {
   palette: {
@@ -21,6 +24,8 @@ function HeroView(props) {
 
   const renderForm = (
     <ThemeProvider theme={theme}>
+      <div style={{ backgroundImage:`url(${background})` }}>
+    
       <CssBaseline />
       <div>
         <Link to = "/login" style={{ textDecoration: 'none' }}>
@@ -71,6 +76,7 @@ function HeroView(props) {
             <Copyright />
           </StyledFooter>
         </WelcomeDiv>
+      </div>
       </div>
     </ThemeProvider>
   );
