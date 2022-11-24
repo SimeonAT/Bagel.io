@@ -1,3 +1,5 @@
+/*
+
 import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { screen } from '@testing-library/react';
@@ -64,3 +66,5 @@ const Register = async () => {
 test('Render HeroPageView, click Register', async () => {
   register();
 });
+
+*/

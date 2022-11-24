@@ -1,5 +1,3 @@
-/*
-
 import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { screen } from '@testing-library/react';
@@ -11,6 +9,7 @@ import LoginPage from '../DisplayPages/LoginPage';
 import RegisterPage from '../DisplayPages/RegisterPage';
 import UserInfo from '../UserContext';
 import * as React from 'react';
+import Main from '../Main';
 // import HomePage from '../DisplayPages/HomePage';
 // import DashboardPage from '../DisplayPages/DashboardPage';
 
@@ -21,33 +20,26 @@ import * as React from 'react';
 // );
 
 const login = async () => {
-  const [loginUsername, setUsername] = React.useState(undefined);
-  const [loginPassword, setPassword] = React.useState(undefined);
-  const [userInfo, setUserInfo] = React.useState(undefined);
   render(
-    <UserInfo.Provider value={{
-      username: loginUsername,
-      password: loginPassword,
-      userInfo: userInfo,
-      setUsername: setUsername,
-      setPassword: setPassword,
-      setUserInfo: setUserInfo,
-    }}>
       <MemoryRouter>
         <Routes>
+          {/* <Route exact path='/' element={
+            <HeroPageView />
+          }></Route> */}
           <Route exact path='/' element={
-            <HeroView />
-          }></Route>
-          <Route exact path='/login' element={
             <LoginPage />
           }></Route>
+          {/* <Route exact path='/login' element={
+            <LoginPage />
+          }></Route> */}
         </Routes>
       </MemoryRouter>
-    </UserInfo.Provider>
   );
-  await screen.findByText('Take back your time!');
-  fireEvent.click(await screen.findByText('Login'));
-  await screen.findByText('Sign in');
+  
+//   await screen.findByText('Take back your time!');
+//   fireEvent.click(await screen.findByText('Login'));
+//   await screen.findByText('Sign in');
+//   await screen.findByText('Sign joe');
 }
 
 // const renderPages = async () => {
@@ -64,7 +56,38 @@ const login = async () => {
 
 test('Render HeroPageView, click Login', async () => {
   login();
-  
-});
 
-*/
+  await screen.findByText('Sign in');
+  
+  //await screen.findByText('Take back your time!');
+
+
+//   await screen.findByText('Create your account now!');
+
+//   fireEvent.click(await screen.findByText('Create your account now!'));
+//   await screen.findByText('Create Your Account!');
+
+//   await screen.findByText('Home');
+//     fireEvent.click(await screen.findByText('Home'));
+//   await screen.findByText('Take back your time!');
+
+
+
+//   fireEvent.click(await screen.findByText('Login'));
+//   await screen.findByText('Sign in');
+
+
+
+//   await screen.findByText('Home');
+//   fireEvent.click(await screen.findByText('Home'));
+//   await screen.findByText('Take back your time!');
+
+
+
+
+//   fireEvent.click(await screen.findByText('Home'));
+//   await screen.findByText('Take back your time!');
+
+//   await screen.findByText('Sign in');
+
+});
