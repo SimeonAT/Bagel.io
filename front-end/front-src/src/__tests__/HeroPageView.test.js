@@ -41,6 +41,7 @@ import UserInfo from '../UserContext';
 //   );
 // }
 
+
 const renderPages = async () => {
   render(
       <MemoryRouter>
@@ -63,3 +64,5 @@ test('Render HeroPageView, make sure it has text', async () => {
   await screen.findByText('Create your account now!');
   await screen.findByText('Login');
 });
+
+
