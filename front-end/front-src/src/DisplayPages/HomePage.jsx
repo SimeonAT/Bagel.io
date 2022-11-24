@@ -120,8 +120,10 @@ export default function Home(props) {
         // and tell the user about this error.
         return;
     }
-    let taskStartISO = new Date(taskStartRef.current.value).toISOString();
-    let taskEndISO = new Date(taskEndRef.current.value).toISOString();
+    let startDateObject = new Date(taskStartRef.current.value);
+    let endDateObject = new Date(taskEndRef.current.value);
+    let taskStartISO = startDateObject.toISOString();
+    let taskEndISO = endDateObject.toISOString();
 
     const isInvalidTask = await newTaskOverlapsExistingTask(taskStartISO, userInfo);
 
@@ -143,6 +145,12 @@ export default function Home(props) {
     if (taskTagToRecord.length > 32) {
       setOverlapingTimeErrorMessage('The task tag is too long.');
       setOverlapingTimeSuggestion('Please enter a task tag that is 32 characters or less.');
+      return;
+    }
+
+    if (startDateObject.valueOf() > endDateObject.valueOf()) {
+      setOverlapingTimeErrorMessage('The end time you entered is before the start time.');
+      setOverlapingTimeSuggestion('Please enter valid dates!');
       return;
     }
 
