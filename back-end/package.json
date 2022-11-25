@@ -4,8 +4,14 @@
   "description": "",
   "main": "src/server.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --runInBand --verbose --forceExit --detectOpenHandles",
     "start": "nodemon src/server.js"
+  },
+  "jest": {
+    "testTimeout": 60000,
+    "testMatch": [
+      "**/?(*.)+(spec|test).[jt]s?(x)"
+    ]
   },
   "author": "",
   "license": "ISC",

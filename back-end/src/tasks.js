@@ -16,7 +16,7 @@ exports.register = async (request, response) => {
     response.setHeader("Content-Type", "application/json");
     // get username/email/password from request body
     const registerReqBody = request.body;
-    console.log('json.stringify(registerReqBody)'+console.log(JSON.stringify(registerReqBody)));
+    // console.log('json.stringify(registerReqBody)'+console.log(JSON.stringify(registerReqBody)));
     // check if username/email in db
     const users = await dbUtils.getMembers();
     let alreadyInUse = false;
@@ -248,9 +248,10 @@ exports.fetchTags = async (request, response) => {
     response.setHeader("Content-Type", "application/json");
 
     const fetchTagsReqBody = request.body;
-    // const fetchTagsReqBody = request.body; //FORTESTING
-
+    // console.log('gothere.5');
     let userTags = await dbUtils.getUserTags(fetchTagsReqBody.username);
+    // let userTags = false;
+
     // remove duplicates from userTags
     if (userTags) {
       userTags = [...new Set(Object.values(userTags))];
