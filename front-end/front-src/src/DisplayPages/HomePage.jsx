@@ -9,7 +9,8 @@ import Calendar from "./Calendar";
 import UserInfo from '../UserContext';
 import {validateDateFieldFormat, newTaskOverlapsExistingTask} from '../frontendUtils';
 import axios from 'axios';
-import background from './TEST.png'
+import background from '../Images/TEST.png'
+
 
 const theme = createTheme( {
   palette: {
@@ -209,22 +210,23 @@ export default function Home(props) {
   const renderPage = (
     <ThemeProvider theme={theme}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <div style={{ backgroundImage:`url(${background})` }}>
-        <Link href = '/' style={{ textDecoration: 'none' }}>
-          <Box textAlign='left'>
-              <Button 
-                color="primary"
-                type="submit"
-                sx={{ mt: 3, mb: 2, mr: 5, ml: 5,
-                  pr: 7, pl: 7, 
-                  border: 2,
-                  fontWeight: 600,
-                  fontSize: 16 }}>
-                Logout
-              </Button>
-            </Box>
-        </Link>
-</div>
+        <div style={{ backgroundImage:`url(${background})` }}>
+          <Link href = '/' style={{ textDecoration: 'none' }}>
+            <Box textAlign='left'>
+                <Button 
+                  color="primary"
+                  type="submit"
+                  sx={{ mt: 3, mb: 2, mr: 5, ml: 5,
+                    pr: 7, pl: 7, 
+                    border: 2,
+                    fontWeight: 600,
+                    fontSize: 16 }}>
+                  Logout
+                </Button>
+              </Box>
+          </Link>
+        </div>
+        
         <Container component="main">
           <CssBaseline />
             <Box

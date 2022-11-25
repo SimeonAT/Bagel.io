@@ -9,7 +9,7 @@ import Bagel from "./Bagel";
 import axios from 'axios';
 import {calculateTotalCompletedByTag} from '../frontendUtils';
 import {CompleteButton, ButtonSection, TaskDisplay} from './Styles';
-import background from './TEST.png'
+import background from '../Images/TEST.png'
 
 const theme = createTheme( {
   palette: {
