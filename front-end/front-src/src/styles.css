@@ -123,14 +123,13 @@ button {
   font-weight: 600;
   margin: 1vw 1vw;
   transition: 0.4s;
-  color: #FFEADF;
-  background-color: #FFEADF;
+  
 }
 
 .login-button {
   width: 10vw;
   color: #FFEADF;
-  background-color: rgba(135, 142, 98, 0.6);
+  background-color: rgba(135, 142, 98, 0.6)a;;
   border: .1vw solid rgba(135, 142, 98, 0.6);
   font-weight: bold;
   padding: .5vw .5vw;
