@@ -2,9 +2,25 @@ import * as React from 'react';
 import {useState} from "react";
 import { Chart, PieSeries, Title, Tooltip, Legend } from '@devexpress/dx-react-chart-material-ui';
 import {EventTracker, HoverState } from '@devexpress/dx-react-chart';
+import { Palette } from '@devexpress/dx-react-chart';
+
 
 function Bagel(props){
     const [chartData, setChartData] = useState([]);
+    const scheme = [
+      "#CAD58D", 
+      "#0a5f42", 
+      "#878E62",
+      "#f0e9db", 
+      "#464444", 
+      "#c2a594",
+      "#33261d",
+      "#B5824D",
+      "#93a197", 
+      "#008080", 
+      "#20b2aa", 
+      "#468499",
+    ];
 
     React.useEffect(() => {
     }, [props.todayTask]);
@@ -25,6 +41,8 @@ function Bagel(props){
       <Chart
         data={chartData}
       >
+        <Palette scheme={scheme} />
+
         <PieSeries
           valueField="time"
           argumentField="name"

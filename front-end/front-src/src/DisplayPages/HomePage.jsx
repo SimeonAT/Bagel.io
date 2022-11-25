@@ -9,6 +9,8 @@ import Calendar from "./Calendar";
 import UserInfo from '../UserContext';
 import {validateDateFieldFormat, newTaskOverlapsExistingTask} from '../frontendUtils';
 import axios from 'axios';
+import background from '../Images/TEST.png'
+
 
 const theme = createTheme( {
   palette: {
@@ -18,6 +20,11 @@ const theme = createTheme( {
       dark: '#424c55',
       contrastText: '#fff',
     },
+  typography: {
+    // In Chinese and Japanese the characters are usually larger,
+    // so a smaller fontsize may be appropriate.
+    fontSize: 12,
+  },
   },
   });
 
@@ -211,22 +218,23 @@ export default function Home(props) {
   const renderPage = (
     <ThemeProvider theme={theme}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-
-        <Link href = '/' style={{ textDecoration: 'none' }}>
-          <Box textAlign='left'>
-              <Button 
-                color="primary"
-                type="submit"
-                sx={{ mt: 3, mb: 2, mr: 5, ml: 5,
-                  pr: 7, pl: 7, 
-                  border: 2,
-                  fontWeight: 600,
-                  fontSize: 16 }}>
-                Logout
-              </Button>
-            </Box>
-        </Link>
-
+        <div style={{ backgroundImage:`url(${background})` }}>
+          <Link href = '/' style={{ textDecoration: 'none' }}>
+            <Box textAlign='left'>
+                <Button 
+                  color="primary"
+                  type="submit"
+                  sx={{ mt: 3, mb: 2, mr: 5, ml: 5,
+                    pr: 7, pl: 7, 
+                    border: 2,
+                    fontWeight: 600,
+                    fontSize: 16 }}>
+                  Logout
+                </Button>
+              </Box>
+          </Link>
+        </div>
+        
         <Container component="main">
           <CssBaseline />
             <Box
@@ -240,12 +248,29 @@ export default function Home(props) {
               <UserInfo.Consumer>
                 {(userInfo) => {
                   return (
-                    <Typography component="h1" variant="h4" align="center" sx={{ mb: 10 }}>
+                    <Typography component="h1" variant="h2" align="center" sx={{ mb: 3, textTransform: 'capitalize' }}>
                       Welcome {userInfo.username}!
                     </Typography>
                   );
                 }}
               </UserInfo.Consumer>
+              <Box textAlign='center'>
+          <Button
+            color="primary"
+            type="submit"
+            //fullWidth
+            variant="outlined"
+            onClick = {navigateToDashboard}
+            sx={{ mt: 0, m0: 2, mr: 5, ml: 5,
+              pr: 7, pl: 7, 
+              border: 2,
+              fontWeight: 600,
+              fontSize: 16 }}>
+            
+            Go To Dashboard
+          </Button>
+        </Box>
+
 
                 <Grid container spacing={2}>
                   <Grid item xs={6}>
@@ -257,7 +282,10 @@ export default function Home(props) {
                           alignItems: 'center',
                         }}
                         >
-                          <Typography component="h1" variant="h5">
+                          <Typography component="h1" variant="h2" sx={{ 
+                            mt: 3, mb: 5, mr: 5, ml: 5,
+                            pr: 7, pl: 7, 
+                             }}>
                             Today's Tasks
                           </Typography>
 
@@ -275,14 +303,20 @@ export default function Home(props) {
                         return (
                           <Box label="create-task-column"
                             sx={{
+                              mt: 7, mb: 5, mr: 5, ml: 5,
                               width: 1,
                               display: 'flex',
                               flexDirection: 'column',
                               alignItems: 'center',
+                              border: 4,
+                              boxShadow: 3,
+                              borderRadius: 8,
                             }}
                           >
 
-                            <Typography component="h1" variant="h5">
+                            <Typography component="h1" variant="h3" sx={{
+                              mt: 5, mb: 5, mr: 5, ml: 5,
+                              }}>
                               Add New Task
                             </Typography>
 
@@ -445,22 +479,7 @@ export default function Home(props) {
                   </Grid>
                 </Grid>
 
-                <Box>
-                    <Button
-                      color="primary"
-                      type="submit"
-                      fullWidth
-                      variant="outlined"
-                      onClick = {navigateToDashboard}
-                      sx={{ mt: 6, mb: 2,
-                        pr: 5, pl: 5,
-                        border: 2, 
-                        fontSize: 22,
-                       }}
-                      >
-                      Go To Dashboard
-                    </Button>
-                </Box>
+                
 
           </Box>         
 

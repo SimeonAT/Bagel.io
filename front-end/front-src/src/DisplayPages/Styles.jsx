@@ -1,3 +1,4 @@
+
 import styled from "styled-components";
 
 export const WelcomeDiv = styled.div`
@@ -22,7 +23,7 @@ export const LogoDiv = styled.div`
   text-align: center;
 `;
 
-export const Tagline = styled.h5`
+export const Tagline = styled.h1`
   font-size: 30px;
   margin: 0px;
   padding: 0px;
@@ -50,7 +51,7 @@ export const CompleteButton = styled.button`
   font-size: 18px;
   width: 200px;
   height: 40px;
-  background-color: Lavender;
+  background-color: #F0E9DB;
 `;
 
 export const ButtonSection = styled.div`
@@ -61,7 +62,6 @@ export const ButtonSection = styled.div`
 export const TaskDisplay = styled.div`
   display: flex;
   flex-direction: column;
-
   padding-top: 5%;
   padding-bottom: 3%;
   padding-left: 5%;
