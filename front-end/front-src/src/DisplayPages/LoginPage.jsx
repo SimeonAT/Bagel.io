@@ -141,7 +141,9 @@ export default function SignIn(props) {
                     <Button
                       color="primary"
                       type="submit"
+                      label="signInButton"
                       variant="outlined"
+                      data-testid="signinButton"
                       sx={{
                         mt: 3, mb: 2,
                         pr: 7, pl: 7,

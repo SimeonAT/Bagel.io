@@ -210,7 +210,7 @@ export default function Dashboard(props) {
                 <UserInfo.Consumer>
                   {({username, password, userInfo}) => {
                     return (
-                      <Typography component="h1" variant="h5" onClick={() => calculateTotalCompletedByTag(username, true)}>
+                      <Typography component="h1" variant="h5" data-testid="title" onClick={() => calculateTotalCompletedByTag(username, true)}>
                           {username}'s Dashboard
                       </Typography>
                     );
@@ -245,7 +245,7 @@ export default function Dashboard(props) {
                       >
 
                       <Typography component="h1" variant="h5">
-                        Your Productivity Bagel
+                        Your Productivity Bagels
                       </Typography>
                       <Bagel
                         todayTask = {todaysTasks}
@@ -253,7 +253,7 @@ export default function Dashboard(props) {
                        />
                       <Bagel
                         todayTask = {overallTasks}
-                        title = {"Hours Spent on Tasks Overall"}
+                        title = {"Hours Spent on Tasks This Month"}
                        />
                     </Box>
                   </Grid>
