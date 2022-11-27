@@ -29,7 +29,7 @@ exports.resetDB = async () => {
 
 exports.testQuery = async () => {
     const {rows} = await pool.query('SELECT * FROM member');
-    console.log('gothere4');
-    console.log(rows);
+    // console.log('gothere4');
+    // console.log(rows);
     return rows;
 }

@@ -16,54 +16,57 @@ exports.register = async (request, response) => {
     response.setHeader("Content-Type", "application/json");
     // get username/email/password from request body
     const registerReqBody = request.body;
-    // console.log('json.stringify(registerReqBody)'+console.log(JSON.stringify(registerReqBody)));
-    // check if username/email in db
-    const users = await dbUtils.getMembers();
-    let alreadyInUse = false;
-    let checkUsername = ""; //if there is a match one or more of these will be filled.
-    let checkEmail = "";
-    for (const userObj of users) {
-      if (userObj.username === registerReqBody.username || userObj.email === registerReqBody.email) {
-        alreadyInUse = true;
-        checkUsername = userObj.username;
-        checkEmail = userObj.email;
-        break;
-      }
-    }
-    // if username/email in db: send failure, else: insert and send success
-    if (alreadyInUse) {
-      let emailUsed = "";
-      let boolEmailUsed = false;
-      let usernameUsed = "";
-      let boolUsernameUsed = false;
-      //check if username already used
-      if (checkUsername === registerReqBody.username) {
-        usernameUsed = "This username has already been used.";
-        boolUsernameUsed = true;
-      }
-      //check if email already used
-      if (checkEmail === registerReqBody.email) {
-        emailUsed = "This email has already been used.";
-        boolEmailUsed = true;
-      }
-      response.send({
-        loginAllowed: false,
-        boolEmailUsed: boolEmailUsed,
-        emailUsed: emailUsed, //these two fields return error message of whether or not email/user has already been used.
-        boolUsernameUsed: boolUsernameUsed,
-        usernameUsed: usernameUsed
-      });
+    if (!registerReqBody.username || !registerReqBody.email || !registerReqBody.password) {
+      response.status(422).send();
     } else {
-      await dbUtils.insertUser(registerReqBody.username, registerReqBody.email, registerReqBody.password);
-      response.send({
-        loginAllowed: true,
-        payload: {
-          "username": registerReqBody.username,
-          "password": registerReqBody.password,
-          "email": registerReqBody.email,
-          "tasks": [],
+      // check if username/email in db
+      const users = await dbUtils.getMembers();
+      let alreadyInUse = false;
+      let checkUsername = ""; //if there is a match one or more of these will be filled.
+      let checkEmail = "";
+      for (const userObj of users) {
+        if (userObj.username === registerReqBody.username || userObj.email === registerReqBody.email) {
+          alreadyInUse = true;
+          checkUsername = userObj.username;
+          checkEmail = userObj.email;
+          break;
         }
-      });
+      }
+      // if username/email in db: send failure, else: insert and send success
+      if (alreadyInUse) {
+        let emailUsed = "";
+        let boolEmailUsed = false;
+        let usernameUsed = "";
+        let boolUsernameUsed = false;
+        //check if username already used
+        if (checkUsername === registerReqBody.username) {
+          usernameUsed = "This username has already been used.";
+          boolUsernameUsed = true;
+        }
+        //check if email already used
+        if (checkEmail === registerReqBody.email) {
+          emailUsed = "This email has already been used.";
+          boolEmailUsed = true;
+        }
+        response.status(403).send({
+          loginAllowed: false,
+          boolEmailUsed: boolEmailUsed,
+          emailUsed: emailUsed, //these two fields return error message of whether or not email/user has already been used.
+          boolUsernameUsed: boolUsernameUsed,
+          usernameUsed: usernameUsed
+        });
+      } else {
+        await dbUtils.insertUser(registerReqBody.username, registerReqBody.email, registerReqBody.password);
+        response.status(200).send({
+          loginAllowed: true,
+          payload: {
+            "username": registerReqBody.username,
+            "password": registerReqBody.password,
+            "email": registerReqBody.email,
+            "tasks": [],
+          }
+        });
+      }
     }
   }
   catch (error) {
@@ -75,7 +78,7 @@ exports.register = async (request, response) => {
  * Compares given username & password with the usernames & passwords in db
  * Logs in User
  * 
- * @param request: {username:"", email:"", password:""}
+ * @param request: {username:"", password:""}
  * @param response - HTTP response object to send to client
  * @returns - {loginAllowed: true, payload: {}} if match, {loginAllowed: false} if no match
  */
@@ -86,56 +89,60 @@ exports.loginDatabase = async (request, response) => {
     const loginReqBody = request.body;
     // get users from db
     const users = await dbUtils.getMembers();
-    // check if user in db
-    let theUser = null;
-    let userInDatabase = false;
-    let usernameError = true;
-    let passwordError = false;
-    for (const userObj of users) {
-      if (userObj.username === loginReqBody.username && userObj.memberpassword === loginReqBody.password) {
-        userInDatabase = true;
-        theUser = userObj;
-        break;
-      }
-      
-      if(userObj.username === loginReqBody.username) {
-        usernameError = false; //username exists
-        if(userObj.memberpassword != loginReqBody.password) {
-          passwordError = true; //password is wrong.
-        }
-      }
-    }
-    if (userInDatabase) {
-      // get tasks from db
-      let theUserTasks = await dbUtils.getMemberScheduledTasks(theUser.username);
-      // make task array
-      const taskArray = [];
-      for (const task of theUserTasks) {
-        taskArray.push({
-          "name": task.taskname,
-          "startDate": task.starttime,
-          "endDate": task.endtime,
-          "tag": task.tasktag,
-          "complete": task.complete,
-          "checkedIn": task.checkedin,
-          "taskid": task.scheduledid,
-        })
-      }
-      // send response with user info in body
-      response.send({
-        loginAllowed: true,
-        payload: {
-          "username": theUser.username,
-          "password": theUser.memberpassword,
-          "email": theUser.email,
-          "tasks": taskArray,
-        }
-      });
+    if (!loginReqBody.username || !loginReqBody.password) {
+      response.status(422).send();
     } else {
-      response.send({loginAllowed: false,
-                     password: passwordError,
-                     username: usernameError
-                    });
+      // check if user in db
+      let theUser = null;
+      let userInDatabase = false;
+      let usernameError = true;
+      let passwordError = false;
+      for (const userObj of users) {
+        if (userObj.username === loginReqBody.username && userObj.memberpassword === loginReqBody.password) {
+          userInDatabase = true;
+          theUser = userObj;
+          break;
+        }
+        
+        if(userObj.username === loginReqBody.username) {
+          usernameError = false; //username exists
+          if(userObj.memberpassword != loginReqBody.password) {
+            passwordError = true; //password is wrong.
+          }
+        }
+      }
+      if (userInDatabase) {
+        // get tasks from db
+        let theUserTasks = await dbUtils.getMemberScheduledTasks(theUser.username);
+        // make task array
+        const taskArray = [];
+        for (const task of theUserTasks) {
+          taskArray.push({
+            "name": task.taskname,
+            "startDate": task.starttime,
+            "endDate": task.endtime,
+            "tag": task.tasktag,
+            "complete": task.complete,
+            "checkedIn": task.checkedin,
+            "taskid": task.scheduledid,
+          })
+        }
+        // send response with user info in body
+        response.status(200).send({
+          loginAllowed: true,
+          payload: {
+            "username": theUser.username,
+            "password": theUser.memberpassword,
+            "email": theUser.email,
+            "tasks": taskArray,
+          }
+        });
+      } else {
+        response.status(403).send({loginAllowed: false,
+                      password: passwordError,
+                      username: usernameError
+                      });
+      }
     }
   } catch (error) {
     sendError.sendError(error, response);
@@ -156,23 +163,27 @@ exports.getTasks = async (request, response) => {
     response.setHeader("Content-Type", "application/json");
 
     const getReqBody = request.body;
-    let theUserTasks = await dbUtils.getMemberScheduledTasks(getReqBody.username);
-    const taskArray = [];
-    if (!theUserTasks) {
-      response.send({taskList: taskArray});
+    if (!getReqBody.username) {
+      response.status(422).send();
     } else {
-      for (const task of theUserTasks) {
-        taskArray.push({
-          "name": task.taskname,
-          "startDate": task.starttime,
-          "endDate": task.endtime,
-          "tag": task.tasktag,
-          "complete": task.complete,
-          "checkedIn": task.checkedin,
-          "taskid": task.scheduledid,
-        })
+      let theUserTasks = await dbUtils.getMemberScheduledTasks(getReqBody.username);
+      const taskArray = [];
+      if (!theUserTasks.length) {
+        response.status(404).send({taskList: taskArray});
+      } else {
+        for (const task of theUserTasks) {
+          taskArray.push({
+            "name": task.taskname,
+            "startDate": task.starttime,
+            "endDate": task.endtime,
+            "tag": task.tasktag,
+            "complete": task.complete,
+            "checkedIn": task.checkedin,
+            "taskid": task.scheduledid,
+          })
+        }
+        response.status(200).send({taskList: taskArray});
       }
-      response.send({taskList: taskArray});
     }
   }
   catch (error) {
@@ -225,16 +236,20 @@ exports.updateTask = async (request, response) => {
     response.set("Access-Control-Allow-Origin", "*");
     response.setHeader("Content-Type", "application/json");
     const updateTaskReqBody = request.body;
-    dbUtils.updateTask(updateTaskReqBody.taskId, updateTaskReqBody.startDate, updateTaskReqBody.endDate, 
-      updateTaskReqBody.tag, updateTaskReqBody.complete, updateTaskReqBody.checkedIn);
-    response.send({success: true});
+    if (!updateTaskReqBody.taskId || !updateTaskReqBody.startDate || !updateTaskReqBody.endDate || !updateTaskReqBody.tag || typeof updateTaskReqBody.checkedIn !== "boolean" || typeof updateTaskReqBody.complete !== "boolean") {
+      response.status(422).send();
+    } else {
+      dbUtils.updateTask(updateTaskReqBody.taskId, updateTaskReqBody.startDate, updateTaskReqBody.endDate, 
+        updateTaskReqBody.tag, updateTaskReqBody.complete, updateTaskReqBody.checkedIn);
+      response.status(200).send({success: true});
+    }
   }
   catch (error) {
     sendError.sendError(error, response);
   }
 }
 
-/** 
+/**
  * Returns a list of all tags a user should have in their dropdown menu
  * Queries DB with username that is sent passed in
  * 
@@ -248,38 +263,20 @@ exports.fetchTags = async (request, response) => {
     response.setHeader("Content-Type", "application/json");
 
     const fetchTagsReqBody = request.body;
-    // console.log('gothere.5');
-    let userTags = await dbUtils.getUserTags(fetchTagsReqBody.username);
-    // let userTags = false;
-
-    // remove duplicates from userTags
-    if (userTags) {
-      userTags = [...new Set(Object.values(userTags))];
+    if (!fetchTagsReqBody || !fetchTagsReqBody.username) {
+      response.status(422).send();
     } else {
-      userTags = [];
+      let userTags = await dbUtils.getUserTags(fetchTagsReqBody.username);
+      // remove duplicates from userTags
+      if (userTags) {
+        userTags = [...new Set(Object.values(userTags))];
+      } else {
+        userTags = [];
+      }
+      const tagArray = ['Work', 'Study', 'Exercise', 'Chores', 'Socialization', 'Hobbies', 'Rest', 'Nourishment', 'Relaxation'];
+      userTags.push(...tagArray);
+      response.status(200).send({tagList: userTags});
     }
-
-    const tagArray = ['Work', 'Study', 'Exercise', 'Chores', 'Socialization', 'Hobbies', 'Rest', 'Nourishment', 'Relaxation'];
-    userTags.push(...tagArray);
-    response.send({tagList: userTags});
-  }
-  catch (error) {
-    sendError.sendError(error, response);
-  }
-}
-
-/** 
- * Sets up environment for testing
- * 
- * @param request: HTTP response object to recieved from client
- * @param response - HTTP response object to send to client
- * @returns - undefined - No return value
- */
-exports.setuptesting = async (request, response) => {
-  try {
-    response.set("Access-Control-Allow-Origin", "*");
-    response.setHeader("Content-Type", "application/json");
-    response.status(201).send({hi2: 'hello2'});
   }
   catch (error) {
     sendError.sendError(error, response);
