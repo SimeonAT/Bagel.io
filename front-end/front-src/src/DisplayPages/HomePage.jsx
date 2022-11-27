@@ -228,7 +228,8 @@ export default function Home(props) {
                     pr: 7, pl: 7, 
                     border: 2,
                     fontWeight: 600,
-                    fontSize: 16 }}>
+                    fontSize: 16,
+                    backgroundColor: "white" }}>
                   Logout
                 </Button>
               </Box>

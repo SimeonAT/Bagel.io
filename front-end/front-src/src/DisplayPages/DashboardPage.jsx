@@ -193,7 +193,8 @@ export default function Dashboard(props) {
                   pr: 7, pl: 7, 
                   border: 2,
                   fontWeight: 600,
-                  fontSize: 16 }} >
+                  fontSize: 16,
+                  backgroundColor: "white" }} >
                 Home
               </Button>
             </Box>
@@ -249,7 +250,7 @@ export default function Dashboard(props) {
                       >
 
                       <Typography component="h1" variant="h3">
-                        Your Productivity Bagel
+                        Your Productivity Bagels
                       </Typography>
                       <Bagel
                         todayTask = {todaysTasks}
@@ -257,7 +258,7 @@ export default function Dashboard(props) {
                        />
                       <Bagel
                         todayTask = {overallTasks}
-                        title = {"Hours Spent on Tasks Overall"}
+                        title = {"Hours Spent on Tasks This Month"}
                        />
                     </Box>
                   </Grid>
