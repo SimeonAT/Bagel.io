@@ -1,6 +1,5 @@
 // require('dotenv').config();
 const { Pool } = require('pg');
-console.log('gothere5432');
 const pool = new Pool({
     host: 'localhost',
     port: 5432,
@@ -166,7 +165,6 @@ exports.getUserTags = async (username) => {
         text: select,
         values: [username],
     }
-    console.log('gothere1');
     const {rows} = await pool.query(query);
     return rows[0];
 };

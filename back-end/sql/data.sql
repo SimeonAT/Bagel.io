@@ -1,7 +1,7 @@
 INSERT INTO foobar(thetime) VALUES (current_timestamp);
 
 INSERT INTO member(username, email, memberpassword) VALUES ('collin', 'collin@ucsc.edu', 'testpass1');
-INSERT INTO member(username, email, memberpassword) VALUES ('Vlad', 'vlad@ucsc.edu', 'testpass2');
+INSERT INTO member(username, email, memberpassword) VALUES ('vlad', 'vlad@ucsc.edu', 'testpass2');
 INSERT INTO member(username, email, memberpassword) VALUES ('kalani', 'kalani@ucsc.edu', 'testpass3');
 INSERT INTO member(username, email, memberpassword) VALUES ('gene', 'gene@ucsc.edu', 'testpass4');
 INSERT INTO member(username, email, memberpassword) VALUES ('simeon', 'simeontran@gmail.com', 'simeontran');

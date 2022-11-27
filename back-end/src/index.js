@@ -19,6 +19,5 @@ server.post("/getTasks", tasks.getTasks);
 server.post("/scheduletask", tasks.scheduletask);
 server.post("/updateTask", tasks.updateTask);
 server.post("/fetchTags", tasks.fetchTags);
-server.post("/setuptesting", tasks.setuptesting);
 
 exports.server = server;
