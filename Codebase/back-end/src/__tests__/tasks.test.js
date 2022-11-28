@@ -150,7 +150,7 @@ describe('POST loginDatabase: valid input', () => {
       .expect(200)
       .then((response) => {
         expect(response.body).toEqual(loginCollin);
-      })
+    })
   });
 
   test('POST logindatabase: password incorrect', async () => {
@@ -190,15 +190,9 @@ describe('POST getTasks: valid input', () => {
         expect(response.body).toEqual(getTasksCollin);
       })
   });
-
-  test('Username does not exist', async () => {
-    await request.post('/getTasks')
-      .send({username:"graham"})
-      .expect(404);
-  });
 });
 
-describe('POST getTasks: valid input', () => {
+describe('POST getTasks: invalid input', () => {
   test('POST getTasks: username blank', async () => {
     await request.post('/getTasks')
       .send({username:""})

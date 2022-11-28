@@ -168,22 +168,18 @@ exports.getTasks = async (request, response) => {
     } else {
       let theUserTasks = await dbUtils.getMemberScheduledTasks(getReqBody.username);
       const taskArray = [];
-      if (!theUserTasks.length) {
-        response.status(404).send({taskList: taskArray});
-      } else {
-        for (const task of theUserTasks) {
-          taskArray.push({
-            "name": task.taskname,
-            "startDate": task.starttime,
-            "endDate": task.endtime,
-            "tag": task.tasktag,
-            "complete": task.complete,
-            "checkedIn": task.checkedin,
-            "taskid": task.scheduledid,
-          })
-        }
-        response.status(200).send({taskList: taskArray});
+      for (const task of theUserTasks) {
+        taskArray.push({
+          "name": task.taskname,
+          "startDate": task.starttime,
+          "endDate": task.endtime,
+          "tag": task.tasktag,
+          "complete": task.complete,
+          "checkedIn": task.checkedin,
+          "taskid": task.scheduledid,
+        })
       }
+      response.status(200).send({taskList: taskArray});
     }
   }
   catch (error) {
