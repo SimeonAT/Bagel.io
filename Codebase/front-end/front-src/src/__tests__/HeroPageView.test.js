@@ -1,48 +1,10 @@
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { screen } from '@testing-library/react';
-import { rest } from 'msw';
-import { setupServer } from 'msw/node';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import HeroPageView from '../DisplayPages/HeroPageView';
-import LoginPage from '../DisplayPages/LoginPage';
-import RegisterPage from '../DisplayPages/RegisterPage';
-import UserInfo from '../UserContext';
-// import HomePage from '../DisplayPages/HomePage';
-// import DashboardPage from '../DisplayPages/DashboardPage';
 
-// const renderPages = async () => {
-//   const [loginUsername, setUsername] = React.useState(undefined);
-//   const [loginPassword, setPassword] = React.useState(undefined);
-//   const [userInfo, setUserInfo] = React.useState(undefined);
-//   render(
-//     <UserInfo.Provider value={{
-//       username: loginUsername,
-//       password: loginPassword,
-//       userInfo: userInfo,
-//       setUsername: setUsername,
-//       setPassword: setPassword,
-//       setUserInfo: setUserInfo,
-//     }}>
-//       <MemoryRouter>
-//         <Routes>
-//           <Route exact path='/' element={
-//             <HeroView />
-//           }></Route>
-//           <Route exact path='/login' element={
-//             <LoginPage />
-//           }></Route>
-//           <Route exact path='/register' element={
-//             <RegisterPage />
-//           }></Route>
-//         </Routes>
-//       </MemoryRouter>
-//     </UserInfo.Provider>
-//   );
-// }
-
-
-const renderPages = async () => {
+const initSUT = async () => {
   render(
       <MemoryRouter>
         <Routes>
@@ -54,15 +16,44 @@ const renderPages = async () => {
   );
 }
 
-test('Render HeroPageView, make sure it has text', async () => {
-  renderPages();
-  await screen.findByText('Bagel.io');
-  await screen.findByText('Take back your time!');
-  await screen.findByText('Prioritize!');
-  await screen.findByText('Plan!');
-  await screen.findByText('Perfect!');
-  await screen.findByText('Create your account now!');
-  await screen.findByText('Login');
+beforeEach(() => {
+  initSUT();
+});
+
+describe("Verify Hero Page UI elements are rendering properly", () => {
+
+  test('App Title Display', async () => {
+    await screen.findByText('Bagel.io');
+  });
+  
+  test('Sub Heading', async () => {
+    await screen.findByText('Take back your time!');
+  });
+
+  test('Sub-sub heading 1', async () => {
+    await screen.findByText('Prioritize!');
+  });
+
+  test('Sub-sub heading 2', async () => {
+    await screen.findByText('Plan!');
+  });
+
+  test('Sub-sub heading 3', async () => {
+    await screen.findByText('Perfect!');
+  });
+
+});
+
+describe("Verify Buttons are rendering properly", () => {
+
+  test('Create Account button', async () => {
+    await screen.findByText('Create your account now!');
+  });
+
+  test('Login Button', async () => {
+    await screen.findByText('Login');
+  });
+
 });
 
 
