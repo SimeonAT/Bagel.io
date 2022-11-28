@@ -22,7 +22,11 @@ function HeroView(props) {
 
   const renderForm = (
     <ThemeProvider theme={theme}>
-      <div style={{ backgroundImage:`url(${background})` }}>
+      <div style={{ backgroundImage:`url(${background})`, backgroundPosition: 'center',
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        width: '100vw',
+        height: '100vh'}}>
         <CssBaseline />
         
         <div>
@@ -37,7 +41,8 @@ function HeroView(props) {
                     border: 5,
                     borderRadius: 3,
                     fontWeight: 500,
-                    fontSize: 24 }} >
+                    fontSize: 24,
+                    backgroundColor: "white" }} >
                   Login
                 </Button>
               </Box>
