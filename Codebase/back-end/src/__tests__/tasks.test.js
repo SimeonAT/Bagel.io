@@ -100,159 +100,184 @@ test('GET request invalid endpoint', async () => {
     .expect(404);
 });
 
-test('POST register: all fields correct', async () => {
-  await request.post('/register')
+describe('POST register: valid input', () => {
+  test('All fields correct', async () => {
+    await request.post('/register')
     .send({username:"flembert", email:"flembert@gmail.com", password:"flembert101"})
     .expect(200)
     .then((response) => {
       expect(response.body).toEqual(registerFlembert);
     })
+  });
+
+  test('Username already exists', async () => {
+    await request.post('/register')
+      .send({username:"flembert", email:"flembert@gmail.com", password:"flembert101"})
+      .expect(403);
+  });
 });
 
-test('POST register: all fields blank', async () => {
-  await request.post('/register')
-    .send({username:"", email:"", password:""})
-    .expect(422);
+describe('POST register: invalid input', () => {
+  test('All fields blank', async () => {
+    await request.post('/register')
+      .send({username:"", email:"", password:""})
+      .expect(422);
+  });
+
+  test('Password blank', async () => {
+    await request.post('/register')
+      .send({username:"flembert", email:"flembert@gmail.com", password:""})
+      .expect(422);
+  });
+
+  test('Email blank', async () => {
+    await request.post('/register')
+      .send({username:"flembert", email:"", password:"flembert101"})
+      .expect(422);
+  });
+
+  test('Username blank', async () => {
+    await request.post('/register')
+      .send({username:"", email:"flembert@gmail.com", password:"flembert101"})
+      .expect(422);
+  });
 });
 
-test('POST register: password blank', async () => {
-  await request.post('/register')
-    .send({username:"flembert", email:"flembert@gmail.com", password:""})
-    .expect(422);
+describe('POST loginDatabase: valid input', () => {
+  test('POST logindatabase: all fields correct', async () => {
+    await request.post('/logindatabase')
+      .send({username:"collin", password:"testpass1"})
+      .expect(200)
+      .then((response) => {
+        expect(response.body).toEqual(loginCollin);
+      })
+  });
+
+  test('POST logindatabase: password incorrect', async () => {
+    await request.post('/logindatabase')
+      .send({username:"collin", password:"wrongpass"})
+      .expect(403);
+  });
+  
+  test('POST logindatabase: user does not exist', async () => {
+    await request.post('/logindatabase')
+      .send({username:"graham", password:"testpass1"})
+      .expect(403);
+  });
+
 });
 
-test('POST register: email blank', async () => {
-  await request.post('/register')
-    .send({username:"flembert", email:"", password:"flembert101"})
-    .expect(422);
+describe('POST loginDatabase: invalid input', () => {
+  test('POST logindatabase: password blank', async () => {
+    await request.post('/logindatabase')
+      .send({username:"collin", email:"collin@ucsc.edu", password:""})
+      .expect(422);
+  });
+
+  test('POST logindatabase: username blank', async () => {
+    await request.post('/logindatabase')
+      .send({username:"", password:"testpass1"})
+      .expect(422);
+  });
 });
 
-test('POST register: username blank', async () => {
-  await request.post('/register')
-    .send({username:"", email:"flembert@gmail.com", password:"flembert101"})
-    .expect(422);
+describe('POST getTasks: valid input', () => {
+  test('Username exists', async () => {
+    await request.post('/getTasks')
+      .send({username:"collin"})
+      .expect(200)
+      .then((response) => {
+        expect(response.body).toEqual(getTasksCollin);
+      })
+  });
+
+  test('Username does not exist', async () => {
+    await request.post('/getTasks')
+      .send({username:"graham"})
+      .expect(404);
+  });
 });
 
-test('POST register: username already exists', async () => {
-  await request.post('/register')
-    .send({username:"flembert", email:"flembert@gmail.com", password:"flembert101"})
-    .expect(403);
+describe('POST getTasks: valid input', () => {
+  test('POST getTasks: username blank', async () => {
+    await request.post('/getTasks')
+      .send({username:""})
+      .expect(422);
+  });
 });
 
-test('POST logindatabase: all fields correct', async () => {
-  await request.post('/logindatabase')
-    .send({username:"collin", password:"testpass1"})
-    .expect(200)
-    .then((response) => {
-      expect(response.body).toEqual(loginCollin);
-    })
+describe('POST scheduleTask: valid input', () => {
+  test('All fields correct', async () => {
+    await request.post('/scheduletask')
+      .send({username:"collin", taskName:"knit", startDate:"2021-11-05T02:44:18Z", endDate:"2021-11-06T02:44:18Z", tag:"hobbies"})
+      .expect(200)
+      .then((response) => {
+        collinNewTask["taskid"] = response.body.taskid;
+        expect(response.body).toEqual(collinNewTask);
+      })
+  });
 });
 
-test('POST logindatabase: password blank', async () => {
-  await request.post('/logindatabase')
-    .send({username:"collin", email:"collin@ucsc.edu", password:""})
-    .expect(422);
+describe('POST scheduleTask: invalid input', () => {
+  test('All fields blank', async () => {
+    await request.post('/scheduletask')
+      .send({username:"", taskName:"", startDate:"", endDate:"", tag:""})
+      .expect(500);
+  });
 });
 
-test('POST logindatabase: username blank', async () => {
-  await request.post('/logindatabase')
-    .send({username:"", password:"testpass1"})
-    .expect(422);
+describe('POST updateTask: valid input', () => {
+  test('All fields correct', async () => {
+    await request.post('/updateTask')
+      .send({ taskId:collinNewTask.taskid, checkedIn: false, startDate:"2021-11-05T02:44:18Z", endDate:"2021-11-06T02:44:18Z", tag:"hobbies", complete:false })
+      .expect(200)
+      .then((response) => {
+        expect(response.body).toEqual({ success: true });
+      })
+  });
 });
 
-test('POST logindatabase: password incorrect', async () => {
-  await request.post('/logindatabase')
-    .send({username:"collin", password:"wrongpass"})
-    .expect(403);
+describe('POST updateTask: invalid input', () => {
+  test('All fields blank', async () => {
+    await request.post('/updateTask')
+      .send({taskId:"", checkedIn: undefined, startDate:"", endDate:"", tag:"", complete: undefined})
+      .expect(422);
+  });
+
+  test('Complete field blank', async () => {
+    await request.post('/updateTask')
+      .send({taskId:collinNewTask.taskid, checkedIn: false, startDate:"2021-11-05T02:44:18Z", endDate:"2021-11-06T02:44:18Z", tag:"hobbies"})
+      .expect(422);
+  });
 });
 
-test('POST logindatabase: user does not exist', async () => {
-  await request.post('/logindatabase')
-    .send({username:"graham", password:"testpass1"})
-    .expect(403);
+describe('POST fetchTags: valid input', () => {
+  test('Username has custom tags', async () => {
+    await request.post('/fetchTags')
+      .send({ username: 'collin' })
+      .expect(200)
+      .then((response) => {
+        // console.log(response.body);
+        expect(response.body).toEqual(collinTags);
+      })
+  });
+
+  test('Username has no custom tags', async () => {
+    await request.post('/fetchTags')
+      .send({ username: 'simeon' })
+      .expect(200)
+      .then((response) => {
+        expect(response.body).toEqual(simeonTags);
+      })
+  });
 });
 
-test('POST getTasks: username exists', async () => {
-  await request.post('/getTasks')
-    .send({username:"collin"})
-    .expect(200)
-    .then((response) => {
-      expect(response.body).toEqual(getTasksCollin);
-    })
-});
-
-test('POST getTasks: username does not exist', async () => {
-  await request.post('/getTasks')
-    .send({username:"graham"})
-    .expect(404);
-});
-
-test('POST getTasks: username blank', async () => {
-  await request.post('/getTasks')
-    .send({username:""})
-    .expect(422);
-});
-
-test('POST scheduleTask: all fields correct', async () => {
-  await request.post('/scheduletask')
-    .send({username:"collin", taskName:"knit", startDate:"2021-11-05T02:44:18Z", endDate:"2021-11-06T02:44:18Z", tag:"hobbies"})
-    .expect(200)
-    .then((response) => {
-      collinNewTask["taskid"] = response.body.taskid;
-      expect(response.body).toEqual(collinNewTask);
-    })
-});
-
-test('POST scheduleTask: all fields blank', async () => {
-  await request.post('/scheduletask')
-    .send({username:"", taskName:"", startDate:"", endDate:"", tag:""})
-    .expect(500);
-});
-
-test('POST updateTask: all fields correct', async () => {
-  await request.post('/updateTask')
-    .send({ taskId:collinNewTask.taskid, checkedIn: false, startDate:"2021-11-05T02:44:18Z", endDate:"2021-11-06T02:44:18Z", tag:"hobbies", complete:false })
-    .expect(200)
-    .then((response) => {
-      expect(response.body).toEqual({ success: true });
-    })
-});
-
-test('POST updateTask: all fields blank', async () => {
-  await request.post('/updateTask')
-    .send({taskId:"", checkedIn: undefined, startDate:"", endDate:"", tag:"", complete: undefined})
-    .expect(422);
-});
-
-test('POST updateTask: complete field blank', async () => {
-  await request.post('/updateTask')
-    .send({taskId:collinNewTask.taskid, checkedIn: false, startDate:"2021-11-05T02:44:18Z", endDate:"2021-11-06T02:44:18Z", tag:"hobbies"})
-    .expect(422);
-});
-
-test('POST fetchTags: username has custom tags', async () => {
-  await request.post('/fetchTags')
-    .send({ username: 'collin' })
-    .expect(200)
-    .then((response) => {
-      // console.log(response.body);
-      expect(response.body).toEqual(collinTags);
-    })
-});
-
-test('POST fetchTags: username has no custom tags', async () => {
-  await request.post('/fetchTags')
-    .send({ username: 'simeon' })
-    .expect(200)
-    .then((response) => {
-      expect(response.body).toEqual(simeonTags);
-    })
-});
-
-test('POST fetchTags: username blank', async () => {
-  await request.post('/fetchTags')
-    .send({ username: '' })
-    .expect(422);
+describe('POST fetchTags: invalid input', () => {
+  test('Username blank', async () => {
+    await request.post('/fetchTags')
+      .send({ username: '' })
+      .expect(422);
+  });
 });
 
 
