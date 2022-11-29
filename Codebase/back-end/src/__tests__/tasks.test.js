@@ -144,7 +144,7 @@ describe('POST register: invalid input', () => {
 });
 
 describe('POST loginDatabase: valid input', () => {
-  test('POST logindatabase: all fields correct', async () => {
+  test('All fields correct', async () => {
     await request.post('/logindatabase')
       .send({username:"collin", password:"testpass1"})
       .expect(200)
@@ -153,13 +153,13 @@ describe('POST loginDatabase: valid input', () => {
     })
   });
 
-  test('POST logindatabase: password incorrect', async () => {
+  test('Password incorrect', async () => {
     await request.post('/logindatabase')
       .send({username:"collin", password:"wrongpass"})
       .expect(403);
   });
   
-  test('POST logindatabase: user does not exist', async () => {
+  test('User does not exist', async () => {
     await request.post('/logindatabase')
       .send({username:"graham", password:"testpass1"})
       .expect(403);
@@ -168,13 +168,13 @@ describe('POST loginDatabase: valid input', () => {
 });
 
 describe('POST loginDatabase: invalid input', () => {
-  test('POST logindatabase: password blank', async () => {
+  test('Password blank', async () => {
     await request.post('/logindatabase')
       .send({username:"collin", email:"collin@ucsc.edu", password:""})
       .expect(422);
   });
 
-  test('POST logindatabase: username blank', async () => {
+  test('Username blank', async () => {
     await request.post('/logindatabase')
       .send({username:"", password:"testpass1"})
       .expect(422);
@@ -193,7 +193,7 @@ describe('POST getTasks: valid input', () => {
 });
 
 describe('POST getTasks: invalid input', () => {
-  test('POST getTasks: username blank', async () => {
+  test('Username blank', async () => {
     await request.post('/getTasks')
       .send({username:""})
       .expect(422);
